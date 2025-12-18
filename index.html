@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Appearing</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      background: #0a0a0a;
+      color: #e8e8e8;
+      line-height: 1.9;
+      font-size: 18px;
+    }
+
+    .container {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 80px 24px 120px;
+    }
+
+    .shard {
+      opacity: 0;
+      animation: fade-in 1.2s ease-out forwards;
+    }
+
+    @keyframes fade-in {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .shard p {
+      margin-bottom: 1.5em;
+      text-align: left;
+    }
+
+    .shard hr {
+      border: none;
+      text-align: center;
+      margin: 3em 0;
+      opacity: 0.4;
+    }
+
+    .shard hr::before {
+      content: "—";
+      color: #e8e8e8;
+      font-size: 1.2em;
+    }
+
+    /* Links if any */
+    .shard a {
+      color: #e8e8e8;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    /* Emphasis */
+    .shard em {
+      font-style: italic;
+    }
+
+    .shard strong {
+      font-weight: 600;
+    }
+
+    /* Entry breath */
+    .entry {
+      height: 40vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      animation: fade-in 2s ease-out forwards;
+    }
+
+    .entry-text {
+      font-size: 14px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      opacity: 0.5;
+      cursor: pointer;
+      transition: opacity 0.3s;
+    }
+
+    .entry-text:hover {
+      opacity: 0.8;
+    }
+
+    /* Hide shard initially, show after click */
+    .shard.hidden {
+      display: none;
+    }
+
+    /* For code-like text */
+    .shard code {
+      font-family: 'Courier New', monospace;
+      font-size: 0.9em;
+      background: rgba(255,255,255,0.05);
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #0a0a0a;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #333;
+      border-radius: 3px;
+    }
+
+    /* Selection */
+    ::selection {
+      background: rgba(255,255,255,0.2);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="entry" id="entry" onclick="enter()">
+    <span class="entry-text">enter</span>
+  </div>
+
+  <div class="container">
+    <div class="shard hidden" id="shard"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    // Configure marked to convert --- to <hr>
+    marked.setOptions({
+      breaks: false,
+      gfm: true
+    });
+
+    // Load and render the markdown
+    async function loadShard() {
+      try {
+        const response = await fetch('the-appearing.md');
+        const text = await response.text();
+        
+        // Convert the em-dash separator to hr
+        const processedText = text.replace(/^—$/gm, '\n---\n');
+        
+        document.getElementById('shard').innerHTML = marked.parse(processedText);
+      } catch (e) {
+        console.error('Could not load shard:', e);
+      }
+    }
+
+    function enter() {
+      document.getElementById('entry').style.display = 'none';
+      document.getElementById('shard').classList.remove('hidden');
+    }
+
+    // Load content on page load
+    loadShard();
+  </script>
+
+</body>
+</html>
