@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" class="article-page">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Research program · Luiz Takahashi</title>
+<meta name="description" content="A proposed program to build the identifiability-based certification layer beneath programmable in-vivo genetic medicine: knowing when to trust a virtual cell, and proving which experiments earn that trust.">
+<meta name="author" content="Luiz Takahashi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Research program · Luiz Takahashi">
+<meta property="og:description" content="A proposed program to build the identifiability-based certification layer beneath programmable in-vivo genetic medicine: knowing when to trust a virtual cell, and proving which experiments earn that trust.">
+<meta property="og:image" content="../assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="../assets/og.png">
+<script>(function(){try{var t=localStorage.getItem('theme');if(!t)t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t);}catch(e){}document.documentElement.classList.add('js');})();</script>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23101317'/><line x1='6' y1='16' x2='26' y2='16' stroke='%238b8f96' stroke-width='1.5' stroke-dasharray='2 2'/><circle cx='11' cy='21' r='3.5' fill='%233987e5'/><circle cx='21' cy='11' r='3.5' fill='%23e66767'/></svg>">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="progress"><div class="progress-bar"></div></div>
+
+<nav class="nav" id="nav">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#101317"/><line x1="6" y1="16" x2="26" y2="16" stroke="#8b8f96" stroke-width="1.5" stroke-dasharray="2 2"/><circle cx="11" cy="21" r="3.5" fill="#3987e5"/><circle cx="21" cy="11" r="3.5" fill="#e66767"/></svg> Luiz&nbsp;Takahashi</a>
+    <div class="nav-links">
+      <a href="../index.html#research">Overview</a>
+      <a href="nullstate.html">NullState</a>
+      <a href="multiview.html">Multi-view interactions</a>
+      <a href="behavior.html">Coupled to Time</a>
+      <a href="program.html" class="current">Research program</a>
+    </div>
+    <div class="nav-tools"><button class="icon-btn" id="themeToggle" aria-label="Toggle color theme" title="Toggle theme"><svg class="theme-icon-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/></svg><svg class="theme-icon-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.6 6.6 0 0 0 9.8 9.8z"/></svg></button></div>
+  </div>
+</nav>
+
+<nav class="toc" id="toc" aria-label="On this page">
+  <span class="toc-title">On this page</span>
+      <a href="#goal" data-spy="goal">The goal</a>
+      <a href="#bottleneck" data-spy="bottleneck">The bottleneck</a>
+      <a href="#thesis" data-spy="thesis">The thesis</a>
+      <a href="#aims" data-spy="aims">Four aims</a>
+      <a href="#anchor" data-spy="anchor">What is proven</a>
+      <a href="#status" data-spy="status">Epistemic status</a>
+</nav>
+
+<main class="wrap">
+  <header class="art-header">
+    <p class="eyebrow">Doctoral research program</p>
+    <h1 class="art-title">Certifiable cell-state control</h1>
+    <p class="art-dek">A proposed program to build the identifiability-based certification layer beneath programmable in-vivo genetic medicine: knowing when to trust a virtual cell, and proving which experiments earn that trust.</p>
+    <div class="art-meta">
+      <span>A forward-looking research proposal, not completed work.</span>
+      <a href="../index.html#research" class="back-link">&larr; All research</a>
+    </div>
+  </header>
+
+  <div class="tldr">
+    <div class="tldr-h">In one minute</div>
+    <ol>
+      <li><span class="k">Goal</span><span>A computational design engine for programmable in-vivo genetic medicine: choose a target, predict the diseased-to-healthy move, and help design the molecule that makes it.</span></li>
+      <li><span class="k">Bottleneck</span><span>Not predictive power but trust. In 2025 and 2026, independent groups reached opposite conclusions about whether models even beat naive baselines.</span></li>
+      <li><span class="k">Thesis</span><span>Trust is governed by identifiability: a score or a proposed intervention means something only to the extent the quantity it estimates is recoverable from the data and design at hand.</span></li>
+      <li><span class="k">Status</span><span>A forward-looking proposal for doctoral study. The completed NullState study already runs the core machinery at atlas scale.</span></li>
+    </ol>
+  </div>
+
+  <article class="article">
+    <section id="goal" class="art-sec"><h2>The goal</h2>
+<p class="art-lead">Genetic medicine has crossed from promise into approved therapy. The rate-limiting step is no longer whether we can edit or deliver, but deciding what to do: which gene, in which cell type, perturbed in which direction, will move a diseased cell toward health, and how to build the molecular agent that effects it.</p>
+<p>Each of those is a prediction-and-design problem over cellular state. The long arc of this work is the engine that answers them: a system that selects a cell-type-specific target, predicts how a perturbation moves a cell from a diseased to a healthy state, and helps design the guide, editor, capsid, or RNA payload that realizes it.</p>
+<div class="art-figure breakout"><figure class="figblock"><div class="matte"><img loading="lazy" src="../assets/figures/fig-engine.png" alt="Schematic of a design engine (target, perturbation to state, payload design) with the four aims forming the trust layer beneath it."></div><figcaption>The design engine (the career goal) and where this program sits: the trust layer beneath a target-selection and perturbation-to-state engine, which the four aims build and then extend. <span class="figref">From the research proposal.</span></figcaption></figure></div>
+<aside class="reasoning"><span class="r-label">The move</span><p>The molecular-design half of the engine, the editor and the capsid and the payload, is a later chapter, and a deliberate one. The plan is to build the trustworthy brain of the engine first, in the environments where the data and the methods are strongest, and to grow into delivery and editing as the program matures.</p></aside>
+<p class="takeaway"><span class="tk">Takeaway</span> The career-scale goal is a computational design engine for programmable in-vivo genetic medicine; this program builds its trustworthy brain first.</p>
+</section>
+
+<section id="bottleneck" class="art-sec"><h2>Why trust is the bottleneck</h2>
+<p>A design engine that confidently proposes the wrong target is worse than no engine: it sends a wet laboratory down a months-long, costly dead end. So the binding constraint on programmable genetic medicine is not predictive firepower. It is trust: knowing when a model's prediction reflects biology rather than an artifact of batch structure, selection, or the metric used to score it.</p>
+<p>In the last year this stopped being a philosophical worry and became a public, unresolved controversy. Across foundation and deep models, one prominent result reported that none outperformed deliberately simple linear baselines at predicting transcriptional responses. A rebuttal argued the opposite, that the negative result was an artifact of poorly calibrated metrics. A third line of work showed that standard metrics are inflated by systematic variation. A community challenge drawing more than 1,200 teams concluded that models do not yet consistently beat naive baselines, and that scaling alone is insufficient.</p>
+<aside class="reasoning"><span class="r-label">The decision</span><p>The decisive read is that these camps disagree because they are measuring different, under-specified quantities, and no one has written down what a metric must satisfy to count as evidence of captured biology. That is an identifiability question, the same one my prior work asks of biological signal, now turned on the evaluation instrument itself.</p></aside>
+<p class="takeaway"><span class="tk">Takeaway</span> The field's true bottleneck is trust, and its loudest disagreement about model quality is really a disagreement about what the metrics identify.</p>
+</section>
+
+<section id="thesis" class="art-sec"><h2>The thesis</h2>
+<p class="art-lead">The trustworthiness of a virtual cell is governed by identifiability. A prediction, a benchmark score, or a proposed cell-state intervention is meaningful only to the extent that the quantity it estimates is recoverable from the data and the design at hand.</p>
+<p>The program makes certifiability of evaluation a formal object and builds the instrument that certifies it, then carries the same lens from the evaluation to the intervention, and finally uses the resulting theory to dictate which experiments, and therefore which laboratories' data, can resolve what public data cannot.</p>
+<blockquote class="pullquote">A model that confidently proposes the wrong target is worse than no model.<cite>the through-line of this work</cite></blockquote>
+</section>
+
+<section id="aims" class="art-sec"><h2>Four aims on a compute ladder</h2>
+<p>The program proceeds in four aims along a deliberate compute-and-data ladder. Each rung produces a self-contained result and earns the next: single-GPU theory and diagnostics demonstrate capability, certified generalization justifies heavy compute, and the identifiability theory itself names the unique experimental designs, and therefore the laboratories, required for the final ascent.</p>
+<div class="art-figure"><div class="ladder">
+  <div class="rung" style="--lvl:1"><div class="step">Rung 1, feasible now</div><h4>Single GPU, public data</h4><p>Formalize certification, and a first reachability metric.</p><div class="earns">&rarr; demonstrates capability</div></div>
+  <div class="rung" style="--lvl:2"><div class="step">Rung 2</div><h4>Heavy compute, giga-scale atlases</h4><p>Certified generalization where scaling alone plateaus.</p><div class="earns">&rarr; earns the compute</div></div>
+  <div class="rung" style="--lvl:3"><div class="step">Rung 3</div><h4>Private, unique data</h4><p>The experiments and platforms only certain labs can generate.</p><div class="earns">&rarr; justifies the lab</div></div>
+</div></div>
+<p><b>Aim 1. Certification of evaluation.</b> Treat each evaluation metric as a functional of the predicted, true, and control distributions, and state the assumptions under which it identifies a biological effect rather than a confound. The deliverable is an open, scverse-compatible certification layer: matched nulls calibrated to a dataset's batch structure, an adversarial confound-decoder that quantifies how much batch or selection identity leaks into a model's predicted effect, and an on-manifold score that flags when a predicted state lies off the data manifold. The aim is to dissolve the baseline controversy by showing the competing conclusions are recoverable under different, explicit assumptions rather than genuinely contradictory.</p>
+<aside class="reasoning"><span class="r-label">The worry</span><p>This is the most contested part of the program, and the evaluation-rigor literature is moving monthly. The response is to stake the formal estimand claim and ship the adopted tool early, to frame the work as dissolving the controversy rather than refereeing it, and to treat Aim 1 as the rigorous foundation for the genuinely novel Aim 2 rather than as the originating claim. Even if a competing formalization appears first, Aim 1 still yields an adopted tool and the certificate that Aim 2 requires.</p></aside>
+<p><b>Aim 2. Identifiability-aware reachability, the keystone.</b> This aim carries the identifiability lens from the evaluation to the intervention: certifying when a predicted diseased-to-healthy transition is genuinely reachable by an admissible perturbation, rather than an artifact of confounded data. The fusion it proposes, a measure of controllability shipped together with a certificate of when that measure is trustworthy, is, to my knowledge, absent from current work, and it is where the defensible originality of the thesis sits.</p>
+<aside class="reasoning"><span class="r-label">The boundary</span><p>A subtlety sits at the heart of this aim, and it is where the depth lies. A controllability claim inherits the trustworthiness of the model it is computed through, so its certificate licenses a precise, conditional statement rather than an unconditional one. Being explicit about that boundary is exactly what separates a trustworthy reachability claim from an overconfident one.</p></aside>
+<aside class="note">The formal construction of the control distance and its recoverability certificate is the originating contribution of the thesis, and is developed in the full proposal rather than here.</aside>
+<p><b>Aim 3. Certified generalization.</b> The community challenge concluded that scaling alone is insufficient and called for thoughtful integration of biological priors. The distinct angle here is to regularize with causal-structure and identifiability constraints suited to the partial-intervention reality of real screens, and to judge the result with the Aim 1 certificate: a certified out-of-distribution gain over a no-change baseline and a matched null, not a raw leaderboard number. A single-GPU proof of concept would train an identifiability-regularized model on public Perturb-seq data; the heavy-compute scale-up would test whether the constraint preserves certified generalization at the scale where pure scaling plateaus.</p>
+<p><b>Aim 4. Design dictation and the disease bridge.</b> A formal identifiability account has a powerful corollary: it specifies which experimental designs would make a currently-unidentifiable effect certifiable. This is the established logic of optimal experimental design, here applied to evaluation and reachability. The aim would apply the NullState framework to disease organoid atlases to characterize aberrant states and define identifiable healthy targets, and would derive, for a target effect class, the minimal design (an allele or dose series, multiple genetic backgrounds, paired pre and post or in-vivo measurement) that renders it certifiable.</p>
+<p class="takeaway"><span class="tk">Takeaway</span> The theory does double duty: it certifies models, and it names the experiments, and the labs, that resolve what public data cannot.</p>
+</section>
+
+<section id="anchor" class="art-sec"><h2>What the completed work already proves</h2>
+<p>The methods this program scales are not hypothetical. NullState, the completed single-author study, already deploys the core machinery at the scale of a 1.8-million-cell organoid atlas: it separates biological signal from a pervasive confound, recovers relative geometry where a clean per-cell coordinate is undefined, and states an explicit identifiability boundary for when latent calibration without anchoring is attainable at all.</p>
+<p>That is precisely the signature this program generalizes, from organoids to the virtual cell: separate signal from confound, state the boundary, defend the negative. The program's central execution risk, that the machinery works at atlas scale, is therefore already retired by completed work.</p>
+<p><a class="pdf-link" href="nullstate.html">Read the NullState study &rarr;</a></p>
+</section>
+
+<section id="status" class="art-sec"><h2>Epistemic status</h2>
+<p>This is a proposal. The definitions are intended to be made precise and the propositions proved or refuted; several works it builds on are preprints that may evolve, and the evaluation-rigor literature underlying Aim 1 is contested and fast-moving. The claim of genuinely unclaimed territory is made for Aim 2's fusion of controllability with a certificate, not for Aim 1.</p>
+<p>The program is deliberately structured so that each aim yields a result even if a more ambitious conjecture, or a competitor's formalization, arrives first. It is a plan of work, presented here as a direction rather than a set of findings.</p>
+</section>
+  </article>
+
+  <section class="art-refs"><h2>Key references</h2><ol>
+    <li>Constantin Ahlmann-Eltze, Wolfgang Huber, and Simon Anders. Deep-learning-based gene perturbation effect prediction does not yet outperform simple linear baselines. Nature Methods, 22:1657-1661, 2025.</li>
+    <li>Yusuf Roohani, Tony J. Hua, Po-Yuan Tung, et al. Virtual cell challenge: toward a Turing test for the virtual cell. Cell, 188, 2025.</li>
+    <li>Romain Lopez, Natasa Tagasovska, Stephen Ra, et al. Learning causal representations of single cells via sparse mechanism shift modeling. Conference on Causal Learning and Reasoning (PMLR 213), 2023.</li>
+    <li>Jiaqi Zhang, Louis Cammarata, Chandler Squires, Themistoklis P. Sapsis, and Caroline Uhler. Active learning for optimal intervention design in causal models. Nature Machine Intelligence, 5(10):1066-1075, 2023.</li>
+    <li>Abhinav K. Adduri, Dhruv Gautam, Beatrice Bevilacqua, et al. Predicting cellular responses to perturbation across diverse contexts with State. bioRxiv, 2025.</li>
+  </ol></section>
+
+  <nav class="art-nav">
+    <a href="behavior.html"><div class="dir">Previous</div><div class="t">Coupled to Time</div></a>
+    <a class="next" href="../index.html#research"><div class="dir">Next</div><div class="t">Research overview</div></a>
+  </nav>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="foot-lead">
+      <div class="foot-name">Luiz Takahashi</div>
+      <div class="foot-desc">Computational biology, identifiability, trustworthy inference. Washington State University.</div>
+    </div>
+    <div class="foot-links">
+      <a href="mailto:l.takahashidosreis@wsu.edu">l.takahashidosreis@wsu.edu</a>
+      <a href="https://github.com/LTTakahashi" rel="noopener">github.com/LTTakahashi</a>
+      <a href="../index.html">Home</a>
+    </div>
+  </div>
+</footer>
+<script src="../assets/app.js" defer></script>
+</body>
+</html>
