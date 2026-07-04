@@ -1,0 +1,14 @@
+# Private source documents (never commit or publish)
+/Phd Application plan.pdf
+/Takahashi_PhD_Research_Proposal-2.pdf
+/Takahashi_PhD_Research_Proposal-3.pdf
+/Coupled to Time, Stuck in Space.docx
+/main.pdf
+/manuscript-2.pdf
+
+# Windows Zone.Identifier metadata
+*Zone.Identifier
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db

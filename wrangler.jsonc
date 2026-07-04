@@ -2,6 +2,8 @@
   "name": "the-appearing",
   "compatibility_date": "2025-12-18",
   "assets": {
-    "directory": "./"
+    // Serve ONLY the built site. Keeps private files in the repo root
+    // (application plan, full proposal, source docs) out of the public deploy.
+    "directory": "./site"
   }
 }

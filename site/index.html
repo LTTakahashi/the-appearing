@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Identifiability &amp; Trustworthy Computational Biology · Luiz Takahashi</title>
+<meta name="description" content="A research program on identifiability in computational biology: deciding when a prediction reflects genuine biology and when it reflects a confound, and stating the boundary where the two cannot be separated. Deep write-ups of three studies in single-cell genomics, proteomics, and behavioral sensing.">
+<meta name="author" content="Luiz Takahashi">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Trustworthy Computational Biology · a research program">
+<meta property="og:description" content="When can we trust what a model says about a cell? Separating genuine signal from confound, and stating the boundary where inference breaks.">
+<meta property="og:image" content="assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Trustworthy Computational Biology · a research program">
+<meta name="twitter:description" content="Identifiability beneath the virtual cell. Separating signal from confound.">
+<meta name="twitter:image" content="assets/og.png">
+
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('theme');
+      if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+    document.documentElement.classList.add('js');
+  })();
+</script>
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23101317'/><line x1='6' y1='16' x2='26' y2='16' stroke='%238b8f96' stroke-width='1.5' stroke-dasharray='2 2'/><circle cx='11' cy='21' r='3.5' fill='%233987e5'/><circle cx='21' cy='11' r='3.5' fill='%23e66767'/></svg>">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<!-- ===================== NAV ===================== -->
+<nav class="nav" id="nav">
+  <div class="wrap">
+    <a href="#top" class="brand">
+      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+        <rect width="32" height="32" rx="7" fill="#101317"/>
+        <line x1="6" y1="16" x2="26" y2="16" stroke="#8b8f96" stroke-width="1.5" stroke-dasharray="2 2"/>
+        <circle cx="11" cy="21" r="3.5" fill="#3987e5"/>
+        <circle cx="21" cy="11" r="3.5" fill="#e66767"/>
+      </svg>
+      Luiz&nbsp;Takahashi
+    </a>
+    <div class="nav-links">
+      <a href="#through-line">The idea</a>
+      <a href="#research">Research</a>
+      <a href="#program">Program</a>
+      <a href="#methods">Methods</a>
+    </div>
+    <div class="nav-tools">
+      <button class="icon-btn" id="themeToggle" aria-label="Toggle color theme" title="Toggle theme">
+        <svg class="theme-icon-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/></svg>
+        <svg class="theme-icon-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.6 6.6 0 0 0 9.8 9.8z"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<span id="top"></span>
+
+<!-- ===================== TABLE-OF-CONTENTS RAIL (wide screens) ===================== -->
+<nav class="toc" id="toc" aria-label="On this page">
+  <span class="toc-title">On this page</span>
+  <a href="#through-line" data-spy="through-line">The idea</a>
+  <a href="#research" data-spy="research">Research</a>
+  <a href="#nullstate"  data-spy="nullstate" class="toc-sub">NullState</a>
+  <a href="#multiview"  data-spy="multiview" class="toc-sub">Multi-view</a>
+  <a href="#behavior"   data-spy="behavior"  class="toc-sub">Behavior</a>
+  <a href="#program" data-spy="program">Program</a>
+  <a href="#methods" data-spy="methods">Methods</a>
+</nav>
+
+<!-- ===================== HERO ===================== -->
+<header class="hero section--plain">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div class="hero-text reveal">
+        <p class="eyebrow">A research program in computational biology</p>
+        <h1>When can we trust what a model says about a <span class="accent-word">cell</span>?</h1>
+        <p class="hero-sub">This is the question underneath the virtual cell. A prediction about how a cell will respond to a perturbation is only as good as our ability to tell genuine biology from confounding, and in high&#8209;dimensional data, batch effects, selection, and gaps in the reference routinely manufacture structure that looks real. This work builds the identifiability layer that decides when a measurement can be believed, and states the boundary where it cannot.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#research">Explore the research
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+          </a>
+          <a class="btn" href="#through-line">The idea behind it</a>
+        </div>
+        <p class="byline">Research by <b>Luiz Takahashi</b>.</p>
+      </div>
+
+      <figure class="hero-visual reveal">
+        <div class="dotgrid" aria-hidden="true"></div>
+        <div class="viz-title">Per-cell score space</div>
+        <div class="viz-sub">1.77M organoid cells, scored for signal vs. confound</div>
+        <svg id="scoreSpace" viewBox="0 0 440 300" role="img" aria-label="Scatter of per-cell mapping scores: on-manifold cells in blue, off-manifold confound compartment in red, split by two calibrated thresholds."></svg>
+        <div class="legend">
+          <span><i style="background:var(--signal)"></i> on-manifold</span>
+          <span><i style="background:var(--confound)"></i> off-manifold</span>
+        </div>
+        <figcaption class="viz-caption">Every cell gets two calibrated scores. A boundary (&tau;) separates cells that map to real biology from a large off&#8209;manifold compartment. Every study on this page lives at a boundary like this one: deciding which side of it a result truly falls on.</figcaption>
+      </figure>
+    </div>
+  </div>
+</header>
+
+<!-- ===================== THROUGH-LINE ===================== -->
+<section class="section" id="through-line">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="idx">01</span>
+      <div>
+        <p class="eyebrow">The idea</p>
+        <h2>One question, three fields</h2>
+      </div>
+    </div>
+    <div class="prose">
+      <p class="lead">When is a measurement telling you about the world, and when is it telling you about your instrument?</p>
+      <p>That question is <em>identifiability</em>, and it is the connective tissue of this work. In high&#8209;dimensional biology the danger is rarely too little signal. It is that the wrong thing looks exactly like signal: a batch effect, a selection bias, or a gap in a reference atlas can produce structure that passes every eye test and every standard metric, and a model that learns it will confidently propose the wrong answer.</p>
+      <p>Each study here follows the same discipline. First, separate the genuine biological signal from the confound that imitates it. Second, and this is the step most work skips, state the exact boundary where the two become impossible to separate, so a result is never trusted past the point the data can support. The aim is not a result. It is a result that carries, with it, the conditions under which it can be believed.</p>
+    </div>
+
+    <blockquote class="pullquote">
+      A model that confidently proposes the wrong target is worse than no model.
+      <cite>from the research statement</cite>
+    </blockquote>
+
+    <div class="triptych">
+      <div class="tcard reveal">
+        <div class="dot" style="background:var(--signal)"></div>
+        <h4>In organoids</h4>
+        <p>Thirty&#8209;eight percent of an organoid atlas maps as off&#8209;manifold. Rather than discard it, this work shows it is structured biology, a reference gap layered over a culture&#8209;stress program, and marks the precise point where a clean lineage axis stops being recoverable at all.</p>
+        <span class="sig">separate the signal, then name the boundary</span>
+      </div>
+      <div class="tcard reveal">
+        <div class="dot" style="background:var(--violet)"></div>
+        <h4>In proteomics</h4>
+        <p>An apparent interaction between how different organs age shows up in all eighteen disease outcomes tested, then disappears once you account for which cohort each sample came from. The theory says why: the signal was assay&#8209;batch structure leaking across views.</p>
+        <span class="sig">prove the leak, refuse the artifact</span>
+      </div>
+      <div class="tcard reveal">
+        <div class="dot" style="background:var(--aqua)"></div>
+        <h4>In behavior</h4>
+        <p>Two features of daily life that look like one measurement. This work pulls them apart, daily routine versus how far a person ranges, and finds that in mild cognitive impairment the clock stays tight while the lived&#8209;in world quietly contracts.</p>
+        <span class="sig">dissociate, then reinterpret</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== RESEARCH (deep chapters) ===================== -->
+<section class="section" id="research">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="idx">02</span>
+      <div>
+        <p class="eyebrow">Research</p>
+        <h2>Three studies, one discipline</h2>
+      </div>
+    </div>
+    <p class="prose" style="margin-bottom:1rem;">Different data (single&#8209;cell genomics, plasma proteomics, in&#8209;home behavioral sensing) and one method throughout: certify what can be trusted, and name precisely what cannot. Each study is written to be read in full.</p>
+  </div>
+
+  <div class="wrap">
+
+    <!-- R1 NullState -->
+    <article class="chapter reveal" id="nullstate">
+      <div class="chapter-head">
+        <p class="kicker"><span class="pill">R1</span> Single&#8209;cell genomics</p>
+        <h3>NullState: quantifying the off&#8209;target compartment of human neural organoids</h3>
+        <p class="collab">Sole&#8209;author study.</p>
+        <p class="chapter-lead">Brain organoids reliably grow cells that correspond to no real developmental state. This work turns that off&#8209;target compartment from a known nuisance into a measured, decomposed, atlas&#8209;anchored object, and states where the measurement itself runs out.</p>
+      </div>
+
+      <div class="chapter-body">
+        <div class="sub">
+          <span class="sub-k">The problem</span>
+          <p>Human neural organoids have become a central model of brain development, yet they also produce cells that match no genuine in&#8209;vivo neural state: non&#8209;neural lineages from incomplete germ&#8209;layer restriction, and aberrant states driven by the culture environment itself. The field lacked a principled way to answer three questions at once. Which organoid cells are off&#8209;target? Why are they off&#8209;target? And is that compartment merely noise, or does it carry reproducible biological structure? Reference&#8209;based mapping offers the natural substrate: project organoid cells onto a comprehensive fetal atlas, and cells that map confidently to a real identity can be separated from those that do not.</p>
+        </div>
+
+        <div class="sub">
+          <span class="sub-k">The approach</span>
+          <p>NullState harmonizes two first&#8209;trimester human references into a single 2,615,898&#8209;cell atlas spanning neural and non&#8209;neural origins, then maps the 1,767,346&#8209;cell Human Neural Organoid Atlas onto it by variational reference surgery: an scVI model trained for 400 epochs, refined with scANVI, and projected with scArches. Every organoid cell receives two calibrated scores, an off&#8209;manifold reconstruction distance and a label&#8209;assignment entropy, and two thresholds fit on held&#8209;out reference cells sort each cell into a six&#8209;state taxonomy. Donor&#8209;level integration lifts cross&#8209;batch mixing (iLISI 6.10 to 8.10) while preserving biological structure (cLISI 1.31 to 1.44).</p>
+        </div>
+
+        <div class="sub">
+          <span class="sub-k">What it found</span>
+          <p>The dominant compartment is not an artifact. Across the atlas, 38.4% of cells fall into a large, largely neural off&#8209;manifold state, and four independent diagnostics converge on real biology: these cells lose neural&#8209;progenitor identity while gaining hypoxia and unfolded&#8209;protein&#8209;response stress signatures; their burden rises steadily with organoid age and metabolic load; it spans 0.4% to 96.8% across differentiation protocols in a way that tracks how far each protocol sits from an early&#8209;cortex reference; and the cells concentrate into coherent transcriptomic territory rather than scattering. A direct test against an independent prenatal cortex atlas isolates a genuine in&#8209;vitro&#8209;divergence component over and above the reference gap.</p>
+          <ul class="findings">
+            <li><b>38.4%</b> of cells are off&#8209;manifold, decomposed into a reference&#8209;coverage gap plus a pervasive in&#8209;vitro stress program (hypoxia, unfolded&#8209;protein response, glycolysis) rather than a mapping error.</li>
+            <li class="neg">A <b>characterized negative result.</b> A shared&#8209;latent model provably cannot separate lineage from culture state here: an origin&#8209;decoding adversary recovers organoid&#8209;versus&#8209;primary identity from the supposedly stripped latent at <span class="stat-inline">0.998</span> balanced accuracy, and stays there when latent capacity is tripled or a batch covariate is added.</li>
+            <li>Where per&#8209;cell disentanglement is impossible, relative geometry survives. Sliced&#8209;Wasserstein distances cancel a shared source offset, and their rank order recovers the primary lineage structure (distance&#8209;matrix correlation <span class="stat-inline">0.90</span>) across four well&#8209;powered non&#8209;neural lineages that clear a matched noise floor by 14 to 105 times.</li>
+          </ul>
+        </div>
+
+        <figure class="viz reveal">
+          <div class="viz-title">The negative that has teeth</div>
+          <div class="viz-sub">origin&#8209;decoding adversary, balanced accuracy</div>
+          <svg viewBox="0 0 440 262" role="img" aria-label="Bar chart: adversary balanced accuracy is 0.998, 0.999, 0.998 across three interventions, far above the 0.6 pass threshold and 0.5 ideal.">
+            <g style="stroke:var(--line);stroke-width:1">
+              <line x1="72" y1="30"  x2="424" y2="30"/>
+              <line x1="72" y1="102" x2="424" y2="102"/>
+            </g>
+            <rect x="72" y="174" width="352" height="36" style="fill:var(--good);opacity:.10"/>
+            <line x1="72" y1="174" x2="424" y2="174" style="stroke:var(--good);stroke-width:1.4;stroke-dasharray:5 4"/>
+            <line x1="72" y1="210" x2="424" y2="210" style="stroke:var(--line-2);stroke-width:1.6"/>
+            <g style="fill:var(--muted);font-family:var(--font-mono);font-size:11px" text-anchor="end">
+              <text x="62" y="34">1.0</text><text x="62" y="106">0.8</text>
+              <text x="62" y="178">0.6</text><text x="62" y="214">0.5</text>
+            </g>
+            <g style="fill:var(--confound)">
+              <rect x="117" y="31"  width="66" height="179" rx="4"/>
+              <rect x="217" y="30"  width="66" height="180" rx="4"/>
+              <rect x="317" y="31"  width="66" height="179" rx="4"/>
+            </g>
+            <g style="fill:var(--ink);font-family:var(--font-mono);font-size:12px;font-weight:600" text-anchor="middle">
+              <text x="150" y="24">0.998</text><text x="250" y="24">0.999</text><text x="350" y="24">0.998</text>
+            </g>
+            <text x="418" y="170" text-anchor="end" style="fill:var(--good);font-family:var(--font-mono);font-size:10px">pass &lt; 0.6</text>
+            <text x="418" y="224" text-anchor="end" style="fill:var(--muted);font-family:var(--font-mono);font-size:10px">ideal 0.5 (source unrecoverable)</text>
+            <g style="fill:var(--ink-2);font-family:var(--font-mono);font-size:10.5px" text-anchor="middle">
+              <text x="150" y="242">baseline</text><text x="150" y="255" style="fill:var(--muted)">z=10</text>
+              <text x="250" y="242">+capacity</text><text x="250" y="255" style="fill:var(--muted)">z=30</text>
+              <text x="350" y="242">+batch</text><text x="350" y="255" style="fill:var(--muted)">decoder</text>
+            </g>
+          </svg>
+          <figcaption class="viz-caption">Three ways to strip the culture signal out of the latent; all fail identically. Source is fully decodable from the supposedly clean latent, so a shared&#8209;latent lineage axis is <em>undefined</em> in this regime. The contribution is stating that boundary, not hiding it.</figcaption>
+        </figure>
+
+        <div class="sub">
+          <span class="sub-k">What it establishes</span>
+          <p>The off&#8209;target problem becomes a quantitative, atlas&#8209;anchored measurement with two calibrated readouts and a clean decomposition. Just as important, the work names an identifiability boundary: in a regime where two domains occupy near&#8209;disjoint manifolds, shared&#8209;latent calibration without anchoring is not merely hard, it is undefined, and only encoder&#8209;side or distributional methods can cross it. That boundary is offered as a contribution, not buried as a failed experiment.</p>
+        </div>
+
+        <div class="limits">
+          <b>Where it stops.</b> Off&#8209;manifold status conflates a reference&#8209;coverage gap with genuine aberrance, so absolute off&#8209;target rates are reference&#8209;dependent and are read comparatively, never as fidelity scores. The recovered lineage geometry is validated at the level of rank order, not as a clean per&#8209;pair distance: a direct test shows the shared offset is not constant across lineages (mutual cosine 0.15), so individual distances stay confounded until per&#8209;lineage offset removal or a matched&#8209;primary embedding is added. The well&#8209;powered geometry is on non&#8209;neural populations; neural off&#8209;target geometry awaits a reference that closes the coverage gap.
+        </div>
+
+        <details class="deeper reveal">
+          <summary>Figures from the manuscript</summary>
+          <div class="deeper-body">
+            <figure class="figblock">
+              <div class="matte"><img loading="lazy" src="assets/figures/fig-ns-landscape.png" alt="NullState Figure 2: six-state off-target classification, per-cell score space, reference harmonization, and feasibility gates."></div>
+              <figcaption>The six&#8209;state landscape and per&#8209;cell score space. The off&#8209;manifold state dominates at 38.4%, and donor&#8209;batch integration improves mixing while preserving biology. <span class="figref">Figure 2.</span></figcaption>
+            </figure>
+            <figure class="figblock">
+              <div class="matte"><img loading="lazy" src="assets/figures/fig-ns-negative.png" alt="NullState Figure 4: an origin-decoding adversary recovers source at 0.998 across interventions; training converges; a schematic of why disentanglement fails."></div>
+              <figcaption>Why lineage cannot be disentangled from culture state in a shared latent. Source is recovered at 0.998 across every intervention, and training converges normally, so the failure is structural. <span class="figref">Figure 4.</span></figcaption>
+            </figure>
+            <figure class="figblock">
+              <div class="matte"><img loading="lazy" src="assets/figures/fig-ns-geometry.png" alt="NullState Figure 5: pairwise sliced-Wasserstein distances clear a noise floor and their rank recovers primary lineage order."></div>
+              <figcaption>Off&#8209;target geometry. Pairwise distances clear a matched noise floor and their rank order recovers the primary lineage structure, while the individual distances remain confounded by lineage&#8209;dependent offsets. <span class="figref">Figure 5.</span></figcaption>
+            </figure>
+          </div>
+        </details>
+
+        <div class="tags">
+          <span class="tag">variational reference mapping</span>
+          <span class="tag">scVI / scANVI / scArches</span>
+          <span class="tag">sliced&#8209;Wasserstein optimal transport</span>
+          <span class="tag">adversarial confound decoding</span>
+          <span class="tag">matched&#8209;null calibration</span>
+        </div>
+        <div class="chapter-links">
+          <a href="papers/nullstate.pdf" rel="noopener" class="pdf-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+            Read the full manuscript (PDF)
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <!-- R2 Multi-view -->
+    <article class="chapter reveal" id="multiview">
+      <div class="chapter-head">
+        <p class="kicker"><span class="pill">R2</span> Methods and proteomics</p>
+        <h3>A completeness hierarchy for multi&#8209;view interaction detection</h3>
+        <p class="collab">with Junhao Wen, Columbia University and the New York Genome Center.</p>
+        <p class="chapter-lead">When several partial measurements describe the same person, do the interactions between them carry information the individual measurements miss? This work gives the theory that answers <em>when</em>, and a large&#8209;scale demonstration of how the question goes wrong.</p>
+      </div>
+
+      <div class="chapter-body">
+        <div class="sub">
+          <span class="sub-k">The problem</span>
+          <p>Organ&#8209;specific biological age gaps, derived from plasma proteomics, estimate how old each organ looks relative to a person&rsquo;s actual age. As multi&#8209;organ panels arrive, a natural question follows: beyond how each organ ages, does the joint pattern across organs, the interaction, predict disease? This is an instance of a general multi&#8209;view problem, and the field leans on heuristics, most commonly view disagreement, without a rigorous account of what each heuristic can and cannot detect. The danger is that the datasets where the question is now asked, large consortia assembled from many cohorts on different assay platforms, have exactly the structure most likely to manufacture a false answer.</p>
+        </div>
+
+        <div class="sub">
+          <span class="sub-k">The approach</span>
+          <p>The work defines an operational hierarchy of multi&#8209;view combinations, from individual&#8209;view predictions and their disagreement, through explicit cross&#8209;view products, to a joint nonparametric estimator, and proves three results about it. It then validates the hierarchy in simulation and applies it to the Global Neurodegeneration Proteomics Consortium: nine validated organ age gaps against eighteen disease outcomes.</p>
+        </div>
+
+        <figure class="figblock reveal">
+          <div class="matte"><img loading="lazy" src="assets/figures/fig-mv-hierarchy.png" alt="The operational hierarchy: organ age gaps feed L1 linear, L1-prime disagreement, L2 pairwise products, and L3 joint nonparametric, with what each can detect."></div>
+          <figcaption>The operational hierarchy. Organ age gaps feed four levels of multi&#8209;view combination; disagreement sits strictly below the linear model and is blind to interactions, while pairwise products capture them up to an order bounded by the sample. <span class="figref">Figure 1.</span></figcaption>
+        </figure>
+
+        <div class="sub">
+          <span class="sub-k">What it found</span>
+          <ul class="findings">
+            <li><b>View disagreement is provably blind to interactions.</b> It is a function of main effects only, and its covariance with any interaction component is exactly zero. This is not a matter of statistical power; the relevant covariance is identically zero.</li>
+            <li>A <b>compression&#8209;and&#8209;order tradeoff</b> bounds the highest interaction order recoverable from a given sample size and number of views, so richer interactions demand more data in a precise, quantified way.</li>
+            <li class="neg">When views share a hidden factor such as an assay batch, interaction signal <b>leaks</b> into the individual&#8209;view predictions at a characterized rate, manufacturing apparent interactions where none exist.</li>
+            <li class="neg">On the consortium data, a naive pooled analysis appears to show that pairwise organ&#8209;aging interactions improve prediction for <b>all eighteen</b> outcomes. Cross&#8209;cohort replication reveals Simpson&rsquo;s paradox: the effect vanishes under cohort adjustment (mean incremental AUC <span class="stat-inline">+0.020 &rarr; &minus;0.0006</span>), and a single&#8209;cohort analysis is null to negative. The apparent effect was entirely between&#8209;cohort batch structure, precisely the leakage regime the third theorem describes.</li>
+          </ul>
+        </div>
+
+        <figure class="viz reveal">
+          <div class="viz-title">Simpson&rsquo;s paradox, in one line</div>
+          <div class="viz-sub">mean incremental AUC from organ&#8209;aging interactions</div>
+          <svg viewBox="0 0 440 262" role="img" aria-label="A slope chart: incremental AUC of +0.020 in a naive pooled analysis collapses to -0.0006 under cohort adjustment, crossing zero.">
+            <polygon points="130,86 330,170 130,170" style="fill:var(--signal);opacity:.10"/>
+            <line x1="60" y1="170" x2="410" y2="170" style="stroke:var(--line-2);stroke-width:1.6"/>
+            <text x="52" y="174" text-anchor="end" style="fill:var(--muted);font-family:var(--font-mono);font-size:11px">0</text>
+            <text x="52" y="90"  text-anchor="end" style="fill:var(--muted);font-family:var(--font-mono);font-size:11px">+.02</text>
+            <line x1="130" y1="86" x2="330" y2="172" style="stroke:var(--ink-2);stroke-width:2.4"/>
+            <circle cx="130" cy="86"  r="7" style="fill:var(--signal)"/>
+            <circle cx="330" cy="172" r="7" style="fill:var(--confound)"/>
+            <text x="130" y="70" text-anchor="middle" style="fill:var(--ink);font-family:var(--font-mono);font-size:13px;font-weight:600">+0.020</text>
+            <text x="356" y="176" style="fill:var(--confound);font-family:var(--font-mono);font-size:13px;font-weight:600">&minus;0.0006</text>
+            <g style="font-family:var(--font-mono);font-size:11px" text-anchor="middle">
+              <text x="130" y="205" style="fill:var(--ink-2)">naive pooled</text>
+              <text x="130" y="219" style="fill:var(--muted)">all 18 outcomes &ldquo;significant&rdquo;</text>
+              <text x="330" y="205" style="fill:var(--ink-2)">cohort&#8209;adjusted</text>
+              <text x="330" y="219" style="fill:var(--muted)">effect gone</text>
+            </g>
+          </svg>
+          <figcaption class="viz-caption">The same interaction effect that looks significant across every outcome disappears once you adjust for which cohort a sample came from. The theorem predicts exactly this regime: apparent structure that is really assay&#8209;batch leakage.</figcaption>
+        </figure>
+
+        <div class="sub">
+          <span class="sub-k">What it establishes</span>
+          <p>Two practical conclusions follow. Interaction detection in harmonized multi&#8209;cohort biomarker data is confounded by assay&#8209;batch structure unless that structure is explicitly controlled. And disagreement&#8209;based analyses, however intuitive, cannot detect interactions at all. The hierarchy gives a map of which summaries answer which questions, and the demonstration shows what it costs to ignore it.</p>
+        </div>
+
+        <div class="tags">
+          <span class="tag">multi&#8209;view learning</span>
+          <span class="tag">interaction analysis</span>
+          <span class="tag">Simpson&rsquo;s paradox</span>
+          <span class="tag">GNPC proteomics</span>
+          <span class="tag">confounding theory</span>
+        </div>
+        <div class="chapter-links">
+          <a href="papers/multiview-interaction-detection.pdf" rel="noopener" class="pdf-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+            Read the full manuscript (PDF)
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <!-- R3 Coupled to Time -->
+    <article class="chapter reveal" id="behavior">
+      <div class="chapter-head">
+        <p class="kicker"><span class="pill">R3</span> Behavioral sensing and cognitive aging</p>
+        <h3>Coupled to Time, Stuck in Space: dissociable behavioral dimensions in MCI and dementia</h3>
+        <p class="collab">with Diane J. Cook and Maureen Schmitter&#8209;Edgecombe, Washington State University.</p>
+        <p class="chapter-lead">Cognitive decline is usually scored by what a person can do in a test. This work asks a different question from continuous in&#8209;home sensing, how a person actually inhabits their world, and finds two dimensions of it where the field assumed one.</p>
+      </div>
+
+      <div class="chapter-body">
+        <div class="sub">
+          <span class="sub-k">The problem</span>
+          <p>Standard assessment treats cognition as an internal capacity, measured when prompted. An older, relational view treats it instead as the fit between a person and their environment. Continuous smart&#8209;home sensing can see that fit directly: not what a person can do in a clinic, but what they actually do at home, day after day. The specific question here is how similarly a person lives their days, and whether that is separable from how widely they move through their space.</p>
+        </div>
+
+        <div class="sub">
+          <span class="sub-k">The approach</span>
+          <p>Thirty&#8209;five community&#8209;dwelling older adults were monitored by passive ambient sensors for four days to twenty&#8209;two months, producing more than two million sensor events. An Unscented Kalman Filter turns raw sensor firings into continuous position, discretized into one&#8209;meter zones. From these trajectories the work computes day&#8209;similarity (how closely one day resembles another), spatial complexity, temporal coupling (being in the same place at the same time across days), and spatial range (distinct zones visited per day), and relates them to working&#8209;memory capacity measured by an in&#8209;home n&#8209;back task.</p>
+        </div>
+
+        <div class="sub">
+          <span class="sub-k">What it found</span>
+          <ul class="findings">
+            <li><b>Two dimensions, not one.</b> Working&#8209;memory capacity is significantly, negatively related to day&#8209;similarity: higher capacity goes with more varied days. It has no significant relationship with spatial complexity. The two behavioral dimensions are largely independent, so routine and spatial richness are separate axes.</li>
+            <li>A <b>time&#8209;and&#8209;space dissociation</b> in mild cognitive impairment: temporal coupling is highest short of dementia (<span class="stat-inline">0.94</span>) while daily spatial range is the lowest of any group (<span class="stat-inline">7.7</span> zones). The clock stays tight even as the lived&#8209;in territory contracts.</li>
+            <li>Individual trajectories across more than a year show the pattern forming: one participant already collapsed into near&#8209;identical days, another varying but slowly routinizing, a plausible early signature of the same process.</li>
+          </ul>
+        </div>
+
+        <div class="viz-pair">
+          <figure class="viz reveal">
+            <div class="viz-title">Coupled to time, stuck in space</div>
+            <div class="viz-sub">across diagnostic groups, MCI highlighted</div>
+            <svg viewBox="0 0 440 250" role="img" aria-label="Two panels: temporal coupling rises with cognitive decline while MCI shows the lowest daily spatial range.">
+              <line x1="222" y1="24" x2="222" y2="196" style="stroke:var(--line);stroke-width:1"/>
+              <text x="34" y="20" style="fill:var(--ink-2);font-family:var(--font-mono);font-size:11px">temporal coupling &uarr;</text>
+              <polyline points="55,137 100,137 150,72 195,56" style="fill:none;stroke:var(--signal);stroke-width:2.2"/>
+              <g>
+                <circle cx="55"  cy="137" r="4.5" style="fill:var(--signal)"/>
+                <circle cx="100" cy="137" r="4.5" style="fill:var(--signal)"/>
+                <circle cx="150" cy="72"  r="6"   style="fill:var(--confound)"/>
+                <circle cx="195" cy="56"  r="4.5" style="fill:var(--signal)"/>
+              </g>
+              <text x="150" y="62" text-anchor="middle" style="fill:var(--confound);font-family:var(--font-mono);font-size:11px;font-weight:600">0.94</text>
+              <g style="fill:var(--muted);font-family:var(--font-mono);font-size:10px" text-anchor="middle">
+                <text x="55"  y="186">HOA</text><text x="100" y="186">SCD</text>
+                <text x="150" y="186">MCI</text><text x="195" y="186">Dem</text>
+              </g>
+              <text x="250" y="20" style="fill:var(--ink-2);font-family:var(--font-mono);font-size:11px">spatial range &darr; (zones/day)</text>
+              <line x1="250" y1="170" x2="415" y2="170" style="stroke:var(--line-2);stroke-width:1.4"/>
+              <g>
+                <rect x="262" y="58"  width="34" height="112" rx="3" style="fill:var(--signal);opacity:.55"/>
+                <rect x="312" y="79"  width="34" height="91"  rx="3" style="fill:var(--confound)"/>
+                <rect x="362" y="54"  width="34" height="116" rx="3" style="fill:var(--signal);opacity:.55"/>
+              </g>
+              <g style="font-family:var(--font-mono);font-size:11px;font-weight:600" text-anchor="middle">
+                <text x="279" y="50" style="fill:var(--ink-2)">9.5</text>
+                <text x="329" y="71" style="fill:var(--confound)">7.7</text>
+                <text x="379" y="46" style="fill:var(--ink-2)">9.8</text>
+              </g>
+              <g style="fill:var(--muted);font-family:var(--font-mono);font-size:10px" text-anchor="middle">
+                <text x="279" y="186">HOA</text><text x="329" y="186">MCI</text><text x="379" y="186">Dem</text>
+              </g>
+            </svg>
+            <figcaption class="viz-caption">MCI holds the tightest clock&#8209;driven routine while ranging over the fewest zones per day, a dissociation that capacity tests, which score the brain in isolation, are blind to.</figcaption>
+          </figure>
+
+          <figure class="viz reveal">
+            <div class="viz-title">Days grow more alike with decline</div>
+            <div class="viz-sub">mean day&#8209;similarity by group (0 to 1)</div>
+            <svg viewBox="0 0 440 250" role="img" aria-label="Bar chart of mean day-similarity rising from HOA 0.82 to dementia 0.91 across diagnostic groups.">
+              <line x1="60" y1="200" x2="415" y2="200" style="stroke:var(--line-2);stroke-width:1.4"/>
+              <g>
+                <rect x="72"  y="150" width="60" height="50"  rx="3" style="fill:var(--signal);opacity:.45"/>
+                <rect x="162" y="130" width="60" height="70"  rx="3" style="fill:var(--signal);opacity:.6"/>
+                <rect x="252" y="90"  width="60" height="110" rx="3" style="fill:var(--signal);opacity:.8"/>
+                <rect x="342" y="60"  width="60" height="140" rx="3" style="fill:var(--signal)"/>
+              </g>
+              <g style="fill:var(--ink);font-family:var(--font-mono);font-size:12px;font-weight:600" text-anchor="middle">
+                <text x="102" y="142">0.82</text><text x="192" y="122">0.84</text>
+                <text x="282" y="82">0.88</text><text x="372" y="52">0.91</text>
+              </g>
+              <g style="fill:var(--muted);font-family:var(--font-mono);font-size:10.5px" text-anchor="middle">
+                <text x="102" y="218">HOA</text><text x="192" y="218">SCD</text>
+                <text x="282" y="218">MCI</text><text x="372" y="218">Dem</text>
+              </g>
+            </svg>
+            <figcaption class="viz-caption">A descriptive gradient toward repeated, near&#8209;identical days. The group difference is not statistically significant given the small cohort; the robust result is the within&#8209;person link between capacity and variety.</figcaption>
+          </figure>
+        </div>
+
+        <div class="sub">
+          <span class="sub-k">What it establishes</span>
+          <p>Routinization and spatial complexity are distinct dimensions of behavioral organization with different relationships to cognitive capacity, which reframes what in&#8209;home monitoring should watch for. If the collapse into routine is itself an early sign, the goal of an intervention is not to preserve routine but to scaffold variety, and for the dissociation seen here, to support spatial exploration while the intact temporal structure carries it.</p>
+        </div>
+
+        <div class="limits">
+          <b>Where it stops.</b> The cohort is modest, especially for dementia, so group comparisons are underpowered and the descriptive gradient in day&#8209;similarity is not statistically significant; the robust result is the individual&#8209;level correlation, which still leaves most of the variance unexplained. A single cognitive measure is used, the study is observational, and behavior reflects more than cognition: mobility, home size, and health all shape spatial range independently. These are named as confounds, not controlled away.
+        </div>
+
+        <div class="tags">
+          <span class="tag">smart&#8209;home sensing</span>
+          <span class="tag">Unscented Kalman Filter</span>
+          <span class="tag">intraindividual variability</span>
+          <span class="tag">longitudinal design</span>
+          <span class="tag">cognitive aging</span>
+        </div>
+        <div class="chapter-links">
+          <span class="muted-link">Manuscript available on request.</span>
+        </div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ===================== RESEARCH PROGRAM ===================== -->
+<section class="section" id="program">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="idx">03</span>
+      <div>
+        <p class="eyebrow">Where it leads</p>
+        <h2>Certifiable cell&#8209;state control</h2>
+      </div>
+    </div>
+    <div class="program-intro prose">
+      <p>The long arc of this work is a <strong>computational design engine for programmable in&#8209;vivo genetic medicine</strong>: a system that selects a cell&#8209;type&#8209;specific target, predicts how a perturbation moves a cell from a diseased toward a healthy state, and helps design the molecule that carries it out. The binding constraint on that engine is not predictive power. It is <strong>trust</strong>. In recent work, independent groups using different metrics reached opposite conclusions about whether current models even beat simple baselines, because they were quietly measuring different, under&#8209;specified quantities. The next stage builds the identifiability&#8209;based certification layer underneath the engine, and advances up a deliberate ladder where each rung earns the next.</p>
+    </div>
+
+    <div class="ladder">
+      <div class="rung reveal" style="--lvl:1">
+        <div class="step">Rung 1, feasible now</div>
+        <h4>Single GPU, public data</h4>
+        <p>Formalize certification, and a first reachability metric.</p>
+        <div class="earns">&rarr; demonstrates capability</div>
+      </div>
+      <div class="rung reveal" style="--lvl:2">
+        <div class="step">Rung 2</div>
+        <h4>Heavy compute, giga&#8209;scale atlases</h4>
+        <p>Certified generalization where scaling alone plateaus.</p>
+        <div class="earns">&rarr; earns the compute</div>
+      </div>
+      <div class="rung reveal" style="--lvl:3">
+        <div class="step">Rung 3</div>
+        <h4>Private, unique data</h4>
+        <p>The experiments and platforms only certain labs can generate.</p>
+        <div class="earns">&rarr; justifies the lab</div>
+      </div>
+    </div>
+
+    <div class="aims">
+      <div class="aim reveal">
+        <div class="aim-top"><span class="n">Aim 1</span></div>
+        <h4>Certification of evaluation</h4>
+        <p>Make certifiability a formal object. State, for each benchmark metric, the assumptions under which a score is evidence that a model captured biology rather than a confound, and ship an open certification layer that operationalizes it.</p>
+        <div class="compute">single GPU, public data</div>
+      </div>
+      <div class="aim aim--key reveal">
+        <div class="aim-top"><span class="n">Aim 2</span><span class="badge">keystone</span></div>
+        <h4>Identifiability&#8209;aware reachability</h4>
+        <p>Define a control distance for diseased&#8209;to&#8209;healthy transitions and attach a recoverability certificate: a statement of when that distance is genuinely present in the data versus manufactured by confounding. This fusion of certification and control is the originating idea.</p>
+        <div class="compute">the keystone</div>
+      </div>
+      <div class="aim reveal">
+        <div class="aim-top"><span class="n">Aim 3</span></div>
+        <h4>Certified generalization</h4>
+        <p>Test whether identifiability priors beat raw scale, judged by a certificate against a matched null rather than a leaderboard number.</p>
+        <div class="compute">heavy compute, giga&#8209;scale atlases</div>
+      </div>
+      <div class="aim reveal">
+        <div class="aim-top"><span class="n">Aim 4</span></div>
+        <h4>Design dictation and the disease bridge</h4>
+        <p>Turn identifiability gaps into the specific experiments, and the specific data, that would close them, applied to disease&#8209;organoid atlases.</p>
+        <div class="compute">private data</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== METHODS ===================== -->
+<section class="section" id="methods">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="idx">04</span>
+      <div>
+        <p class="eyebrow">Methods</p>
+        <h2>The recurring machinery</h2>
+      </div>
+    </div>
+    <p class="prose" style="margin-bottom:2rem;">A compact, transferable toolkit runs through every study: the same moves, pointed at organoids, proteomes, or behavior.</p>
+    <div class="toolkit">
+      <div class="tool reveal"><h4>Variational reference mapping</h4><p>scVI, scANVI, and scArches surgery to co&#8209;embed millions of cells against harmonized reference atlases.</p></div>
+      <div class="tool reveal"><h4>Optimal transport and cancellation</h4><p>Sliced&#8209;Wasserstein distances whose invariance to a shared translation cancels a common confound, recovering relative geometry that per&#8209;cell methods lose.</p></div>
+      <div class="tool reveal"><h4>Adversarial confound decoding</h4><p>Train an adversary to recover the nuisance you tried to remove. If it succeeds, the latent was never clean. A negative result with teeth.</p></div>
+      <div class="tool reveal"><h4>Matched nulls and noise floors</h4><p>Compare every distance against a calibrated null built from the data&rsquo;s own structure. Nothing counts until it clears the floor.</p></div>
+      <div class="tool reveal"><h4>Identifiability and causal representation</h4><p>State the estimand and its identifying assumptions, drawing the line between what is recoverable and what is manufactured.</p></div>
+      <div class="tool reveal"><h4>Rank&#8209;level and distributional readouts</h4><p>When a per&#8209;cell coordinate is undefined, fall back to relative geometry and rank order, which degrade gracefully where point estimates fail.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="footer" id="contact">
+  <div class="wrap">
+    <div class="foot-lead">
+      <div class="foot-name">Luiz Takahashi</div>
+      <div class="foot-desc">Computational biology · identifiability · trustworthy inference. Washington State University.</div>
+    </div>
+    <div class="foot-links">
+      <a href="mailto:l.takahashidosreis@wsu.edu">l.takahashidosreis@wsu.edu</a>
+      <a href="https://github.com/LTTakahashi" rel="noopener">github.com/LTTakahashi</a>
+      <a href="#top">Top &uarr;</a>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/app.js" defer></script>
+</body>
+</html>
