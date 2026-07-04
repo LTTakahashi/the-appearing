@@ -534,6 +534,121 @@ h1, h2, h3, h4 { color: var(--ink); font-weight: 650; line-height: 1.14; letter-
 .footer .foot-links { display: flex; gap: 1.3rem; flex-wrap: wrap; }
 
 /* ======================================================================
+   DEEP-DIVE ARTICLE PAGES
+   ====================================================================== */
+/* reading-progress bar */
+.progress { position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 60; background: transparent; }
+.progress-bar { height: 100%; width: 0; background: var(--signal); }
+
+/* article TOC rail sits in the gutter of the narrower reading column */
+@media (min-width: 1120px) {
+  .article-page .toc { display: flex; left: calc(50vw - 532px); }
+}
+
+.art-header { max-width: 720px; margin: 0 auto; padding-top: clamp(1.6rem, 4vw, 2.8rem); }
+.art-eyebrow { /* reuses .eyebrow look */ }
+.art-title {
+  font-family: var(--font-serif); font-weight: 400;
+  font-size: clamp(1.95rem, 4.6vw, 3.05rem); line-height: 1.08; letter-spacing: -0.02em;
+  color: var(--ink); margin: .7rem 0 0;
+}
+.art-dek { font-size: clamp(1.08rem, 1.9vw, 1.32rem); color: var(--ink-2); line-height: 1.45; margin: 1rem 0 0; max-width: 60ch; }
+.art-meta {
+  margin-top: 1.3rem; display: flex; justify-content: space-between; gap: .8rem 1.2rem; flex-wrap: wrap; align-items: center;
+  font-size: .87rem; color: var(--muted); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: .85rem 0;
+}
+.back-link { font-family: var(--font-mono); font-size: .8rem; display: inline-flex; align-items: center; gap: .4rem; }
+
+/* one-minute TL;DR box */
+.tldr { max-width: 720px; margin: 2rem auto 1rem; border: 1px solid var(--line-2); border-radius: var(--radius); background: var(--surface); padding: 1.3rem 1.5rem; box-shadow: var(--shadow); }
+.tldr-h { font-family: var(--font-mono); font-size: .7rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: .95rem; }
+.tldr ol { margin: 0; padding: 0; list-style: none; display: grid; gap: .65rem; }
+.tldr li { display: grid; grid-template-columns: 96px 1fr; gap: .8rem; font-size: .96rem; color: var(--ink); line-height: 1.45; }
+.tldr li .k { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .04em; color: var(--signal-ink); padding-top: .12rem; }
+@media (max-width: 560px) { .tldr li { grid-template-columns: 1fr; gap: .15rem; } }
+
+/* article body */
+.article { max-width: 720px; margin: 1.5rem auto 0; }
+.art-sec { padding: 1.5rem 0; scroll-margin-top: 80px; }
+.art-sec > h2 { font-size: clamp(1.4rem, 2.9vw, 1.95rem); letter-spacing: -0.015em; margin: 0 0 1.1rem; }
+.art-sec p { color: var(--ink-2); margin: 0 0 1.12em; }
+.art-sec p.art-lead { font-size: 1.12rem; color: var(--ink); line-height: 1.5; }
+.art-sec .findings, .art-sec .limits { max-width: none; }
+
+/* skim aid */
+.takeaway {
+  background: var(--surface-2); border-radius: var(--radius-sm); padding: .75rem 1rem; margin: 1.4rem 0;
+  display: flex; gap: .7rem; align-items: baseline; font-size: .96rem; color: var(--ink); line-height: 1.5;
+}
+.takeaway .tk { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .12em; text-transform: uppercase; color: var(--good); flex: 0 0 auto; padding-top: .12rem; }
+
+/* the thinking callout (centerpiece) */
+.reasoning {
+  margin: 1.7rem 0; border: 1px solid var(--line); border-left: 3px solid var(--signal); border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--signal) 4%, var(--surface)); padding: 1rem 1.2rem;
+}
+.reasoning .r-label { display: block; font-family: var(--font-mono); font-size: .66rem; letter-spacing: .12em; text-transform: uppercase; color: var(--signal-ink); margin-bottom: .5rem; }
+.reasoning p { margin: 0 0 .7em; color: var(--ink); font-size: .97rem; line-height: 1.55; }
+.reasoning p:last-child { margin-bottom: 0; }
+
+/* inline aside note */
+.note { display: block; margin: 1.3rem 0; padding-left: 1.05rem; border-left: 2px solid var(--line-2); color: var(--ink-2); font-size: .9rem; line-height: 1.55; }
+
+/* charts / figures inside articles: static + optional breakout wider than the column */
+.article .viz, .article .figblock { position: static; margin: 0; }
+.art-figure { margin: 1.9rem 0; }
+.art-figure figcaption { font-size: .82rem; color: var(--muted); line-height: 1.5; margin-top: .8rem; }
+@media (min-width: 900px) {
+  .art-figure.breakout { width: min(900px, 100%); margin-left: 50%; transform: translateX(-50%); }
+}
+
+/* references */
+.art-refs { max-width: 720px; margin: 2.6rem auto 0; border-top: 1px solid var(--line); padding-top: 1.6rem; }
+.art-refs h2 { font-size: 1.05rem; margin: 0 0 .9rem; }
+.art-refs ol { margin: 0; padding-left: 1.3rem; color: var(--ink-2); font-size: .84rem; line-height: 1.55; }
+.art-refs li { margin-bottom: .55rem; }
+
+/* prev / next / overview navigation */
+.art-nav { max-width: 720px; margin: 2.4rem auto 0; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; border-top: 1px solid var(--line); padding-top: 1.8rem; }
+.art-nav a { border: 1px solid var(--line); border-radius: var(--radius); padding: 1rem 1.1rem; background: var(--surface); transition: border-color .18s ease, transform .18s ease; }
+.art-nav a:hover { border-color: var(--line-2); text-decoration: none; transform: translateY(-2px); }
+.art-nav .dir { font-family: var(--font-mono); font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.art-nav .t { color: var(--ink); font-weight: 600; margin-top: .35rem; font-size: .93rem; line-height: 1.3; }
+.art-nav .next { text-align: right; }
+@media (max-width: 620px) { .art-nav { grid-template-columns: 1fr; } .art-nav .next { text-align: left; } }
+
+/* study switcher in the nav (current page marker) */
+.nav-links a.current { color: var(--ink); }
+.nav-links a.current::after { content: ""; position: absolute; left: 0; right: 0; bottom: -2px; height: 2px; background: var(--signal); border-radius: 2px; }
+
+/* ======================================================================
+   PORTAL, research overview cards (skim layer on the main page)
+   ====================================================================== */
+.overview { display: grid; gap: 1.2rem; }
+.ov-card {
+  display: grid; grid-template-columns: 1fr 300px; gap: clamp(1.2rem, 3vw, 2.4rem); align-items: center;
+  border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); padding: clamp(1.3rem, 3vw, 1.9rem);
+  transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+.ov-card:hover { border-color: var(--line-2); box-shadow: var(--shadow); }
+.ov-card .kicker { font-family: var(--font-mono); font-size: .74rem; color: var(--muted); letter-spacing: .06em; display: flex; gap: .55rem; align-items: center; flex-wrap: wrap; }
+.ov-card h3 { font-size: clamp(1.2rem, 2.4vw, 1.55rem); letter-spacing: -.015em; margin: .7rem 0 .2rem; line-height: 1.2; }
+.ov-card .ov-collab { font-size: .86rem; color: var(--muted); margin: 0 0 .8rem; }
+.ov-card .ov-q { color: var(--ink); font-size: 1rem; margin: 0 0 .8rem; }
+.ov-card .ov-find { list-style: none; padding: 0; margin: 0 0 1.1rem; display: grid; gap: .5rem; }
+.ov-card .ov-find li { position: relative; padding-left: 1.35rem; font-size: .92rem; color: var(--ink-2); }
+.ov-card .ov-find li::before { content: ""; position: absolute; left: 0; top: .5em; width: 7px; height: 7px; border-radius: 2px; background: var(--signal); }
+.ov-card .ov-find li.neg::before { background: var(--confound); }
+.ov-card .ov-find li b { color: var(--ink); font-variant-numeric: tabular-nums; }
+.ov-read { font-weight: 600; font-size: .93rem; display: inline-flex; align-items: center; gap: .4rem; }
+.ov-read svg { width: 15px; height: 15px; transition: transform .18s ease; }
+.ov-card:hover .ov-read svg { transform: translateX(3px); }
+.ov-mini { border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--bg); padding: .8rem; }
+.ov-mini svg { width: 100%; height: auto; }
+.ov-mini .cap { font-family: var(--font-mono); font-size: .68rem; color: var(--muted); margin-top: .4rem; text-align: center; }
+@media (max-width: 800px) { .ov-card { grid-template-columns: 1fr; } .ov-mini { order: 2; } }
+
+/* ======================================================================
    print
    ====================================================================== */
 @media print {

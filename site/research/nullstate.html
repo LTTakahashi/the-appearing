@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" class="article-page">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NullState · Luiz Takahashi</title>
+<meta name="description" content="A reference-anchored measurement of the off-target cells human neural organoids make, and a mapped-out boundary of what latent models can and cannot separate.">
+<meta name="author" content="Luiz Takahashi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NullState · Luiz Takahashi">
+<meta property="og:description" content="A reference-anchored measurement of the off-target cells human neural organoids make, and a mapped-out boundary of what latent models can and cannot separate.">
+<meta property="og:image" content="../assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="../assets/og.png">
+<script>(function(){try{var t=localStorage.getItem('theme');if(!t)t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t);}catch(e){}document.documentElement.classList.add('js');})();</script>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23101317'/><line x1='6' y1='16' x2='26' y2='16' stroke='%238b8f96' stroke-width='1.5' stroke-dasharray='2 2'/><circle cx='11' cy='21' r='3.5' fill='%233987e5'/><circle cx='21' cy='11' r='3.5' fill='%23e66767'/></svg>">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="progress"><div class="progress-bar"></div></div>
+
+<nav class="nav" id="nav">
+  <div class="wrap">
+    <a href="../index.html" class="brand"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#101317"/><line x1="6" y1="16" x2="26" y2="16" stroke="#8b8f96" stroke-width="1.5" stroke-dasharray="2 2"/><circle cx="11" cy="21" r="3.5" fill="#3987e5"/><circle cx="21" cy="11" r="3.5" fill="#e66767"/></svg> Luiz&nbsp;Takahashi</a>
+    <div class="nav-links">
+      <a href="../index.html#research">Overview</a>
+      <a href="nullstate.html" class="current">NullState</a>
+      <a href="multiview.html">Multi-view interactions</a>
+      <a href="behavior.html">Coupled to Time</a>
+    </div>
+    <div class="nav-tools"><button class="icon-btn" id="themeToggle" aria-label="Toggle color theme" title="Toggle theme"><svg class="theme-icon-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/></svg><svg class="theme-icon-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.6 6.6 0 0 0 9.8 9.8z"/></svg></button></div>
+  </div>
+</nav>
+
+<nav class="toc" id="toc" aria-label="On this page">
+  <span class="toc-title">On this page</span>
+      <a href="#question" data-spy="question">The question</a>
+      <a href="#setup" data-spy="setup">The setup</a>
+      <a href="#landscape" data-spy="landscape">What the map showed</a>
+      <a href="#negative" data-spy="negative">The wall</a>
+      <a href="#geometry" data-spy="geometry">The salvage</a>
+      <a href="#limits" data-spy="limits">Where it stops</a>
+      <a href="#opens" data-spy="opens">What it opens</a>
+</nav>
+
+<main class="wrap">
+  <header class="art-header">
+    <p class="eyebrow">Single-cell genomics</p>
+    <h1 class="art-title">NullState: quantifying the off-target compartment of human neural organoids</h1>
+    <p class="art-dek">A reference-anchored measurement of the off-target cells human neural organoids make, and a mapped-out boundary of what latent models can and cannot separate.</p>
+    <div class="art-meta">
+      <span>Sole-author study.</span>
+      <a href="../index.html#research" class="back-link">&larr; All research</a>
+    </div>
+  </header>
+
+  <div class="tldr">
+    <div class="tldr-h">In one minute</div>
+    <ol>
+      <li><span class="k">Question</span><span>Organoids reliably make cells that match no real developmental state, but the field had no principled, atlas-anchored way to quantify that off-target compartment or ask if it has structure.</span></li>
+      <li><span class="k">Approach</span><span>Map 1.77M organoid cells onto a harmonized 2.62M-cell fetal reference, give each cell calibrated off-manifold and entropy scores, and probe the compartment with orthogonal diagnostics.</span></li>
+      <li><span class="k">Result</span><span>38.4% of cells are off-manifold, a structured mixture of reference gap and in-vitro stress; lineage provably cannot be split from dish-state in a shared latent, but off-target geometry still recovers lineage rank order.</span></li>
+      <li><span class="k">Why it matters</span><span>It converts a vague quality concern into a calibrated comparative measurement, and names a concrete identifiability boundary for when latent calibration without anchoring is possible at all.</span></li>
+    </ol>
+  </div>
+
+  <article class="article">
+    <section id="question" class="art-sec"><h2>The question</h2>
+<p class="art-lead">Human neural organoids reliably produce cells that correspond to no real in-vivo neural state: non-neural lineages from incomplete germ-layer restriction, and aberrant states driven by the culture environment itself. This is a known embarrassment for the model. What has been missing is a principled way to measure it.</p>
+<p>Everyone in the field can name the problem. A landmark result showed that metabolic and endoplasmic-reticulum stress in organoids impairs the specification of correct molecular subtypes, and cross-protocol comparisons against fetal tissue keep surfacing protocol-dependent off-target routes. But naming is not measuring. There was no atlas-anchored way to decide which organoid cells are off-target, to explain <em>why</em> they are off-target, and to ask whether that compartment is noise or carries reproducible structure.</p>
+<p>The recent Human Neural Organoid Atlas (HNOCA), over 1.7 million cells across dozens of protocols, makes the measurement possible for the first time, because it puts the whole organoid landscape on one coordinate system. The move here is to anchor that landscape to a common developmental ground truth and read off-target status as distance from it.</p>
+<aside class="reasoning"><span class="r-label">The decision</span><p>Why reference-based mapping rather than an unsupervised organoid-only analysis? Because "off-target" is only meaningful relative to a target. An organoid-intrinsic clustering can tell you cells are weird; it cannot tell you they are weird <em>with respect to real human development</em>. Projecting onto a comprehensive fetal atlas makes the null explicit: cells that map confidently to a fetal identity are on-target, cells that do not are the object of study.</p></aside>
+<p class="takeaway"><span class="tk">Takeaway</span> The contribution is to turn a vague quality concern into a calibrated, comparative measurement against a fixed developmental reference.</p>
+</section>
+
+<section id="setup" class="art-sec"><h2>The setup</h2>
+<p>The reference had to span both fates an organoid can miss: neural and non-neural. So two recently completed human atlases were harmonized into one, a first-trimester human brain cell atlas (HDBCA) as the neural core plus the non-neural compartments of a fetal-body atlas, retrieved as raw UMI counts from the CELLxGENE Census. The merged reference is <span class="stat-inline">2,615,898</span> cells by 61,497 genes, with 32 of 33 lineage origins resolved. The organoid query is the full <span class="stat-inline">1,767,346</span>-cell HNOCA.</p>
+<p>Mapping used variational reference surgery: an scVI model trained on the reference (400 epochs, ELBO 695.6), refined to a label-aware scANVI (ELBO 736.1), with the query projected on by scArches architectural surgery (query-surgery ELBO 920.2). Each organoid cell then gets two calibrated scores, an off-manifold reconstruction distance and a label-assignment entropy, that jointly define a six-state off-target taxonomy.</p>
+<aside class="reasoning"><span class="r-label">The worry</span><p>At atlas scale the negative-binomial encoder is fragile. Two stabilizers turned out to be load-bearing, and they are worth stating because skipping either makes the encoder diverge to NaN: dropping 9,229 non-UMI full-length read-count cells whose library sizes destabilize the count model, and filtering to cells with at least 50 counts across highly variable genes (1,767,346 down to 1,689,762, 4.4% removed). These are not cosmetic preprocessing; they are the difference between a model and a crash.</p></aside>
+<p>Two thresholds, a label-entropy cutoff <span class="stat-inline">0.96</span> and an off-manifold cutoff <span class="stat-inline">1.93</span>, were calibrated on held-out reference cells (the off-manifold nearest-neighbor fit excludes the held-out set, to avoid self-neighbor deflation of the distance). Donor-level batch integration raised cross-batch mixing while preserving biology: integration LISI rose from 6.10 to 8.10, with only a modest change in cell-type LISI (1.31 to 1.44).</p>
+<div class="art-figure breakout"><figure class="figblock"><div class="matte"><img loading="lazy" src="../assets/figures/fig-ns-landscape.png" alt="NullState Figure 2: six-state classification, per-cell score space, integration LISI, and feasibility gates."></div><figcaption>The six-state landscape and per-cell score space. The off-manifold state dominates at 38.4%, and donor-batch integration improves mixing while preserving biology. <span class="figref">Figure 2.</span></figcaption></figure></div>
+<p>Three feasibility gates confirmed the measurement is well-posed before any biology was read from it: the taxonomy is internally consistent (Gate A), an in-vitro "dish vector" computed on clean on-target cells is highly self-consistent (Gate B, mean cosine <span class="stat-inline">0.855</span>, above the 0.70 bar, justifying a single shared in-vitro axis), and the true off-target compartment is large enough for downstream geometry (Gate C, 93,795 cells).</p>
+<p class="takeaway"><span class="tk">Takeaway</span> Before interpreting anything, the pipeline checks that the measurement is calibrated, biology-preserving, and adequately powered.</p>
+</section>
+
+<section id="landscape" class="art-sec"><h2>What the map showed</h2>
+<p class="art-lead">The partition is dominated by a single compartment. An ambiguous-novel (off-manifold) state holds <span class="stat-inline">38.4%</span> of cells (677,783), ahead of clean on-target (26.0%), poorly differentiated on-target (15.9%), ambiguous (9.5%), true off-target (5.3%), and QC-dropped (4.9%). A compartment that large forces the central question: artifact, or biology?</p>
+<aside class="reasoning"><span class="r-label">The test</span><p>A 38% off-manifold fraction is exactly the number a skeptic would attribute to projection failure. So rather than defend it with one argument, four orthogonal diagnostics were run on the neural subset, chosen so that a projection artifact would have to fail all four at once to be mistaken for biology.</p></aside>
+<p><b>Identity and stress.</b> Off-manifold neural cells lose neural-progenitor identity (NPC score 1.11 to 0.61) while gaining canonical culture-stress signatures: hypoxia (0.60 to 0.96) and the unfolded-protein/ER-stress response (0.12 to 0.56, a roughly five-fold rise), with an independent glycolysis hallmark elevated in step (0.46 to 0.65). This is the culture-stress signature reported by Bhaduri et al. (2020), now resolved at atlas scale and tied directly to off-manifold status.</p>
+<div class="art-figure breakout"><figure class="viz">
+  <div class="viz-title">Identity lost, stress gained</div>
+  <div class="viz-sub">gene-set scores, clean on-target vs off-manifold</div>
+  <svg viewBox="0 0 440 262" role="img" aria-label="Grouped bars: off-manifold cells lose neural-progenitor identity (1.11 to 0.61) and gain hypoxia (0.60 to 0.96), unfolded-protein response (0.12 to 0.56), and glycolysis (0.46 to 0.65).">
+    <g style="stroke:var(--line);stroke-width:1"><line x1="60" y1="60" x2="424" y2="60"/><line x1="60" y1="135" x2="424" y2="135"/></g>
+    <line x1="60" y1="210" x2="424" y2="210" style="stroke:var(--line-2);stroke-width:1.4"/>
+    <g style="fill:var(--muted);font-family:var(--font-mono);font-size:11px" text-anchor="end"><text x="52" y="64">1.0</text><text x="52" y="139">0.5</text><text x="52" y="214">0</text></g>
+    <g>
+      <rect x="83"  y="43"  width="20" height="167" rx="3" style="fill:var(--signal)"/><rect x="105" y="118" width="20" height="92"  rx="3" style="fill:var(--confound)"/>
+      <rect x="168" y="120" width="20" height="90"  rx="3" style="fill:var(--signal)"/><rect x="190" y="66"  width="20" height="144" rx="3" style="fill:var(--confound)"/>
+      <rect x="253" y="192" width="20" height="18"  rx="3" style="fill:var(--signal)"/><rect x="275" y="126" width="20" height="84"  rx="3" style="fill:var(--confound)"/>
+      <rect x="338" y="141" width="20" height="69"  rx="3" style="fill:var(--signal)"/><rect x="360" y="112" width="20" height="98"  rx="3" style="fill:var(--confound)"/>
+    </g>
+    <g style="fill:var(--ink-2);font-family:var(--font-mono);font-size:10px" text-anchor="middle"><text x="104" y="226">NPC</text><text x="189" y="226">hypoxia</text><text x="274" y="226">UPR</text><text x="359" y="226">glycolysis</text></g>
+  </svg>
+  <div class="legend"><span><i style="background:var(--signal)"></i> clean on-target</span><span><i style="background:var(--confound)"></i> off-manifold</span></div>
+  <figcaption class="viz-caption">Off-manifold cells lose neural-progenitor identity and gain a coherent culture-stress signature (hypoxia, unfolded-protein response, glycolysis). This is what marks the compartment as structured biology rather than a mapping artifact.</figcaption>
+</figure></div>
+<p><b>Maturation and load.</b> The off-manifold fraction rises monotonically with a per-cell complexity proxy (detected genes, quintile fractions 0.13 to 0.78) and is highest in the oldest organoids. Off-target burden accrues with culture time and metabolic demand, which is what a stress mechanism predicts and random misassignment does not.</p>
+<p><b>Protocol dependence.</b> Across 26 differentiation protocols the ambiguous-novel fraction spans nearly the whole range, <span class="stat-inline">0.4%</span> to <span class="stat-inline">96.8%</span>, roughly 240-fold. Guided cortical protocols sit low; regionally divergent or barrier-forming ones (choroid plexus at 96.8%, midbrain-dopaminergic and thalamic at 85 to 90%) sit high. That gradient is a clue, not a verdict: a first-trimester, cortex-rich reference under-represents later and non-cortical neural states, which then read as off-manifold. Part of the signal is a coverage gap, not aberrance.</p>
+<div class="art-figure breakout"><figure class="viz">
+  <div class="viz-title">How far from early cortex?</div>
+  <div class="viz-sub">off-manifold burden across 26 differentiation protocols</div>
+  <svg viewBox="0 0 440 150" role="img" aria-label="A horizontal scale from 0 to 100 percent of off-manifold burden; guided cortical protocols sit near 0.4 percent while choroid-plexus organoids reach 96.8 percent.">
+    <rect x="61" y="72" width="338" height="8" rx="4" style="fill:var(--signal);opacity:.14"/>
+    <line x1="60" y1="95" x2="410" y2="95" style="stroke:var(--line-2);stroke-width:1.4"/>
+    <g style="stroke:var(--line);stroke-width:1"><line x1="60" y1="90" x2="60" y2="100"/><line x1="147.5" y1="90" x2="147.5" y2="100"/><line x1="235" y1="90" x2="235" y2="100"/><line x1="322.5" y1="90" x2="322.5" y2="100"/><line x1="410" y1="90" x2="410" y2="100"/></g>
+    <g style="fill:var(--muted);font-family:var(--font-mono);font-size:10px" text-anchor="middle"><text x="60" y="115">0%</text><text x="147" y="115">25</text><text x="235" y="115">50</text><text x="322" y="115">75</text><text x="410" y="115">100</text></g>
+    <circle cx="61" cy="76" r="5" style="fill:var(--signal)"/><circle cx="95" cy="76" r="4" style="fill:var(--signal);opacity:.7"/><circle cx="365" cy="76" r="5" style="fill:var(--violet)"/><circle cx="399" cy="76" r="6" style="fill:var(--confound)"/>
+    <text x="61" y="40" text-anchor="start" style="fill:var(--muted);font-family:var(--font-mono);font-size:10px">0.4%</text>
+    <text x="61" y="52" text-anchor="start" style="fill:var(--ink-2);font-family:var(--font-mono);font-size:10px">guided cortical</text>
+    <text x="399" y="40" text-anchor="end" style="fill:var(--confound);font-family:var(--font-mono);font-size:10px">96.8%</text>
+    <text x="399" y="52" text-anchor="end" style="fill:var(--ink-2);font-family:var(--font-mono);font-size:10px">choroid plexus</text>
+    <text x="365" y="140" text-anchor="middle" style="fill:var(--muted);font-family:var(--font-mono);font-size:9.5px">midbrain / thalamic</text>
+  </svg>
+  <figcaption class="viz-caption">The roughly 240-fold spread across protocols is not a fidelity ranking. It largely measures distance from a first-trimester, cortex-rich reference: faithfully regionalized organoids (choroid plexus, midbrain, thalamic) sit high because the reference does not yet cover them.</figcaption>
+</figure></div>
+<p><b>Coherence.</b> Off-manifold cells are not scattered. Across 30 Leiden communities the fraction is bimodal (per-cluster sd 0.29 about a mean of 0.55); 20% of cells sit in near-pure off-manifold clusters and 21% in near-pure clean clusters. Off-manifold status is a population-level property, not per-cell noise.</p>
+<aside class="reasoning"><span class="r-label">The move</span><p>The protocol gradient argues for a coverage-gap component only indirectly. So it was tested directly: do off-manifold neural cells map onto an <em>independent</em> prenatal cortex atlas (not HDBCA)? Cells merely missing from HDBCA should be recoverable there; genuinely divergent cells should not. The test immediately hit the same wall that later defeats the disentanglement aim: the organoid-versus-primary gap displaces <em>every</em> organoid cell from the independent atlas, including clean cells that map confidently to HDBCA (clean median distance 4.0 versus reference-self 2.2). Absolute "mapped-on" fractions are therefore confounded and are not reported.</p></aside>
+<p>What survives that confound is a contrast, not an absolute. The clean distribution calibrates the shared displacement, and clean-versus-ambiguous cancels it: ambiguous-novel cells sit consistently further from the independent cortex manifold than clean cells (AUC 0.65, Cliff's delta 0.30, p below 10^-300; 70% exceed the clean median, 15% lie beyond the clean 95th percentile). That is confound-controlled evidence for a genuine in-vitro-divergence component, over and above the coverage gap.</p>
+<p class="takeaway"><span class="tk">Takeaway</span> The dominant off-target compartment is a structured biological mixture: a reference-coverage gap superimposed on a pervasive, maturation-scaling in-vitro stress program.</p>
+</section>
+
+<section id="negative" class="art-sec"><h2>The wall</h2>
+<p class="art-lead">The natural next step is seductive: if the in-vitro state is a low-dimensional nuisance, subtract it and place off-target cells on a clean lineage axis. This is the centerpiece, because the honest answer is that you cannot, and the value is in characterizing exactly why.</p>
+<p>The tool was contrastiveVI, which factorizes a shared background latent (meant to carry lineage) from a salient latent (meant to carry the organoid-specific variation). Train background on primary fetal cells, salient on organoid cells, and the background should encode dish-stripped lineage. Disentanglement was scored adversarially: a held-out classifier tries to recover organoid-versus-primary origin from the background latent. Balanced accuracy 0.5 is ideal; below 0.6 would count as success.</p>
+<div class="art-figure breakout"><figure class="viz">
+          <div class="viz-title">The negative that has teeth</div>
+          <div class="viz-sub">origin&#8209;decoding adversary, balanced accuracy</div>
+          <svg viewBox="0 0 440 262" role="img" aria-label="Bar chart: adversary balanced accuracy is 0.998, 0.999, 0.998 across three interventions, far above the 0.6 pass threshold and 0.5 ideal.">
+            <g style="stroke:var(--line);stroke-width:1">
+              <line x1="72" y1="30"  x2="424" y2="30"/>
+              <line x1="72" y1="102" x2="424" y2="102"/>
+            </g>
+            <rect x="72" y="174" width="352" height="36" style="fill:var(--good);opacity:.10"/>
+            <line x1="72" y1="174" x2="424" y2="174" style="stroke:var(--good);stroke-width:1.4;stroke-dasharray:5 4"/>
+            <line x1="72" y1="210" x2="424" y2="210" style="stroke:var(--line-2);stroke-width:1.6"/>
+            <g style="fill:var(--muted);font-family:var(--font-mono);font-size:11px" text-anchor="end">
+              <text x="62" y="34">1.0</text><text x="62" y="106">0.8</text>
+              <text x="62" y="178">0.6</text><text x="62" y="214">0.5</text>
+            </g>
+            <g style="fill:var(--confound)">
+              <rect x="117" y="31"  width="66" height="179" rx="4"/>
+              <rect x="217" y="30"  width="66" height="180" rx="4"/>
+              <rect x="317" y="31"  width="66" height="179" rx="4"/>
+            </g>
+            <g style="fill:var(--ink);font-family:var(--font-mono);font-size:12px;font-weight:600" text-anchor="middle">
+              <text x="150" y="24">0.998</text><text x="250" y="24">0.999</text><text x="350" y="24">0.998</text>
+            </g>
+            <text x="418" y="170" text-anchor="end" style="fill:var(--good);font-family:var(--font-mono);font-size:10px">pass &lt; 0.6</text>
+            <text x="418" y="224" text-anchor="end" style="fill:var(--muted);font-family:var(--font-mono);font-size:10px">ideal 0.5 (source unrecoverable)</text>
+            <g style="fill:var(--ink-2);font-family:var(--font-mono);font-size:10.5px" text-anchor="middle">
+              <text x="150" y="242">baseline</text><text x="150" y="255" style="fill:var(--muted)">z=10</text>
+              <text x="250" y="242">+capacity</text><text x="250" y="255" style="fill:var(--muted)">z=30</text>
+              <text x="350" y="242">+batch</text><text x="350" y="255" style="fill:var(--muted)">decoder</text>
+            </g>
+          </svg>
+          <figcaption class="viz-caption">Three ways to strip the culture signal out of the latent; all fail identically. Source is fully decodable from the supposedly clean latent, so a shared&#8209;latent lineage axis is <em>undefined</em> in this regime. The contribution is stating that boundary, not hiding it.</figcaption>
+        </figure></div>
+<p>It failed, and failed robustly. Baseline salient capacity gave adversary accuracy <span class="stat-inline">0.998</span>; tripling salient capacity gave <span class="stat-inline">0.999</span>; adding a source batch covariate to the decoder, the textbook remedy, gave <span class="stat-inline">0.998</span>. Training converged normally every time, so this is not an optimization failure.</p>
+<div class="art-figure breakout"><figure class="figblock"><div class="matte"><img loading="lazy" src="../assets/figures/fig-ns-negative.png" alt="NullState Figure 4: an origin-decoding adversary recovers source at 0.998; training converges; a schematic of why disentanglement fails."></div><figcaption>Why lineage cannot be disentangled from culture state in a shared latent. Source is recovered at 0.998 across every intervention, and training converges normally, so the failure is structural. <span class="figref">Figure 4.</span></figcaption></figure></div>
+<aside class="reasoning"><span class="r-label">The decision</span><p>The instinct on a failed model is to blame the run: more capacity, better conditioning, longer training. Each of those was the obvious rescue, and each was tried and reported. When all three land at 0.998 to 0.999 and the loss curves are clean, the discipline is to stop treating it as a bug and start treating it as a property of the data. The failure is stated as an identifiability boundary, not a tuning problem.</p></aside>
+<p>The mechanism is structural. When organoid and fetal cells occupy near-disjoint regions of expression space, source identity is almost definitionally decodable, and there is no overlap region in which a shared lineage axis is even well defined. The background encoder observes the organoid-versus-primary difference and writes it into the latent directly; conditioning the decoder on a batch label cannot undo what the encoder has already encoded.</p>
+<aside class="reasoning"><span class="r-label">The boundary</span><p>Two scope limits are stated plainly, because overclaiming here would be easy. First, the adversary shows only that source is <em>decodable</em>, not <em>what it is made of</em>: organoid and primary data differ in biological in-vitro state and in lab, dissociation, platform, and ambient RNA, every one transcriptome-pervasive. So the defensible claim is narrow, shared-latent methods cannot yield a source-invariant lineage axis here, and the specifically in-vitro character of the shift is read from the Aim 2 stress diagnostics, not from the adversary. The two are deliberately not conflated. Second, the substantive contribution is not "a domain gap exists" (assumed), but the sharper statement: shared-latent calibration without anchoring is feasible only where the two domains share an overlap region in which a common lineage axis is defined, and the fetal-versus-organoid regime lies past that boundary.</p></aside>
+<p>Naming that boundary, rather than restating the bare fact that source is decodable, is the point. It also identifies the only routes that could cross it: encoder-side interventions (adversarial or invariance-penalized encoders) or distributional rather than per-cell methods.</p>
+<blockquote class="pullquote">A negative result is worth stating only once you can say precisely where the wall is and why.<cite>the characterized negative</cite></blockquote>
+<p class="takeaway"><span class="tk">Takeaway</span> Lineage cannot be split from in-vitro state in a shared latent here; the useful output is a named identifiability boundary, not a failed model.</p>
+</section>
+
+<section id="geometry" class="art-sec"><h2>The salvage</h2>
+<p class="art-lead">The disentanglement wall blocks a per-cell dish-stripped coordinate. It does not obviously block comparing off-target populations <em>to each other</em>, and that is where something is salvaged, with a caveat found by testing rather than assumed.</p>
+<aside class="reasoning"><span class="r-label">The salvage</span><p>The insight is a translation invariance. If every off-target organoid cell carries the same source offset in the latent, that offset is a constant translation, and sliced-Wasserstein distance is invariant to a shared translation: distance between the shifted populations equals distance between the originals. The shared contamination cancels exactly in pairwise distances, so relative structure survives even though absolute per-cell coordinates do not. This is why the negative does not kill the geometry aim.</p></aside>
+<p>The powered arena for this is the non-neural contaminant lineages, not the neural compartment. That division of labor is deliberate: the neural off-manifold cells are larger but the first-trimester reference conflates their divergence with its own coverage gaps, whereas the non-neural contaminants (skeletal and cardiac muscle, fibroblast, adrenal-cortical) map to a complete fetal-body reference and number in the thousands. Of 17 off-target populations, four are well powered (cortical-adrenal 49,338; skeletal-muscle 30,629; fibroblast 6,349; cardiac-muscle 2,534).</p>
+<div class="art-figure breakout"><figure class="figblock"><div class="matte"><img loading="lazy" src="../assets/figures/fig-ns-geometry.png" alt="NullState Figure 5: pairwise sliced-Wasserstein distances clear a noise floor and their rank recovers primary lineage order."></div><figcaption>Off-target geometry. Pairwise distances clear a matched noise floor and their rank order recovers the primary lineage structure, while the individual distances remain confounded by lineage-dependent offsets. <span class="figref">Figure 5.</span></figcaption></figure></div>
+<p>All six pairwise comparisons are real differences, each clearing a matched-N self-distance noise floor by <span class="stat-inline">14</span> to <span class="stat-inline">105</span>-fold (W from 0.32 to 0.99 against floors of 0.007 to 0.026); the remaining 130 small-N comparisons are correctly returned as underpowered. The instrument works.</p>
+<aside class="reasoning"><span class="r-label">The test</span><p>The whole result rests on one assumption, that the source offset is the same vector across the compared populations, and that constancy is not the one Gate B verified. Gate B established offset-consistency among <em>on-target neural</em> types; the cancellation is applied to <em>off-target non-neural</em> populations, different cells. Worse, the stress biology cuts against constancy: if the ER-stress component scales with secretory demand, the offset should be larger for adrenal-cortical cells than for muscle, so part of a recovered "lineage" distance could be differential-stress distance. Rather than assume the offset is constant, it was measured directly, per-lineage dish vectors compared across the four lineages.</p></aside>
+<p>The direct test failed the assumption. The per-lineage dish vectors are mutually inconsistent (mean pairwise cosine <span class="stat-inline">0.15</span>, against 0.855 for on-target neural types; only the two myogenic lineages align, at 0.55), and each pairwise offset difference is comparable in magnitude to the lineage separation itself. So the individual distances are confounded by a lineage-dependent offset and cannot be read as clean lineage metrics.</p>
+<ul class="findings">
+<li>The six pairwise distances are statistically real and clear the noise floor by 14 to 105-fold.</li>
+<li>Their rank order recovers the primary lineage geometry: the organoid and primary pairwise-distance matrices correlate <b>r = 0.90</b> (two myogenic populations closest at W = 0.32, fibroblast most distant at W near 0.96 to 0.99, adrenal-cortical between).</li>
+<li class="neg">The constant-offset assumption does not hold (mutual cosine 0.15), so per-pair distances are confounded, not clean lineage metrics. Only the ordering is validated.</li>
+</ul>
+<p>So the aim is presented for exactly what it is: a working capability with a reference-validated ordering, not a clean lineage geometry. The instrument orders the lineages as the primary reference does; recovering true per-pair distances would need per-lineage offset removal or a matched-primary embedding.</p>
+<p class="takeaway"><span class="tk">Takeaway</span> Translation invariance rescues the rank order (r = 0.90), but a self-imposed offset-constancy test shows the individual distances stay confounded, so only the ordering is claimed.</p>
+</section>
+
+<section id="limits" class="art-sec"><h2>Where it stops</h2>
+<div class="limits"><b>Where it stops.</b> Off-manifold status conflates reference gap with biological aberrance, so absolute off-target rates are reference-dependent and must be read comparatively, never as a fidelity score. The pervasive organoid-versus-primary source gap displaces even clean, HDBCA-validated cells from an independent atlas, so the absolute coverage-gap fraction is not directly measurable; only the clean-versus-ambiguous contrast is. The dish-vector and stress scores are signature-based proxies, corroborated by the maturation correlation and the independent-atlas divergence but not independent of gene-set choice. The well-powered geometry lives on non-neural contaminants; neural off-target geometry awaits a reference that closes the coverage gap. And the cancellation that licenses the geometry assumes a per-lineage-constant offset that the direct test finds does not hold (cosine 0.15), so only the rank order (r = 0.90) should be relied on.</div>
+<p>The 240-fold protocol spread is the most tempting number to misuse. It measures distance from an early, cortex-rich reference, so a choroid-plexus protocol at 96.8% off-manifold is largely reference-absent, non-cortical and later than HDBCA covers, not 96.8% aberrant. Read as a fidelity ranking it would mis-rank faithfully regionalized organoids (choroid plexus, midbrain, thalamus) as the worst performers, which they are not. The axis is a fidelity axis only for protocols targeting the reference's own domain, or once the reference is broadened.</p>
+</section>
+
+<section id="opens" class="art-sec"><h2>What it opens</h2>
+<p class="art-lead">The disentanglement wall does not close the convergence question that motivated the work; it reroutes it. The same translation invariance that rescued the geometry is itself a way to ask whether cell types of different developmental origin converge, without ever building a source-invariant per-cell coordinate.</p>
+<p>To test whether, say, brain-derived and kidney-derived mesenchyme have arrived at the same state, one needs only their relative geometry in a space where the shared source offset cancels, the construction demonstrated here, with the proviso the offset-constancy test made concrete: the shared offset must actually be constant across the compared populations, or be explicitly removed. That is a checkable condition, not a free lunch. A cross-germ-layer convergence study therefore runs through the cancellation logic and an offset-constancy check, not through repairing contrastive disentanglement.</p>
+<aside class="reasoning"><span class="r-label">Why not this</span><p>The reflexive response to the failed disentanglement would be to fix contrastiveVI: engineer the encoder, tune the penalty, chase the source out of the latent. The argument here is that this road provably does not reach the goal in this regime, and effort is better spent on the road that does, the distributional comparison plus an explicit constancy check. The negative result is not a detour; it is the identification of which road does not arrive, paired with a partly working vehicle for the one that might.</p></aside>
+<p>Framed as a statement about what is recoverable from which data, an identifiability boundary for calibration without anchoring, the characterized negative is a methods contribution in its own right, and it connects to a broader program: knowing when a latent coordinate can be trusted to mean what we want it to mean, and when the honest answer is that the geometry, not the coordinate, is all the data will support.</p>
+<p class="takeaway"><span class="tk">Takeaway</span> The framework yields a comparative off-target measurement, a named identifiability boundary, and a checkable route to the convergence question the negative result reframes rather than blocks.</p>
+</section>
+  </article>
+
+  <section class="art-refs"><h2>Key references</h2><ol>
+    <li>Zhisong He, Leander Dony, Jonas Simon Fleck, Leila Sidow, Sabina Kanton, Barbara Treutlein, Fabian J. Theis, and J. Gray Camp. An integrated transcriptomic cell atlas of human neural organoids. Nature, 635(8039):690-698, 2024. doi:10.1038/s41586-024-08172-8.</li>
+    <li>Aparna Bhaduri, Madeline G. Andrews, Walter Mancia Leon, Diane Jung, David Shin, et al. Cell stress in cortical organoids impairs molecular subtype specification. Nature, 578(7793):142-148, 2020. doi:10.1038/s41586-020-1962-0.</li>
+    <li>Emelie Braun, Miri Danan-Gotthold, Lars E. Borm, Kyung Won Lee, Elin Vinsland, et al. Comprehensive cell atlas of the first-trimester developing human brain. Science, 382(6667):eadf1226, 2023. doi:10.1126/science.adf1226.</li>
+    <li>Ethan Weinberger, Chris Lin, and Su-In Lee. Isolating salient variations of interest in single-cell data with contrastivevi. Nature Methods, 20(9):1336-1345, 2023. doi:10.1038/s41592-023-01955-3.</li>
+    <li>Nicolas Bonneel, Julien Rabin, Gabriel Peyre, and Hanspeter Pfister. Sliced and Radon Wasserstein barycenters of measures. Journal of Mathematical Imaging and Vision, 51(1):22-45, 2015. doi:10.1007/s10851-014-0506-3.</li>
+    <li>Mohammad Lotfollahi, Mohsen Naghipourfar, Malte D. Luecken, Matin Khajavi, Maren Buttner, et al. Mapping single-cell data to reference atlases by transfer learning. Nature Biotechnology, 40(1):121-130, 2022. doi:10.1038/s41587-021-01001-7.</li>
+  </ol></section>
+
+  <nav class="art-nav">
+    <a href="../index.html#research"><div class="dir">Back</div><div class="t">Research overview</div></a>
+    <a class="next" href="multiview.html"><div class="dir">Next</div><div class="t">Multi-view interactions</div></a>
+  </nav>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="foot-lead">
+      <div class="foot-name">Luiz Takahashi</div>
+      <div class="foot-desc">Computational biology, identifiability, trustworthy inference. Washington State University.</div>
+    </div>
+    <div class="foot-links">
+      <a href="mailto:l.takahashidosreis@wsu.edu">l.takahashidosreis@wsu.edu</a>
+      <a href="https://github.com/LTTakahashi" rel="noopener">github.com/LTTakahashi</a>
+      <a href="../index.html">Home</a>
+    </div>
+  </div>
+</footer>
+<script src="../assets/app.js" defer></script>
+</body>
+</html>

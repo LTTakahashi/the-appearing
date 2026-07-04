@@ -24,11 +24,11 @@
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
 
-  /* ---------- scrollspy (drives top nav + the TOC rail) ---------- */
-  // ids in document order; the last one whose top has passed the offset line is "current"
-  var spyIds = ["through-line", "research", "nullstate", "multiview", "behavior", "program", "methods"];
+  /* ---------- scrollspy (drives top nav + the TOC rail; works on any page) ---------- */
   var navLinks = Array.prototype.slice.call(document.querySelectorAll(".nav-links a"));
   var tocLinks = Array.prototype.slice.call(document.querySelectorAll(".toc a[data-spy]"));
+  // ids in document order, derived from the rail; the last one whose top passed the line is current
+  var spyIds = tocLinks.map(function (a) { return a.getAttribute("data-spy"); });
 
   function navIdFor(cur) {
     return (cur === "nullstate" || cur === "multiview" || cur === "behavior") ? "research" : cur;
@@ -56,9 +56,28 @@
   function onSpyScroll() {
     if (!spyTicking) { spyTicking = true; requestAnimationFrame(computeSpy); }
   }
-  window.addEventListener("scroll", onSpyScroll, { passive: true });
-  window.addEventListener("resize", onSpyScroll, { passive: true });
-  computeSpy();
+  if (spyIds.length) {
+    window.addEventListener("scroll", onSpyScroll, { passive: true });
+    window.addEventListener("resize", onSpyScroll, { passive: true });
+    computeSpy();
+  }
+
+  /* ---------- reading-progress bar (article pages) ---------- */
+  var progressBar = document.querySelector(".progress-bar");
+  if (progressBar) {
+    var pTicking = false;
+    function updateProgress() {
+      pTicking = false;
+      var h = document.documentElement;
+      var max = h.scrollHeight - h.clientHeight;
+      var pct = max > 0 ? (window.scrollY || h.scrollTop) / max : 0;
+      progressBar.style.width = (Math.max(0, Math.min(1, pct)) * 100) + "%";
+    }
+    function onProgress() { if (!pTicking) { pTicking = true; requestAnimationFrame(updateProgress); } }
+    window.addEventListener("scroll", onProgress, { passive: true });
+    window.addEventListener("resize", onProgress, { passive: true });
+    updateProgress();
+  }
 
   /* ---------- reveal on scroll (with fail-safe) ---------- */
   var reveals = Array.prototype.slice.call(document.querySelectorAll(".reveal"));

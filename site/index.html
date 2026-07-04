@@ -66,9 +66,9 @@
   <span class="toc-title">On this page</span>
   <a href="#through-line" data-spy="through-line">The idea</a>
   <a href="#research" data-spy="research">Research</a>
-  <a href="#nullstate"  data-spy="nullstate" class="toc-sub">NullState</a>
-  <a href="#multiview"  data-spy="multiview" class="toc-sub">Multi-view</a>
-  <a href="#behavior"   data-spy="behavior"  class="toc-sub">Behavior</a>
+  <a href="research/nullstate.html" class="toc-sub">NullState</a>
+  <a href="research/multiview.html" class="toc-sub">Multi-view</a>
+  <a href="research/behavior.html" class="toc-sub">Behavior</a>
   <a href="#program" data-spy="program">Program</a>
   <a href="#methods" data-spy="methods">Methods</a>
 </nav>
@@ -149,7 +149,7 @@
   </div>
 </section>
 
-<!-- ===================== RESEARCH (deep chapters) ===================== -->
+<!-- ===================== RESEARCH (skim portal) ===================== -->
 <section class="section" id="research">
   <div class="wrap">
     <div class="section-head">
@@ -159,44 +159,22 @@
         <h2>Three studies, one discipline</h2>
       </div>
     </div>
-    <p class="prose" style="margin-bottom:1rem;">Different data (single&#8209;cell genomics, plasma proteomics, in&#8209;home behavioral sensing) and one method throughout: certify what can be trusted, and name precisely what cannot. Each study is written to be read in full.</p>
-  </div>
-
-  <div class="wrap">
-
-    <!-- R1 NullState -->
-    <article class="chapter reveal" id="nullstate">
-      <div class="chapter-head">
-        <p class="kicker"><span class="pill">R1</span> Single&#8209;cell genomics</p>
-        <h3>NullState: quantifying the off&#8209;target compartment of human neural organoids</h3>
-        <p class="collab">Sole&#8209;author study.</p>
-        <p class="chapter-lead">Brain organoids reliably grow cells that correspond to no real developmental state. This work turns that off&#8209;target compartment from a known nuisance into a measured, decomposed, atlas&#8209;anchored object, and states where the measurement itself runs out.</p>
-      </div>
-
-      <div class="chapter-body">
-        <div class="sub">
-          <span class="sub-k">The problem</span>
-          <p>Human neural organoids have become a central model of brain development, yet they also produce cells that match no genuine in&#8209;vivo neural state: non&#8209;neural lineages from incomplete germ&#8209;layer restriction, and aberrant states driven by the culture environment itself. The field lacked a principled way to answer three questions at once. Which organoid cells are off&#8209;target? Why are they off&#8209;target? And is that compartment merely noise, or does it carry reproducible biological structure? Reference&#8209;based mapping offers the natural substrate: project organoid cells onto a comprehensive fetal atlas, and cells that map confidently to a real identity can be separated from those that do not.</p>
-        </div>
-
-        <div class="sub">
-          <span class="sub-k">The approach</span>
-          <p>NullState harmonizes two first&#8209;trimester human references into a single 2,615,898&#8209;cell atlas spanning neural and non&#8209;neural origins, then maps the 1,767,346&#8209;cell Human Neural Organoid Atlas onto it by variational reference surgery: an scVI model trained for 400 epochs, refined with scANVI, and projected with scArches. Every organoid cell receives two calibrated scores, an off&#8209;manifold reconstruction distance and a label&#8209;assignment entropy, and two thresholds fit on held&#8209;out reference cells sort each cell into a six&#8209;state taxonomy. Donor&#8209;level integration lifts cross&#8209;batch mixing (iLISI 6.10 to 8.10) while preserving biological structure (cLISI 1.31 to 1.44).</p>
-        </div>
-
-        <div class="sub">
-          <span class="sub-k">What it found</span>
-          <p>The dominant compartment is not an artifact. Across the atlas, 38.4% of cells fall into a large, largely neural off&#8209;manifold state, and four independent diagnostics converge on real biology: these cells lose neural&#8209;progenitor identity while gaining hypoxia and unfolded&#8209;protein&#8209;response stress signatures; their burden rises steadily with organoid age and metabolic load; it spans 0.4% to 96.8% across differentiation protocols in a way that tracks how far each protocol sits from an early&#8209;cortex reference; and the cells concentrate into coherent transcriptomic territory rather than scattering. A direct test against an independent prenatal cortex atlas isolates a genuine in&#8209;vitro&#8209;divergence component over and above the reference gap.</p>
-          <ul class="findings">
-            <li><b>38.4%</b> of cells are off&#8209;manifold, decomposed into a reference&#8209;coverage gap plus a pervasive in&#8209;vitro stress program (hypoxia, unfolded&#8209;protein response, glycolysis) rather than a mapping error.</li>
-            <li class="neg">A <b>characterized negative result.</b> A shared&#8209;latent model provably cannot separate lineage from culture state here: an origin&#8209;decoding adversary recovers organoid&#8209;versus&#8209;primary identity from the supposedly stripped latent at <span class="stat-inline">0.998</span> balanced accuracy, and stays there when latent capacity is tripled or a batch covariate is added.</li>
-            <li>Where per&#8209;cell disentanglement is impossible, relative geometry survives. Sliced&#8209;Wasserstein distances cancel a shared source offset, and their rank order recovers the primary lineage structure (distance&#8209;matrix correlation <span class="stat-inline">0.90</span>) across four well&#8209;powered non&#8209;neural lineages that clear a matched noise floor by 14 to 105 times.</li>
+    <p class="prose" style="margin-bottom:2.4rem;">Different data (single-cell genomics, plasma proteomics, in-home behavioral sensing) and one method throughout: certify what can be trusted, and name precisely what cannot. Skim the overview here, or open any study for the full walk through the reasoning.</p>
+    <div class="overview">
+      <article class="ov-card reveal">
+        <div class="ov-body">
+          <p class="kicker"><span class="pill">R1</span> Single-cell genomics</p>
+          <h3>NullState: quantifying the off-target compartment of human neural organoids</h3>
+          <p class="ov-collab">Sole-author study.</p>
+          <p class="ov-q">Organoids reliably grow cells that match no real developmental state. Is that compartment noise, or structured biology, and can it even be measured cleanly?</p>
+          <ul class="ov-find">
+        <li><b>38.4%</b> of cells are off-manifold, shown to be structured biology (a reference gap plus a culture-stress program), not an artifact.</li>
+        <li class="neg">A characterized negative: shared-latent disentanglement provably fails here (adversary <b>0.998</b>), stated as an identifiability boundary.</li>
+        <li>Where it fails, geometry survives by cancellation: rank order recovers lineage structure (<b>r = 0.90</b>).</li>
           </ul>
+          <a class="ov-read" href="research/nullstate.html">Read the full study <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         </div>
-
-        <figure class="viz reveal">
-          <div class="viz-title">The negative that has teeth</div>
-          <div class="viz-sub">origin&#8209;decoding adversary, balanced accuracy</div>
+        <div class="ov-mini">
           <svg viewBox="0 0 440 262" role="img" aria-label="Bar chart: adversary balanced accuracy is 0.998, 0.999, 0.998 across three interventions, far above the 0.6 pass threshold and 0.5 ideal.">
             <g style="stroke:var(--line);stroke-width:1">
               <line x1="72" y1="30"  x2="424" y2="30"/>
@@ -225,90 +203,23 @@
               <text x="350" y="242">+batch</text><text x="350" y="255" style="fill:var(--muted)">decoder</text>
             </g>
           </svg>
-          <figcaption class="viz-caption">Three ways to strip the culture signal out of the latent; all fail identically. Source is fully decodable from the supposedly clean latent, so a shared&#8209;latent lineage axis is <em>undefined</em> in this regime. The contribution is stating that boundary, not hiding it.</figcaption>
-        </figure>
-
-        <div class="sub">
-          <span class="sub-k">What it establishes</span>
-          <p>The off&#8209;target problem becomes a quantitative, atlas&#8209;anchored measurement with two calibrated readouts and a clean decomposition. Just as important, the work names an identifiability boundary: in a regime where two domains occupy near&#8209;disjoint manifolds, shared&#8209;latent calibration without anchoring is not merely hard, it is undefined, and only encoder&#8209;side or distributional methods can cross it. That boundary is offered as a contribution, not buried as a failed experiment.</p>
+          <div class="cap">the negative that has teeth</div>
         </div>
-
-        <div class="limits">
-          <b>Where it stops.</b> Off&#8209;manifold status conflates a reference&#8209;coverage gap with genuine aberrance, so absolute off&#8209;target rates are reference&#8209;dependent and are read comparatively, never as fidelity scores. The recovered lineage geometry is validated at the level of rank order, not as a clean per&#8209;pair distance: a direct test shows the shared offset is not constant across lineages (mutual cosine 0.15), so individual distances stay confounded until per&#8209;lineage offset removal or a matched&#8209;primary embedding is added. The well&#8209;powered geometry is on non&#8209;neural populations; neural off&#8209;target geometry awaits a reference that closes the coverage gap.
-        </div>
-
-        <details class="deeper reveal">
-          <summary>Figures from the manuscript</summary>
-          <div class="deeper-body">
-            <figure class="figblock">
-              <div class="matte"><img loading="lazy" src="assets/figures/fig-ns-landscape.png" alt="NullState Figure 2: six-state off-target classification, per-cell score space, reference harmonization, and feasibility gates."></div>
-              <figcaption>The six&#8209;state landscape and per&#8209;cell score space. The off&#8209;manifold state dominates at 38.4%, and donor&#8209;batch integration improves mixing while preserving biology. <span class="figref">Figure 2.</span></figcaption>
-            </figure>
-            <figure class="figblock">
-              <div class="matte"><img loading="lazy" src="assets/figures/fig-ns-negative.png" alt="NullState Figure 4: an origin-decoding adversary recovers source at 0.998 across interventions; training converges; a schematic of why disentanglement fails."></div>
-              <figcaption>Why lineage cannot be disentangled from culture state in a shared latent. Source is recovered at 0.998 across every intervention, and training converges normally, so the failure is structural. <span class="figref">Figure 4.</span></figcaption>
-            </figure>
-            <figure class="figblock">
-              <div class="matte"><img loading="lazy" src="assets/figures/fig-ns-geometry.png" alt="NullState Figure 5: pairwise sliced-Wasserstein distances clear a noise floor and their rank recovers primary lineage order."></div>
-              <figcaption>Off&#8209;target geometry. Pairwise distances clear a matched noise floor and their rank order recovers the primary lineage structure, while the individual distances remain confounded by lineage&#8209;dependent offsets. <span class="figref">Figure 5.</span></figcaption>
-            </figure>
-          </div>
-        </details>
-
-        <div class="tags">
-          <span class="tag">variational reference mapping</span>
-          <span class="tag">scVI / scANVI / scArches</span>
-          <span class="tag">sliced&#8209;Wasserstein optimal transport</span>
-          <span class="tag">adversarial confound decoding</span>
-          <span class="tag">matched&#8209;null calibration</span>
-        </div>
-        <div class="chapter-links">
-          <a href="papers/nullstate.pdf" rel="noopener" class="pdf-link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
-            Read the full manuscript (PDF)
-          </a>
-        </div>
-      </div>
-    </article>
-
-    <!-- R2 Multi-view -->
-    <article class="chapter reveal" id="multiview">
-      <div class="chapter-head">
-        <p class="kicker"><span class="pill">R2</span> Methods and proteomics</p>
-        <h3>A completeness hierarchy for multi&#8209;view interaction detection</h3>
-        <p class="collab">with Junhao Wen, Columbia University and the New York Genome Center.</p>
-        <p class="chapter-lead">When several partial measurements describe the same person, do the interactions between them carry information the individual measurements miss? This work gives the theory that answers <em>when</em>, and a large&#8209;scale demonstration of how the question goes wrong.</p>
-      </div>
-
-      <div class="chapter-body">
-        <div class="sub">
-          <span class="sub-k">The problem</span>
-          <p>Organ&#8209;specific biological age gaps, derived from plasma proteomics, estimate how old each organ looks relative to a person&rsquo;s actual age. As multi&#8209;organ panels arrive, a natural question follows: beyond how each organ ages, does the joint pattern across organs, the interaction, predict disease? This is an instance of a general multi&#8209;view problem, and the field leans on heuristics, most commonly view disagreement, without a rigorous account of what each heuristic can and cannot detect. The danger is that the datasets where the question is now asked, large consortia assembled from many cohorts on different assay platforms, have exactly the structure most likely to manufacture a false answer.</p>
-        </div>
-
-        <div class="sub">
-          <span class="sub-k">The approach</span>
-          <p>The work defines an operational hierarchy of multi&#8209;view combinations, from individual&#8209;view predictions and their disagreement, through explicit cross&#8209;view products, to a joint nonparametric estimator, and proves three results about it. It then validates the hierarchy in simulation and applies it to the Global Neurodegeneration Proteomics Consortium: nine validated organ age gaps against eighteen disease outcomes.</p>
-        </div>
-
-        <figure class="figblock reveal">
-          <div class="matte"><img loading="lazy" src="assets/figures/fig-mv-hierarchy.png" alt="The operational hierarchy: organ age gaps feed L1 linear, L1-prime disagreement, L2 pairwise products, and L3 joint nonparametric, with what each can detect."></div>
-          <figcaption>The operational hierarchy. Organ age gaps feed four levels of multi&#8209;view combination; disagreement sits strictly below the linear model and is blind to interactions, while pairwise products capture them up to an order bounded by the sample. <span class="figref">Figure 1.</span></figcaption>
-        </figure>
-
-        <div class="sub">
-          <span class="sub-k">What it found</span>
-          <ul class="findings">
-            <li><b>View disagreement is provably blind to interactions.</b> It is a function of main effects only, and its covariance with any interaction component is exactly zero. This is not a matter of statistical power; the relevant covariance is identically zero.</li>
-            <li>A <b>compression&#8209;and&#8209;order tradeoff</b> bounds the highest interaction order recoverable from a given sample size and number of views, so richer interactions demand more data in a precise, quantified way.</li>
-            <li class="neg">When views share a hidden factor such as an assay batch, interaction signal <b>leaks</b> into the individual&#8209;view predictions at a characterized rate, manufacturing apparent interactions where none exist.</li>
-            <li class="neg">On the consortium data, a naive pooled analysis appears to show that pairwise organ&#8209;aging interactions improve prediction for <b>all eighteen</b> outcomes. Cross&#8209;cohort replication reveals Simpson&rsquo;s paradox: the effect vanishes under cohort adjustment (mean incremental AUC <span class="stat-inline">+0.020 &rarr; &minus;0.0006</span>), and a single&#8209;cohort analysis is null to negative. The apparent effect was entirely between&#8209;cohort batch structure, precisely the leakage regime the third theorem describes.</li>
+      </article>
+      <article class="ov-card reveal">
+        <div class="ov-body">
+          <p class="kicker"><span class="pill">R2</span> Methods and proteomics</p>
+          <h3>A completeness hierarchy for multi-view interaction detection</h3>
+          <p class="ov-collab">with Junhao Wen, Columbia University and the New York Genome Center.</p>
+          <p class="ov-q">If two organs age together, does the joint pattern predict disease beyond each one alone? On harmonized multi-cohort data, the intuitive answer is a trap.</p>
+          <ul class="ov-find">
+        <li>Proved: view disagreement is provably blind to interactions (covariance exactly zero).</li>
+        <li class="neg">An apparent effect across all <b>18</b> outcomes reverses under cohort adjustment (<b>+0.020 to -0.0006</b>): Simpson's paradox.</li>
+        <li>The apparent signal was assay-batch structure, exactly the leakage regime the theory predicts.</li>
           </ul>
+          <a class="ov-read" href="research/multiview.html">Read the full study <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         </div>
-
-        <figure class="viz reveal">
-          <div class="viz-title">Simpson&rsquo;s paradox, in one line</div>
-          <div class="viz-sub">mean incremental AUC from organ&#8209;aging interactions</div>
+        <div class="ov-mini">
           <svg viewBox="0 0 440 262" role="img" aria-label="A slope chart: incremental AUC of +0.020 in a naive pooled analysis collapses to -0.0006 under cohort adjustment, crossing zero.">
             <polygon points="130,86 330,170 130,170" style="fill:var(--signal);opacity:.10"/>
             <line x1="60" y1="170" x2="410" y2="170" style="stroke:var(--line-2);stroke-width:1.6"/>
@@ -326,64 +237,24 @@
               <text x="330" y="219" style="fill:var(--muted)">effect gone</text>
             </g>
           </svg>
-          <figcaption class="viz-caption">The same interaction effect that looks significant across every outcome disappears once you adjust for which cohort a sample came from. The theorem predicts exactly this regime: apparent structure that is really assay&#8209;batch leakage.</figcaption>
-        </figure>
-
-        <div class="sub">
-          <span class="sub-k">What it establishes</span>
-          <p>Two practical conclusions follow. Interaction detection in harmonized multi&#8209;cohort biomarker data is confounded by assay&#8209;batch structure unless that structure is explicitly controlled. And disagreement&#8209;based analyses, however intuitive, cannot detect interactions at all. The hierarchy gives a map of which summaries answer which questions, and the demonstration shows what it costs to ignore it.</p>
+          <div class="cap">Simpson's paradox reversal</div>
         </div>
-
-        <div class="tags">
-          <span class="tag">multi&#8209;view learning</span>
-          <span class="tag">interaction analysis</span>
-          <span class="tag">Simpson&rsquo;s paradox</span>
-          <span class="tag">GNPC proteomics</span>
-          <span class="tag">confounding theory</span>
-        </div>
-        <div class="chapter-links">
-          <a href="papers/multiview-interaction-detection.pdf" rel="noopener" class="pdf-link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
-            Read the full manuscript (PDF)
-          </a>
-        </div>
-      </div>
-    </article>
-
-    <!-- R3 Coupled to Time -->
-    <article class="chapter reveal" id="behavior">
-      <div class="chapter-head">
-        <p class="kicker"><span class="pill">R3</span> Behavioral sensing and cognitive aging</p>
-        <h3>Coupled to Time, Stuck in Space: dissociable behavioral dimensions in MCI and dementia</h3>
-        <p class="collab">with Diane J. Cook and Maureen Schmitter&#8209;Edgecombe, Washington State University.</p>
-        <p class="chapter-lead">Cognitive decline is usually scored by what a person can do in a test. This work asks a different question from continuous in&#8209;home sensing, how a person actually inhabits their world, and finds two dimensions of it where the field assumed one.</p>
-      </div>
-
-      <div class="chapter-body">
-        <div class="sub">
-          <span class="sub-k">The problem</span>
-          <p>Standard assessment treats cognition as an internal capacity, measured when prompted. An older, relational view treats it instead as the fit between a person and their environment. Continuous smart&#8209;home sensing can see that fit directly: not what a person can do in a clinic, but what they actually do at home, day after day. The specific question here is how similarly a person lives their days, and whether that is separable from how widely they move through their space.</p>
-        </div>
-
-        <div class="sub">
-          <span class="sub-k">The approach</span>
-          <p>Thirty&#8209;five community&#8209;dwelling older adults were monitored by passive ambient sensors for four days to twenty&#8209;two months, producing more than two million sensor events. An Unscented Kalman Filter turns raw sensor firings into continuous position, discretized into one&#8209;meter zones. From these trajectories the work computes day&#8209;similarity (how closely one day resembles another), spatial complexity, temporal coupling (being in the same place at the same time across days), and spatial range (distinct zones visited per day), and relates them to working&#8209;memory capacity measured by an in&#8209;home n&#8209;back task.</p>
-        </div>
-
-        <div class="sub">
-          <span class="sub-k">What it found</span>
-          <ul class="findings">
-            <li><b>Two dimensions, not one.</b> Working&#8209;memory capacity is significantly, negatively related to day&#8209;similarity: higher capacity goes with more varied days. It has no significant relationship with spatial complexity. The two behavioral dimensions are largely independent, so routine and spatial richness are separate axes.</li>
-            <li>A <b>time&#8209;and&#8209;space dissociation</b> in mild cognitive impairment: temporal coupling is highest short of dementia (<span class="stat-inline">0.94</span>) while daily spatial range is the lowest of any group (<span class="stat-inline">7.7</span> zones). The clock stays tight even as the lived&#8209;in territory contracts.</li>
-            <li>Individual trajectories across more than a year show the pattern forming: one participant already collapsed into near&#8209;identical days, another varying but slowly routinizing, a plausible early signature of the same process.</li>
+      </article>
+      <article class="ov-card reveal">
+        <div class="ov-body">
+          <p class="kicker"><span class="pill">R3</span> Behavioral sensing and cognitive aging</p>
+          <h3>Coupled to Time, Stuck in Space</h3>
+          <p class="ov-collab">with Diane J. Cook and Maureen Schmitter-Edgecombe, Washington State University.</p>
+          <p class="ov-q">Is daily routine just a shadow of cognitive capacity, or a separate dimension of how a person inhabits their world?</p>
+          <ul class="ov-find">
+        <li>Two dimensions, not one: capacity tracks day-to-day variety, not spatial complexity.</li>
+        <li>A time-space dissociation in MCI: highest temporal coupling (<b>0.94</b>) but lowest spatial range (<b>7.7</b> zones).</li>
+        <li>Reframes intervention: the collapse into routine may itself be the early warning.</li>
           </ul>
+          <a class="ov-read" href="research/behavior.html">Read the full study <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         </div>
-
-        <div class="viz-pair">
-          <figure class="viz reveal">
-            <div class="viz-title">Coupled to time, stuck in space</div>
-            <div class="viz-sub">across diagnostic groups, MCI highlighted</div>
-            <svg viewBox="0 0 440 250" role="img" aria-label="Two panels: temporal coupling rises with cognitive decline while MCI shows the lowest daily spatial range.">
+        <div class="ov-mini">
+          <svg viewBox="0 0 440 250" role="img" aria-label="Two panels: temporal coupling rises with cognitive decline while MCI shows the lowest daily spatial range.">
               <line x1="222" y1="24" x2="222" y2="196" style="stroke:var(--line);stroke-width:1"/>
               <text x="34" y="20" style="fill:var(--ink-2);font-family:var(--font-mono);font-size:11px">temporal coupling &uarr;</text>
               <polyline points="55,137 100,137 150,72 195,56" style="fill:none;stroke:var(--signal);stroke-width:2.2"/>
@@ -414,55 +285,10 @@
                 <text x="279" y="186">HOA</text><text x="329" y="186">MCI</text><text x="379" y="186">Dem</text>
               </g>
             </svg>
-            <figcaption class="viz-caption">MCI holds the tightest clock&#8209;driven routine while ranging over the fewest zones per day, a dissociation that capacity tests, which score the brain in isolation, are blind to.</figcaption>
-          </figure>
-
-          <figure class="viz reveal">
-            <div class="viz-title">Days grow more alike with decline</div>
-            <div class="viz-sub">mean day&#8209;similarity by group (0 to 1)</div>
-            <svg viewBox="0 0 440 250" role="img" aria-label="Bar chart of mean day-similarity rising from HOA 0.82 to dementia 0.91 across diagnostic groups.">
-              <line x1="60" y1="200" x2="415" y2="200" style="stroke:var(--line-2);stroke-width:1.4"/>
-              <g>
-                <rect x="72"  y="150" width="60" height="50"  rx="3" style="fill:var(--signal);opacity:.45"/>
-                <rect x="162" y="130" width="60" height="70"  rx="3" style="fill:var(--signal);opacity:.6"/>
-                <rect x="252" y="90"  width="60" height="110" rx="3" style="fill:var(--signal);opacity:.8"/>
-                <rect x="342" y="60"  width="60" height="140" rx="3" style="fill:var(--signal)"/>
-              </g>
-              <g style="fill:var(--ink);font-family:var(--font-mono);font-size:12px;font-weight:600" text-anchor="middle">
-                <text x="102" y="142">0.82</text><text x="192" y="122">0.84</text>
-                <text x="282" y="82">0.88</text><text x="372" y="52">0.91</text>
-              </g>
-              <g style="fill:var(--muted);font-family:var(--font-mono);font-size:10.5px" text-anchor="middle">
-                <text x="102" y="218">HOA</text><text x="192" y="218">SCD</text>
-                <text x="282" y="218">MCI</text><text x="372" y="218">Dem</text>
-              </g>
-            </svg>
-            <figcaption class="viz-caption">A descriptive gradient toward repeated, near&#8209;identical days. The group difference is not statistically significant given the small cohort; the robust result is the within&#8209;person link between capacity and variety.</figcaption>
-          </figure>
+          <div class="cap">time-space dissociation</div>
         </div>
-
-        <div class="sub">
-          <span class="sub-k">What it establishes</span>
-          <p>Routinization and spatial complexity are distinct dimensions of behavioral organization with different relationships to cognitive capacity, which reframes what in&#8209;home monitoring should watch for. If the collapse into routine is itself an early sign, the goal of an intervention is not to preserve routine but to scaffold variety, and for the dissociation seen here, to support spatial exploration while the intact temporal structure carries it.</p>
-        </div>
-
-        <div class="limits">
-          <b>Where it stops.</b> The cohort is modest, especially for dementia, so group comparisons are underpowered and the descriptive gradient in day&#8209;similarity is not statistically significant; the robust result is the individual&#8209;level correlation, which still leaves most of the variance unexplained. A single cognitive measure is used, the study is observational, and behavior reflects more than cognition: mobility, home size, and health all shape spatial range independently. These are named as confounds, not controlled away.
-        </div>
-
-        <div class="tags">
-          <span class="tag">smart&#8209;home sensing</span>
-          <span class="tag">Unscented Kalman Filter</span>
-          <span class="tag">intraindividual variability</span>
-          <span class="tag">longitudinal design</span>
-          <span class="tag">cognitive aging</span>
-        </div>
-        <div class="chapter-links">
-          <span class="muted-link">Manuscript available on request.</span>
-        </div>
-      </div>
-    </article>
-
+      </article>
+    </div>
   </div>
 </section>
 
