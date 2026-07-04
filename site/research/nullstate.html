@@ -53,6 +53,7 @@
       <span>Sole-author study.</span>
       <a href="../index.html#research" class="back-link">&larr; All research</a>
     </div>
+    <div class="art-meta2">Status: <b>Preprint</b> &nbsp;&middot;&nbsp; Updated: <b>2026-07</b></div>
   </header>
 
   <div class="tldr">
@@ -195,7 +196,7 @@
 </section>
 
 <section id="limits" class="art-sec"><h2>Where it stops</h2>
-<div class="limits"><b>Where it stops.</b> Off-manifold status conflates reference gap with biological aberrance, so absolute off-target rates are reference-dependent and must be read comparatively, never as a fidelity score. The pervasive organoid-versus-primary source gap displaces even clean, HDBCA-validated cells from an independent atlas, so the absolute coverage-gap fraction is not directly measurable; only the clean-versus-ambiguous contrast is. The dish-vector and stress scores are signature-based proxies, corroborated by the maturation correlation and the independent-atlas divergence but not independent of gene-set choice. The well-powered geometry lives on non-neural contaminants; neural off-target geometry awaits a reference that closes the coverage gap. And the cancellation that licenses the geometry assumes a per-lineage-constant offset that the direct test finds does not hold (cosine 0.15), so only the rank order (r = 0.90) should be relied on.</div>
+<div class="limits"><b>Where it stops.</b> Off-manifold status conflates reference gap with biological aberrance, so absolute off-target rates are reference-dependent and must be read comparatively, never as a fidelity score. The pervasive organoid-versus-primary source gap displaces even clean, HDBCA-validated cells from an independent atlas, so the absolute coverage-gap fraction is not directly measurable; only the clean-versus-ambiguous contrast is. The dish-vector and stress scores are signature-based proxies, corroborated by the maturation correlation and the independent-atlas divergence but not independent of gene-set choice. The well-powered geometry lives on non-neural contaminants; neural off-target geometry awaits a reference that closes the coverage gap. And the cancellation that licenses the geometry assumes a per-lineage-constant offset that the direct test finds does not hold (cosine 0.15), so only the rank order (r = 0.90) should be relied on.</div><div class="falsify"><span class="f-label">What would change this conclusion</span><p>A first-trimester reference cannot resolve the neural off-target compartment into clean lineage geometry. A reference that closes the coverage gap (later and non-cortical states), or an encoder-side or distributional method rather than a shared latent, would let that compartment be placed on a trustworthy lineage axis instead of only a rank order.</p></div>
 <p>The 240-fold protocol spread is the most tempting number to misuse. It measures distance from an early, cortex-rich reference, so a choroid-plexus protocol at 96.8% off-manifold is largely reference-absent, non-cortical and later than HDBCA covers, not 96.8% aberrant. Read as a fidelity ranking it would mis-rank faithfully regionalized organoids (choroid plexus, midbrain, thalamus) as the worst performers, which they are not. The axis is a fidelity axis only for protocols targeting the reference's own domain, or once the reference is broadened.</p>
 </section>
 
@@ -207,6 +208,12 @@
 <p class="takeaway"><span class="tk">Takeaway</span> The framework yields a comparative off-target measurement, a named identifiability boundary, and a checkable route to the convergence question the negative result reframes rather than blocks.</p>
 </section>
   </article>
+
+  <section class="related"><h2>Related</h2><ul>
+    <li><a href="multiview.html">Multi-view interaction detection</a><span class="why">, the same shared-confound cancellation, proved as a theorem about batch leakage across views</span></li>
+    <li><a href="behavior.html">Coupled to Time</a><span class="why">, the same discipline in behavior: separate a real signal from a confound that imitates it</span></li>
+    <li><a href="program.html">Research program</a><span class="why">, the machinery here, generalized from organoids to the virtual cell</span></li>
+  </ul></section>
 
   <section class="art-refs"><h2>Key references</h2><ol>
     <li>Zhisong He, Leander Dony, Jonas Simon Fleck, Leila Sidow, Sabina Kanton, Barbara Treutlein, Fabian J. Theis, and J. Gray Camp. An integrated transcriptomic cell atlas of human neural organoids. Nature, 635(8039):690-698, 2024. doi:10.1038/s41586-024-08172-8.</li>

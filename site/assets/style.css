@@ -602,6 +602,23 @@ h1, h2, h3, h4 { color: var(--ink); font-weight: 650; line-height: 1.14; letter-
   .art-figure.breakout { width: min(900px, 100%); margin-left: 50%; transform: translateX(-50%); }
 }
 
+/* per-page epistemic metadata line */
+.art-meta2 { margin-top: .7rem; font-family: var(--font-mono); font-size: .73rem; color: var(--muted); letter-spacing: .02em; }
+.art-meta2 b { color: var(--ink-2); font-weight: 600; }
+
+/* "what would change this conclusion" (a falsifiability commitment) */
+.falsify { margin: 1.5rem 0 0; border-left: 3px solid var(--good); padding: .35rem 0 .35rem 1.3rem; font-size: .93rem; color: var(--ink-2); line-height: 1.62; max-width: 70ch; }
+.falsify .f-label { display: block; font-family: var(--font-mono); font-size: .64rem; letter-spacing: .12em; text-transform: uppercase; color: var(--good); margin-bottom: .4rem; }
+.falsify p { margin: 0; }
+
+/* curated cross-links (the through-line, made navigable) */
+.related { max-width: 720px; margin: 2.4rem auto 0; border-top: 1px solid var(--line); padding-top: 1.6rem; }
+.related h2 { font-size: 1.05rem; margin: 0 0 .9rem; }
+.related ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .7rem; }
+.related li { font-size: .93rem; color: var(--ink-2); line-height: 1.5; }
+.related li a { font-weight: 600; }
+.related li .why { color: var(--muted); }
+
 /* references */
 .art-refs { max-width: 720px; margin: 2.6rem auto 0; border-top: 1px solid var(--line); padding-top: 1.6rem; }
 .art-refs h2 { font-size: 1.05rem; margin: 0 0 .9rem; }
