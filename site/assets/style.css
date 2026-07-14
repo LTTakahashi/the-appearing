@@ -658,6 +658,10 @@ h1, h2, h3, h4 { color: var(--ink); font-weight: 650; line-height: 1.14; letter-
 .ov-card .ov-find li.neg::before { background: var(--confound); }
 .ov-card .ov-find li b { color: var(--ink); font-variant-numeric: tabular-nums; }
 .ov-read { font-weight: 600; font-size: .93rem; display: inline-flex; align-items: center; gap: .4rem; }
+.ov-links { display: flex; align-items: center; gap: 1.3rem; flex-wrap: wrap; }
+.ov-pdf { font-size: .9rem; font-weight: 550; color: var(--ink-2); display: inline-flex; align-items: center; gap: .35rem; }
+.ov-pdf svg { width: 15px; height: 15px; }
+.ov-pdf:hover { color: var(--signal-ink); text-decoration: none; }
 .ov-read svg { width: 15px; height: 15px; transition: transform .18s ease; }
 .ov-card:hover .ov-read svg { transform: translateX(3px); }
 .ov-mini { border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--bg); padding: .8rem; }
@@ -669,8 +673,11 @@ h1, h2, h3, h4 { color: var(--ink); font-weight: 650; line-height: 1.14; letter-
    print
    ====================================================================== */
 @media print {
-  .nav, .hero-visual, .viz, .cta-row, .icon-btn { display: none !important; }
+  .nav, .toc, .progress, .hero-visual, .cta-row, .icon-btn, .art-nav, .related, .back-link, .foot-links { display: none !important; }
   body { background: #fff; color: #000; font-size: 11pt; }
-  .section, .work { border-color: #ccc; page-break-inside: avoid; }
+  .section, .work, .chapter, .art-sec { border-color: #ccc; page-break-inside: avoid; }
   a { color: #000; text-decoration: underline; }
+  .article, .art-header, .tldr, .art-refs { max-width: 100%; }
+  .art-figure.breakout { width: 100%; margin-left: 0; transform: none; }
+  .reasoning, .takeaway, .tldr, .falsify, .figblock .matte { break-inside: avoid; }
 }
