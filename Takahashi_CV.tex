@@ -1,0 +1,84 @@
+\documentclass[10pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{mathpazo}
+\usepackage[scaled=0.9]{helvet}
+\usepackage[letterpaper,margin=0.42in]{geometry}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{microtype}
+\usepackage[colorlinks=true,linkcolor=black,urlcolor=black,citecolor=black]{hyperref}
+
+\titleformat{\section}{\normalsize\bfseries\scshape}{}{0em}{}[\vspace{-4pt}\rule{\linewidth}{0.8pt}]
+\titlespacing{\section}{0pt}{4pt}{1pt}
+\setlist[itemize]{leftmargin=1.2em,itemsep=0.4pt,topsep=1pt,parsep=0pt,label=\textbullet}
+\setlength{\parindent}{0pt}
+\pagestyle{empty}
+\linespread{0.98}
+
+\newcommand{\role}[2]{\noindent\textbf{#1}\hfill\textbf{#2}\par}
+\newcommand{\sub}[1]{\noindent\textit{#1}\par\vspace{1.5pt}}
+
+\begin{document}
+
+\begin{center}
+{\LARGE\bfseries Luiz Takahashi}\\[1pt]
+{\small l.takahashidosreis@wsu.edu $\mid$ (509) 338-8073 $\mid$ Pullman, WA $\mid$ \href{https://github.com/LTTakahashi}{github.com/LTTakahashi} $\mid$ \href{https://luiztakahashi.com}{luiztakahashi.com}}
+\end{center}
+\vspace{-3pt}
+
+\section{Education}
+\role{Washington State University}{Pullman, WA}
+\role{B.S.\ in Computer Science, GPA: 3.82/4.0}{Expected May 2027}
+President's Honor Roll (4 semesters). Coursework: Machine Learning, Data Mining, Algorithms, Linear Algebra.
+
+\section{Research Experience}
+
+\role{Independent Researcher, Computational Biology (single-cell / neural organoids)}{2025 -- Present}
+\sub{Self-directed; sole-author preprint (Zenodo, 2026).}
+\begin{itemize}
+\item Conducted a single-author study of the off-target compartment of human neural organoids: mapped a 1.77M-cell organoid atlas onto a harmonized 2.6M-cell fetal-brain reference (scVI / scANVI / scArches), defining calibrated off-manifold and label-entropy scores that resolve a six-state taxonomy of off-target cells.
+\item Established an \textit{identifiability boundary}: proved a standard contrastive disentanglement model cannot separate lineage from in-vitro state (an adversary recovers cell source at $>$0.998 accuracy regardless of latent capacity), then recovered confound-invariant geometry via sliced-Wasserstein cancellation, validated with a confound-controlled cross-atlas test.
+\end{itemize}
+
+\role{Undergraduate Research Assistant, CASAS Smart Home Lab \& Neuropsychology and Aging Lab}{Aug 2025 -- Present}
+\sub{Washington State University. Advisors: Dr.\ Diane J.\ Cook \& Dr.\ Maureen Schmitter-Edgecombe. Funded by NIH/NIA.}
+\begin{itemize}
+\item Developed a room-aware Kalman filter for indoor localization from sparse smart-home sensors monitoring 35 older adults (ages 60--90+, 4 days to 22 months); reduced localization error by 18\% with 92\% statistical consistency (vs.\ 65\% baseline) across 2M+ sensor events.
+\item Found cognitive accuracy significantly associated with behavioral variety ($r=-0.43$, $p=0.015$), driven almost entirely by MCI participants ($r=-0.93$, $p=0.002$); showed the effect dissolves under a noise-multiplied outcome, isolating where the signal lives.
+\item Built a LASSO classifier (healthy vs.\ impaired, AUC $=0.78$) identifying spatial entropy ($\beta=-0.42$) and night-activity fraction ($\beta=+0.38$) as clinically interpretable biomarkers consistent with sundowning.
+\end{itemize}
+
+\role{Independent Researcher (Columbia University / Wen Lab collaboration), Multi-View Interaction Hierarchy}{2025 -- Present}
+\begin{itemize}
+\item Developed a hierarchy for multi-view interaction detection with completeness guarantees; proved that the common view-disagreement heuristic cannot detect interactions, and bounded the interaction order recoverable at a given sample size via a Hoeffding functional decomposition.
+\item Demonstrated on a 30,000-person GNPC proteomic dataset (9 organ biological-age gaps, 18 disease outcomes) that a seemingly significant cross-organ interaction effect is a between-cohort batch artifact, reproducing the Simpson's paradox from first principles.
+\end{itemize}
+
+\role{Research Assistant, Center for Artificial Intelligence (C4AI), University of S\~ao Paulo}{May -- Aug 2025}
+\sub{HarpIA Project. Advisor: Dr.\ Fabio Cozman.}
+\begin{itemize}
+\item Developed SQL Component Match, a semantic natural-language-to-SQL evaluation metric using AST analysis ($\sim$4,000 lines of Python): 95\% semantic accuracy vs.\ a 70\% Spider baseline with $O(n^{1.08})$ scalability; built a 5,686-line test suite (234 methods) with multi-stage normalization, a DNF circuit breaker, and Unicode homograph detection.
+\end{itemize}
+
+\section{Publications \& Presentations}
+\begin{itemize}
+\item \textbf{L.\ Takahashi.} \textit{NullState: a reference-anchored framework for detecting, diagnosing, and quantifying the off-target compartment of human neural organoids.} Preprint, Zenodo, 2026. \href{https://doi.org/10.5281/zenodo.21459720}{doi:10.5281/zenodo.21459720}. (Sole author.)
+\item \textbf{L.\ Takahashi}, J.\ Wen. Multi-view interaction hierarchy for health screening. \textit{In preparation} (target: AISTATS 2027).
+\item \textbf{L.\ Takahashi}, D.\ J.\ Cook, M.\ Schmitter-Edgecombe. Day-similarity structure in older adults. \textit{In preparation} (target: journal).
+\item \textbf{Poster:} L.\ Takahashi, D.\ J.\ Cook, M.\ Schmitter-Edgecombe. Room-Aware Behavioral Profiling for Cognitive Health Monitoring. \textit{International Society for Gerontechnology (ISG) 2026}, Vancouver, Canada.
+\end{itemize}
+
+\section{Teaching}
+\role{Teaching Assistant, Washington State University}{2025 -- Present}
+\begin{itemize}
+\item \textbf{Program Design \& Development (C/C++):} lead a weekly 3-hour lab for 15+ students; mentor on data structures, algorithms, and debugging during office hours.
+\item \textbf{Data Mining:} sole teaching assistant for the course; graded assignments and exams for 50+ students.
+\end{itemize}
+
+\section{Technical Skills}
+\noindent\textbf{Languages:} Python (advanced), C (proficient), C++, SQL, C\#, Bash \quad\textbf{ML/AI:} PyTorch, scikit-learn, scvi-tools/Scanpy, Kalman filtering, LASSO/Ridge, KNN, neural networks \\[1pt]
+\textbf{Data:} Pandas, NumPy, SciPy, Matplotlib, Seaborn, sqlglot, time-series analysis, synthetic data generation \quad\textbf{Tools:} Git, Docker, Linux, \LaTeX, Jupyter
+
+\end{document}
