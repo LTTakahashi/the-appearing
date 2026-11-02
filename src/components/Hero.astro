@@ -105,10 +105,12 @@ const { hero } = site;
   }
   figcaption {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
-    gap: 12px;
+    gap: 2px 12px;
     margin-top: 10px;
   }
+  figcaption span { white-space: nowrap; }
 
   @media (max-width: 899px) {
     .hero {

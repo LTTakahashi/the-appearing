@@ -81,6 +81,16 @@ test('desktop: portrait beside the text', async () => {
   await context.close();
 });
 
+test('portrait caption phrases never break mid-phrase on phones', async () => {
+  for (const width of [390, 320]) {
+    const { page, context } = await openPage(browser, srv.url + '/', { width });
+    const lines = await page.$$eval('.hero-portrait figcaption span', (ss) => ss.map((s) =>
+      Math.round(s.getBoundingClientRect().height / parseFloat(getComputedStyle(s).lineHeight))));
+    assert.deepEqual(lines, [1, 1], `width ${width}: caption spans wrap ${lines}`);
+    await context.close();
+  }
+});
+
 test('no horizontal scroll at 320px', async () => {
   const { page, context } = await openPage(browser, srv.url + '/', { width: 320, height: 700 });
   const { sw, iw } = await page.evaluate(() => ({ sw: document.documentElement.scrollWidth, iw: window.innerWidth }));
