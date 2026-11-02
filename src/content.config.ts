@@ -1,4 +1,4 @@
-import { defineCollection } from 'astro:content';
+import { defineCollection, type ImageFunction } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 
@@ -29,7 +29,7 @@ const item = z.object({ label: z.string().min(1), text: z.string().min(1), empha
 
 // Typed blocks that make up a project page (spec §7.2). `type` is the discriminator,
 // matching the editor's list-widget type key.
-const blocks = (image: () => z.ZodType) =>
+const blocks = (image: ImageFunction) =>
   z.discriminatedUnion('type', [
     z.object({ type: z.literal('text'), heading: z.string().min(1), body: z.string().min(1) }),
     z.object({ type: z.literal('steps'), items: z.array(item).min(2).max(4) }),

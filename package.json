@@ -10,7 +10,7 @@
     "build": "node scripts/check-images.mjs && astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "test": "astro build && node --test \"tests/*.test.cjs\"",
+    "test": "astro build && node --test --test-concurrency=3 \"tests/*.test.cjs\"",
     "verify": "astro check && npm test && wrangler deploy --dry-run"
   },
   "dependencies": {
