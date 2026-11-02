@@ -3,7 +3,7 @@
 - **Date:** 2026-11-02
 - **Status:** approved in conversation; written spec awaiting review
 - **Branch:** `claude/beautiful-fermat-yuufzk`
-- **Visual reference:** canvas mockup "A · Plate (editorial print)", https://claude.ai/artifact/9sRXdBpUxGaq3R1joXiKAE (private to the owner)
+- **Visual reference:** canvas mockup "A · Plate (editorial print)" for layout and "Background schemes", scheme 2, for color: https://claude.ai/artifact/9sRXdBpUxGaq3R1joXiKAE (private to the owner)
 
 ## 1. Goal
 
@@ -60,7 +60,8 @@ standalone publications page, an HTML CV page.
 | Old comp-bio content (NullState, research program, framing) | Delete; redirect old URLs to `/` |
 | Photo | User-supplied portrait, cropped 4:5, muted treatment |
 | Visual direction | A · Plate (editorial print) |
-| Accent ink | Red-orange `#B23A22` |
+| Color scheme | Limestone (light) + Slate (dark): cool stone neutrals, warm accent |
+| Accent ink | Red-orange `#B3361F` (light), `#F2694A` (dark) |
 | Build tool | Astro (latest stable, 7.x), static output |
 | Navigation | Only sections that exist (Research, Publications, CV) |
 | Research cards | Not whole-card links yet; each shows its real links |
@@ -98,16 +99,16 @@ Gallery and Writing exist in the list with `enabled: false`.
 ## 5. Homepage layout
 
 Max content width 1200 px. Side gutters are 40 px on desktop and 20 px
-under 720 px. Sections are separated by a 1 px ink rule.
+under 720 px. Sections are separated by a 1 px `--rule-strong` rule.
 
 1. **Header.** Wordmark "Luiz Takahashi" in Newsreader 600 on the left. On
    the right: nav links (Inter 500, 14 px) and an icon-only theme toggle
-   (`aria-label`, ≥44 px target). A 1 px ink rule sits below. A "Skip to
+   (`aria-label`, ≥44 px target). A 1 px `--rule-strong` rule sits below. A "Skip to
    content" link appears on focus.
 2. **Hero** (two columns ≥ 900 px):
    - Left column: label, `h1` name, italic research line, bio (two
      paragraphs), link row.
-   - Right column: a framed portrait, max 380 px. The frame is a 1 px ink
+   - Right column: a framed portrait, max 380 px. The frame is a 1 px `--rule-strong`
      border with a 10 px paper inset. A caption row sits under it in mono
      12 px.
    - Under 900 px the order is label, name, research line, portrait (max
@@ -132,7 +133,7 @@ under 720 px. Sections are separated by a 1 px ink rule.
      - a title (Newsreader 20 px);
      - authors, with Luiz's name in bold;
      - the venue in italics;
-     - link chips (1 px ink outline, mono 12 px).
+     - link chips (1 px `--rule-strong` outline, mono 12 px).
 5. **Footer.**
    - Name, links (Email, GitHub, ORCID, CV), "Updated November 2026".
    - A line: "Also published as L. Takahashi Dos Reis."
@@ -141,21 +142,34 @@ under 720 px. Sections are separated by a 1 px ink rule.
 
 ### 6.1 Color tokens (CSS custom properties on `:root`)
 
-| Token | Light | Dark ("night print") |
+The scheme is **Limestone + Slate**. Lithography is printing from
+limestone, so the page reads as the printing stone. The cool neutral
+ground makes the warm red-orange accent read sharper than it would on
+cream.
+
+| Token | Light (Limestone) | Dark (Slate) | Use |
+|---|---|---|---|
+| `--paper` | `#EDEEEA` | `#121416` | page background |
+| `--paper-2` | `#E1E3DE` | `#1B1E21` | illustration panels |
+| `--ink` | `#15171A` | `#E8EAE7` | headings, primary text, figure ink |
+| `--ink-2` | `#42464C` | `#B8BDC1` | body paragraphs |
+| `--muted` | `#5A5F66` | `#8E949A` | dates, meta, captions |
+| `--rule` | `#D3D6D0` | `#2E3236` | hairlines inside sections |
+| `--rule-strong` | `#15171A` | `#5E646A` | section rules, header rule, photo frame, link chips |
+| `--accent` | `#B3361F` | `#F2694A` | kickers, focus ring, hover, figure accent |
+
+In dark mode, `--rule-strong` is a dimmed grey rather than full-bright
+ink, so structural lines don't glare. The red-orange keeps the same hue in
+both themes and only gets lighter on dark.
+
+Measured contrast (WCAG), on `paper` / `paper-2`:
+
+| Token | Light | Dark |
 |---|---|---|
-| `--paper` | `#F4F1EA` | `#141311` |
-| `--paper-2` | `#EAE5D9` | `#1D1B18` |
-| `--ink` | `#1B1A17` | `#EEE9DE` |
-| `--ink-2` | `#4A4740` | `#C4BDAF` |
-| `--muted` | `#645F57` | `#9C9587` |
-| `--rule` | `#D8D2C4` | `#34312B` |
-| `--accent` | `#B23A22` | `#E57A5C` |
-
-Measured contrast (WCAG):
-
-- Light: ink 15.4, ink-2 8.2, muted 5.6, accent 5.3 on `paper`. On
-  `paper-2` all are ≥ 4.7.
-- Dark: all text tokens are ≥ 5.7 on both papers.
+| ink | 15.4 / 13.9 | 15.3 / 13.8 |
+| ink-2 | 8.2 / 7.3 | 9.8 / 8.8 |
+| muted | 5.5 / 5.0 | 6.0 / 5.5 |
+| accent | 5.2 / 4.7 | 6.1 / 5.5 |
 
 Theme selection works like this:
 
@@ -192,8 +206,8 @@ Only three, and nothing else gets texture or effects:
 1. The plate frame around the portrait.
 2. Two-ink research illustrations (ink + accent on `paper-2`), each with a
    faint grain overlay: SVG `feTurbulence`, alpha ≤ 0.10.
-3. Hairline rules: ink rules between sections, `--rule` hairlines inside
-   sections.
+3. Hairline rules: `--rule-strong` rules between sections, `--rule`
+   hairlines inside sections.
 
 ### 6.4 Portrait
 
@@ -201,7 +215,8 @@ Only three, and nothing else gets texture or effects:
   at 800×1000 in `src/assets/portrait.jpg`.
 - Rendered with Astro `<Picture>` (AVIF and WebP, widths 380/760),
   `loading="eager"`, with explicit `width` and `height`.
-- Muted treatment: `filter: saturate(.82) contrast(1.03) sepia(.06)`. Dark
+- Muted treatment: `filter: saturate(.82) contrast(1.03)`. There is no
+  sepia, so skin tones stay natural against the cool background. Dark
   theme adds `brightness(.92)`.
 - Alt text: "Portrait of Luiz Takahashi".
 
