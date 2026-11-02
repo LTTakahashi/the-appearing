@@ -70,6 +70,21 @@ test('grid collapses from 3 columns to 1', async () => {
   }
 });
 
+test('cards never extend past the content column on narrow phones', async () => {
+  for (const width of [320, 300]) {
+    const { page, context } = await openPage(browser, srv.url + '/', { width, height: 700 });
+    const r = await page.evaluate(() => {
+      const grid = document.querySelector('#research .cards');
+      const gridRight = grid.getBoundingClientRect().right;
+      const maxRight = Math.max(...[...grid.children].map((c) => c.getBoundingClientRect().right));
+      return { gridRight, maxRight, sw: document.documentElement.scrollWidth, iw: window.innerWidth };
+    });
+    assert.ok(r.maxRight <= r.gridRight + 0.5, `width ${width}: card right ${r.maxRight} > column right ${r.gridRight}`);
+    assert.ok(r.sw <= r.iw, `width ${width}: scrollWidth ${r.sw} > innerWidth ${r.iw}`);
+    await context.close();
+  }
+});
+
 test('figures use theme tokens', async () => {
   const { page, context } = await openPage(browser, srv.url + '/', { colorScheme: 'dark' });
   const html = await page.$eval('#research article.project-card .figure', (f) => f.innerHTML);

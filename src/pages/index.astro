@@ -43,7 +43,7 @@ const publications = await getCollection('publications');
   .section-title { margin-bottom: 36px; }
   .cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
     gap: 40px 32px;
   }
   .rows {
