@@ -10,6 +10,7 @@ import { figures } from '../../components/figures';
 import { pageProjects, nextProject } from '../../lib/content';
 import { headingId } from '../../lib/markdown';
 import { site } from '../../data/site';
+import { vtName } from '../../lib/vt';
 
 export async function getStaticPaths() {
   const list = await pageProjects();
@@ -30,11 +31,11 @@ const toc = [
 ---
 <BaseLayout title={`${p.title} · ${site.name}`} description={p.question} path={`/research/${slug}/`}>
   <article class="wrap project">
-    <ProjectHeader project={p} />
+    <ProjectHeader project={p} slug={slug} />
 
     {Figure && (
       <figure class="project-hero">
-        <div class="panel"><Figure /></div>
+        <div class="panel" style={`view-transition-name: ${vtName('fig', slug)}`}><Figure /></div>
         <figcaption class="meta">Fig. 1 · {p.figureCaption}</figcaption>
       </figure>
     )}

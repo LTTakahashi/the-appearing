@@ -2,27 +2,39 @@
 import type { CollectionEntry } from 'astro:content';
 import LinkChips from './LinkChips.astro';
 import { figures } from './figures';
+import { vtName } from '../lib/vt';
 
 type ProjectData = CollectionEntry<'projects'>['data'];
 
 interface Props {
   project: ProjectData;
+  slug?: string;
+  hasPage?: boolean;
 }
 
-const { project } = Astro.props;
+const { project, slug, hasPage = false } = Astro.props;
+const href = hasPage && slug ? `/research/${slug}/` : null;
+const figStyle = href && slug ? `view-transition-name: ${vtName('fig', slug)}` : undefined;
+const titleStyle = href && slug ? `view-transition-name: ${vtName('title', slug)}` : undefined;
 const Figure = project.figure ? (figures[project.figure] as any) : null;
 ---
-<article class="project-card">
-  {Figure && <div class="figure"><Figure /></div>}
+<article class:list={['project-card', { 'has-page': href }]}>
+  {Figure && <div class="figure" style={figStyle}><Figure /></div>}
   {project.kicker && <p class="kicker">{project.kicker}</p>}
-  <h3 class="serif">{project.title}</h3>
+  <h3 class="serif" style={titleStyle}>{href ? <a class="card-link" href={href}>{project.title}</a> : project.title}</h3>
   <p class="summary">{project.summary}</p>
   <p class="meta">{project.role} · {project.status}</p>
   <LinkChips links={project.links} />
 </article>
 
 <style>
-  .project-card { min-width: 0; }
+  .project-card { position: relative; min-width: 0; }
+  /* Whole-card link: the title link's overlay covers the card; inner links sit above it. */
+  .card-link { color: inherit; text-decoration: none; }
+  .card-link::after { content: ''; position: absolute; inset: 0; z-index: 0; }
+  .card-link:focus-visible { outline: none; }
+  .project-card.has-page:focus-within { outline: 2px solid var(--accent); outline-offset: 6px; }
+  .project-card :global(.link-list) { position: relative; z-index: 1; }
   .figure {
     aspect-ratio: 4 / 3;
     overflow: hidden;

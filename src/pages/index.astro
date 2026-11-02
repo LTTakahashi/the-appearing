@@ -19,10 +19,10 @@ const publications = await published('publications');
   <section id="research" class="wrap section research" aria-labelledby="research-title">
     <h2 id="research-title" class="section-title">Research</h2>
     <div class="cards">
-      {featured.map((p) => <ProjectCard project={p.data} />)}
+      {featured.map((p) => <ProjectCard project={p.data} slug={p.id} hasPage={p.data.page} />)}
     </div>
     <div class="rows">
-      {rows.map((p) => <ProjectRow project={p.data} />)}
+      {rows.map((p) => <ProjectRow project={p.data} slug={p.id} hasPage={p.data.page} />)}
     </div>
   </section>
 
