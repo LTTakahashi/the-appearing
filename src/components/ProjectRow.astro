@@ -1,0 +1,50 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import LinkChips from './LinkChips.astro';
+
+type ProjectData = CollectionEntry<'projects'>['data'];
+
+interface Props {
+  project: ProjectData;
+}
+
+const { project } = Astro.props;
+---
+<div class="project-row">
+  <h3 class="serif">{project.title}</h3>
+  <p class="summary">{project.summary}</p>
+  <div class="side">
+    <p class="meta">{project.role} · {project.status}</p>
+    <LinkChips links={project.links} />
+  </div>
+</div>
+
+<style>
+  .project-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px 32px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  h3 {
+    flex: 1 1 260px;
+    min-width: 0;
+    font-size: 21px;
+    line-height: 1.25;
+  }
+  .summary {
+    flex: 2 1 380px;
+    min-width: 0;
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+  .side {
+    flex: 0 1 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+</style>

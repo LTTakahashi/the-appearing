@@ -12,3 +12,10 @@
 # OS / editor cruft
 .DS_Store
 Thumbs.db
+
+# Build and tooling output
+node_modules/
+dist/
+.astro/
+.wrangler/
+.test-tmp/

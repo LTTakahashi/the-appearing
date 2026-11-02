@@ -1,0 +1,141 @@
+---
+import { Picture } from 'astro:assets';
+import portrait from '../assets/portrait.jpg';
+import { site } from '../data/site';
+
+const { hero } = site;
+---
+<section class="wrap hero" aria-labelledby="hero-name">
+  <div class="text">
+    <p class="kicker hero-label hero-enter" style="--i: 0">{hero.label}</p>
+    <h1 id="hero-name" class="serif hero-name hero-enter" style="--i: 1">{site.name}</h1>
+    <p class="serif hero-line hero-enter" style="--i: 2">{hero.researchLine}</p>
+    <div class="hero-bio hero-enter" style="--i: 3">
+      {hero.bio.map((p) => <p>{p}</p>)}
+    </div>
+    <ul class="hero-links hero-enter" style="--i: 4">
+      {hero.links.map((l) => (
+        <li><a href={l.href} rel={l.href.startsWith('https://') ? 'noopener' : undefined}>{l.label}</a></li>
+      ))}
+    </ul>
+  </div>
+  <figure class="hero-portrait hero-enter" style="--i: 2">
+    <div class="frame">
+      <Picture
+        src={portrait}
+        formats={['avif', 'webp']}
+        widths={[380, 760]}
+        sizes="(min-width: 900px) 380px, 300px"
+        alt="Portrait of Luiz Takahashi"
+        loading="eager"
+      />
+    </div>
+    <figcaption class="meta">
+      <span>{hero.caption[0]}</span>
+      <span>{hero.caption[1]}</span>
+    </figcaption>
+  </figure>
+</section>
+
+<style>
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 380px);
+    grid-template-areas: 'text photo';
+    column-gap: 56px;
+    align-items: start;
+    padding-top: 72px;
+    padding-bottom: 88px;
+  }
+  .text { grid-area: text; min-width: 0; }
+  .hero-portrait { grid-area: photo; margin: 0; }
+
+  .hero-label { margin-bottom: 22px; }
+  .hero-name {
+    font-size: clamp(48px, 7vw, 84px);
+    line-height: 1;
+    letter-spacing: -0.025em;
+    font-weight: 500;
+  }
+  .hero-line {
+    margin-top: 26px;
+    max-width: 24em;
+    font-style: italic;
+    font-size: clamp(22px, 2.6vw, 30px);
+    line-height: 1.28;
+    color: var(--ink);
+  }
+  .hero-bio {
+    margin-top: 34px;
+    max-width: 62ch;
+    color: var(--ink-2);
+  }
+  .hero-bio p + p { margin-top: 14px; }
+  .hero-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 26px;
+    margin: 28px 0 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--font-mono);
+    font-size: 13.5px;
+  }
+  .hero-links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    overflow-wrap: anywhere;
+  }
+
+  .frame {
+    border: 1px solid var(--rule-strong);
+    padding: 10px;
+  }
+  .frame :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    filter: saturate(0.82) contrast(1.03);
+  }
+  :global([data-theme='dark']) .frame :global(img) {
+    filter: saturate(0.82) contrast(1.03) brightness(0.92);
+  }
+  figcaption {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2px 12px;
+    margin-top: 10px;
+  }
+  figcaption span { white-space: nowrap; }
+
+  @media (max-width: 899px) {
+    .hero {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: 'label' 'name' 'line' 'photo' 'bio' 'links';
+      padding-top: 48px;
+      padding-bottom: 64px;
+    }
+    .text { display: contents; }
+    .hero-label { grid-area: label; }
+    .hero-name { grid-area: name; }
+    .hero-line { grid-area: line; }
+    .hero-bio { grid-area: bio; margin-top: 30px; }
+    .hero-links { grid-area: links; }
+    .hero-portrait { max-width: 300px; margin-top: 30px; }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.js) .hero-enter {
+      animation: hero-in 600ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+      animation-delay: calc(var(--i, 0) * 60ms);
+    }
+  }
+  @keyframes hero-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
+  }
+</style>

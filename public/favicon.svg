@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <style>
+    .bg { fill: #EDEEEA; }
+    .band { fill: #B3361F; }
+    .curve { stroke: #B3361F; }
+    .dot { fill: #15171A; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #121416; }
+      .band { fill: #F2694A; }
+      .curve { stroke: #F2694A; }
+      .dot { fill: #E8EAE7; }
+    }
+  </style>
+  <rect class="bg" width="32" height="32" rx="6"/>
+  <path class="band" d="M5,20 C10,12 16,8 27,6 L27,12 C17,13.5 11,17.5 5,27 Z" opacity="0.22"/>
+  <path class="curve" d="M5,23.5 C10.5,15 16.5,10.5 27,9" fill="none" stroke-width="2.4" stroke-linecap="round"/>
+  <circle class="dot" cx="21" cy="20" r="2.3"/>
+</svg>

@@ -1,0 +1,22 @@
+---
+import Grain from './Grain.astro';
+---
+<svg class="fig" viewBox="0 0 400 300" role="img" aria-label="Illustration: a home floor plan with sensors; a resident's path through rooms with uncertainty ellipses around estimated positions.">
+  <Grain id="grain-homes" />
+  <rect class="a" x="170" y="40" width="90" height="110" opacity="0.1"></rect>
+  <rect class="is" x="40" y="40" width="320" height="220" fill="none" stroke-width="2.4"></rect>
+  <path class="is" d="M170,40 V120 M170,166 V260 M40,150 H118 M260,40 V104 M260,150 V260 M260,150 H360" fill="none" stroke-width="2.4"></path>
+  <g class="i">
+    <rect x="102" y="92" width="7" height="7"></rect><rect x="76" y="202" width="7" height="7"></rect>
+    <rect x="212" y="72" width="7" height="7"></rect><rect x="212" y="210" width="7" height="7"></rect>
+    <rect x="306" y="92" width="7" height="7"></rect><rect x="306" y="206" width="7" height="7"></rect>
+    <rect x="166" y="140" width="7" height="7"></rect><rect x="256" y="124" width="7" height="7"></rect>
+  </g>
+  <ellipse class="a" cx="148" cy="118" rx="18" ry="11" opacity="0.18"></ellipse>
+  <ellipse class="a" cx="214" cy="178" rx="24" ry="14" opacity="0.18"></ellipse>
+  <ellipse class="a" cx="310" cy="112" rx="15" ry="24" opacity="0.18"></ellipse>
+  <polyline class="as" points="106,96 148,118 172,146 214,178 262,128 310,112 312,196" fill="none" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"></polyline>
+  <circle class="a" cx="312" cy="200" r="5"></circle>
+  <circle class="as" cx="312" cy="200" r="11" fill="none" stroke-width="1.5" opacity="0.6"></circle>
+  <rect width="400" height="300" filter="url(#grain-homes)"></rect>
+</svg>

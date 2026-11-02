@@ -1,0 +1,70 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import ProjectRow from '../components/ProjectRow.astro';
+import NewsList from '../components/NewsList.astro';
+import PublicationList from '../components/PublicationList.astro';
+
+const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+const featured = projects.filter((p) => p.data.feature);
+const rows = projects.filter((p) => !p.data.feature);
+const news = await getCollection('news');
+const publications = await getCollection('publications');
+---
+<BaseLayout>
+  <Hero />
+
+  <section id="research" class="wrap section research" aria-labelledby="research-title">
+    <h2 id="research-title" class="section-title">Research</h2>
+    <div class="cards">
+      {featured.map((p) => <ProjectCard project={p.data} />)}
+    </div>
+    <div class="rows">
+      {rows.map((p) => <ProjectRow project={p.data} />)}
+    </div>
+  </section>
+
+  <section class="wrap section updates" aria-label="News and publications">
+    <div class="col-news">
+      <h2 id="news-title" class="col-title serif">News</h2>
+      <NewsList items={news} />
+    </div>
+    <div id="publications" class="col-pubs">
+      <h2 id="publications-title" class="col-title serif">Selected publications</h2>
+      <PublicationList items={publications} />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .research { padding-top: 56px; padding-bottom: 80px; scroll-margin-top: 16px; }
+  .section-title { margin-bottom: 36px; }
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+    gap: 40px 32px;
+  }
+  .rows {
+    margin-top: 56px;
+    border-top: 1px solid var(--rule);
+  }
+  .updates {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: 56px;
+    padding-top: 56px;
+    padding-bottom: 80px;
+  }
+  .col-pubs { scroll-margin-top: 16px; }
+  .col-title {
+    margin-bottom: 24px;
+    font-size: 32px;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+  @media (max-width: 899px) {
+    .updates { grid-template-columns: minmax(0, 1fr); gap: 48px; }
+  }
+</style>

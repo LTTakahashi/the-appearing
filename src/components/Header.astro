@@ -1,0 +1,68 @@
+---
+import { nav, site } from '../data/site';
+import ThemeToggle from './ThemeToggle.astro';
+
+const items = nav.filter((n) => n.enabled);
+---
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="wordmark serif" href="/">{site.name}</a>
+    <div class="right">
+      <nav aria-label="Primary">
+        <ul>
+          {items.map((item) => (
+            <li><a href={item.href}>{item.label}</a></li>
+          ))}
+        </ul>
+      </nav>
+      <ThemeToggle />
+    </div>
+  </div>
+</header>
+
+<style>
+  .bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px 32px;
+    padding-top: 18px;
+    padding-bottom: 14px;
+  }
+  .site-header .wrap { position: relative; }
+  .site-header .wrap::after {
+    content: '';
+    position: absolute;
+    left: var(--gutter);
+    right: var(--gutter);
+    bottom: 0;
+    border-bottom: 1px solid var(--rule-strong);
+  }
+  .wordmark {
+    font-size: 23px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .right { display: flex; align-items: center; gap: 12px; }
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 24px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+  }
+  nav a:hover { color: var(--accent); }
+</style>

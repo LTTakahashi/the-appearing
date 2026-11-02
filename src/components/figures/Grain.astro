@@ -1,0 +1,17 @@
+---
+// Faint print grain for a figure (spec §6.3). Place inside the figure's <svg>,
+// then cover the figure with <rect width="400" height="300" filter={`url(#${id})`} />.
+interface Props {
+  id: string;
+}
+const { id } = Astro.props;
+---
+<defs>
+  <filter id={id}>
+    <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"></feTurbulence>
+    <feColorMatrix type="saturate" values="0"></feColorMatrix>
+    <feComponentTransfer>
+      <feFuncA type="table" tableValues="0 0.09"></feFuncA>
+    </feComponentTransfer>
+  </filter>
+</defs>
