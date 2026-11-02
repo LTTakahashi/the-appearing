@@ -25,6 +25,8 @@ blocks:
     heading: The problem
     body: |-
       If scores rise with practice, a range set on day one soon flags ordinary improvement as change, and can miss a real drop that still looks normal by day-one standards.
+  - type: interactive
+    name: practice-band
   - type: text
     heading: How it was tested
     body: |-

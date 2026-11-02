@@ -1,0 +1,12 @@
+---
+import PracticeBand from '../../interactive/PracticeBand.astro';
+
+interface Props {
+  name: 'practice-band';
+}
+
+const { name } = Astro.props;
+---
+<section class="block-interactive">
+  {name === 'practice-band' && <PracticeBand />}
+</section>
