@@ -16,11 +16,12 @@ const ESCAPES: Record<string, string> = {
 
 /**
  * Tiny inline-Markdown renderer for short data strings (news items).
- * Escapes all HTML, then allows only `[text](https://…)` links and `*emphasis*`.
+ * Escapes all HTML, then allows only `[text](https://…)` links, `**strong**` and `*emphasis*`.
  */
 export function renderInline(md: string): string {
   return md
     .replace(/[&<>"']/g, (c) => ESCAPES[c])
     .replace(/\[([^\]]+)\]\((https:\/\/[^\s)]+)\)/g, '<a href="$2" rel="noopener">$1</a>')
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
     .replace(/\*([^*]+)\*/g, '<em>$1</em>');
 }

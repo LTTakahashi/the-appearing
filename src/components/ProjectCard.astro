@@ -1,9 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import LinkChips from './LinkChips.astro';
-import ArtsFigure from './figures/ArtsFigure.astro';
-import PraxisFigure from './figures/PraxisFigure.astro';
-import HomesFigure from './figures/HomesFigure.astro';
+import { figures } from './figures';
 
 type ProjectData = CollectionEntry<'projects'>['data'];
 
@@ -12,8 +10,7 @@ interface Props {
 }
 
 const { project } = Astro.props;
-const figures = { arts: ArtsFigure, praxis: PraxisFigure, homes: HomesFigure };
-const Figure = project.figure ? figures[project.figure] : null;
+const Figure = project.figure ? (figures[project.figure] as any) : null;
 ---
 <article class="project-card">
   {Figure && <div class="figure"><Figure /></div>}

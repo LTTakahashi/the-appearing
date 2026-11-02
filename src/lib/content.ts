@@ -26,3 +26,15 @@ export function heroLinks(p: Profile): LinkItem[] {
     { label: 'ORCID', href: p.orcid },
   ];
 }
+
+/** Published projects that have a page, in homepage order. */
+export async function pageProjects(): Promise<CollectionEntry<'projects'>[]> {
+  return (await published('projects')).filter((p) => p.data.page).sort((a, b) => a.data.order - b.data.order);
+}
+
+/** The page project after `slug` in order, wrapping around to the first. */
+export async function nextProject(slug: string): Promise<CollectionEntry<'projects'>> {
+  const list = await pageProjects();
+  const i = list.findIndex((p) => p.id === slug);
+  return list[(i + 1) % list.length];
+}

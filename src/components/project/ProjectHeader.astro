@@ -1,0 +1,65 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import LinkChips from '../LinkChips.astro';
+
+type ProjectData = CollectionEntry<'projects'>['data'];
+
+interface Props {
+  project: ProjectData;
+}
+
+const { project: p } = Astro.props;
+const authors = p.authors ?? [];
+---
+<header class="project-header">
+  <nav class="breadcrumb meta" aria-label="Breadcrumb">
+    <a href="/#research">Research</a> <span aria-hidden="true">/</span> {p.shortName}
+  </nav>
+  {p.kicker && <p class="kicker">{p.kicker}</p>}
+  <h1 class="serif">{p.title}</h1>
+  {p.question && <p class="project-question serif">{p.question}</p>}
+  {authors.length > 0 && (
+    <p class="project-authors">
+      {authors.map((a, i) => <>{i > 0 && ', '}{a === p.self ? <strong>{a}</strong> : a}</>)}
+    </p>
+  )}
+  <div class="project-meta-row">
+    <p class="project-meta meta">{p.role} · {p.status}</p>
+    <LinkChips links={p.links} variant="chip" />
+  </div>
+</header>
+
+<style>
+  .project-header { max-width: 860px; }
+  .breadcrumb { margin-bottom: 40px; font-size: 12.5px; }
+  .breadcrumb a { color: var(--muted); }
+  .kicker { margin-bottom: 16px; }
+  h1 {
+    font-size: clamp(40px, 5.4vw, 64px);
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+  }
+  .project-question {
+    margin-top: 22px;
+    max-width: 34em;
+    font-style: italic;
+    font-size: clamp(20px, 2.2vw, 25px);
+    line-height: 1.35;
+    color: var(--ink);
+  }
+  .project-authors {
+    margin-top: 22px;
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: var(--ink-2);
+  }
+  .project-authors strong { color: var(--ink); font-weight: 600; }
+  .project-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 16px;
+    margin-top: 16px;
+  }
+  .project-meta { font-size: 12.5px; }
+</style>

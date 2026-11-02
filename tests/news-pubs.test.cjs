@@ -18,6 +18,7 @@ test('formatMonth and renderInline', async () => {
   );
   assert.equal(renderInline('<script>x</script> & "q"'), '&lt;script&gt;x&lt;/script&gt; &amp; &quot;q&quot;');
   assert.equal(renderInline('[bad](javascript:alert(1))'), '[bad](javascript:alert(1))');
+  assert.equal(renderInline('a **b** and *c*'), 'a <strong>b</strong> and <em>c</em>');
 });
 
 test('all news render, newest first, formatted', async () => {

@@ -60,3 +60,37 @@ test('a draft news item never reaches the built site', () => {
   assert.equal(r.status, 0, r.out.slice(-600));
   assert.doesNotMatch(r.home, /DRAFT-PROBE/);
 });
+
+const projectFile = (dir, slug) => path.join(dir, 'src/content/projects', slug, 'index.md');
+
+test('a page project without its one-minute summary fails the build', () => {
+  const r = buildCopy((dir) => {
+    const f = projectFile(dir, 'arts');
+    fs.writeFileSync(f, fs.readFileSync(f, 'utf8').replace(/^minute:\n(  - .*\n)+/m, ''));
+  });
+  assert.notEqual(r.status, 0, `build should fail:\n${r.out.slice(-600)}`);
+  assert.match(r.out, /minute|one-minute/i);
+});
+
+test('two text blocks with the same heading fail the build', () => {
+  const r = buildCopy((dir) => {
+    const f = projectFile(dir, 'arts');
+    fs.writeFileSync(f, fs.readFileSync(f, 'utf8').replace('heading: Limits', 'heading: Results'));
+  });
+  assert.notEqual(r.status, 0, `build should fail:\n${r.out.slice(-600)}`);
+});
+
+test('a draft page project gets no route and is skipped by next-project links', () => {
+  const r = buildCopy((dir) => {
+    const f = projectFile(dir, 'smart-homes');
+    fs.writeFileSync(f, fs.readFileSync(f, 'utf8').replace(/^---\n/, '---\ndraft: true\n'));
+  }, (dist) => ({
+    hasPage: fs.existsSync(path.join(dist, 'research/smart-homes/index.html')),
+    practice: fs.readFileSync(path.join(dist, 'research/practice-as-signal/index.html'), 'utf8'),
+    home: fs.readFileSync(path.join(dist, 'index.html'), 'utf8'),
+  }));
+  assert.equal(r.status, 0, r.out.slice(-600));
+  assert.equal(r.hasPage, false);
+  assert.match(r.practice, /class="next-project"[^>]*href="\/research\/multi-view\/"|href="\/research\/multi-view\/"[^>]*class="next-project"/);
+  assert.doesNotMatch(r.home, /Room-aware tracking in smart homes/);
+});

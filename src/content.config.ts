@@ -17,7 +17,7 @@ const profile = defineCollection({
     researchLine: z.string().min(1),
     bio: z.tuple([z.string().min(1), z.string().min(1)]),
     caption: z.tuple([z.string().min(1), z.string().min(1)]),
-    email: z.string().email(),
+    email: z.email(),
     github: z.string().regex(/^https:\/\//),
     orcid: z.string().regex(/^https:\/\//),
     cvPath: z.string().startsWith('/'),
@@ -25,24 +25,67 @@ const profile = defineCollection({
   }),
 });
 
+const item = z.object({ label: z.string().min(1), text: z.string().min(1), emphasis: z.boolean().optional() });
+
+// Typed blocks that make up a project page (spec §7.2). `type` is the discriminator,
+// matching the editor's list-widget type key.
+const blocks = (image: () => z.ZodType) =>
+  z.discriminatedUnion('type', [
+    z.object({ type: z.literal('text'), heading: z.string().min(1), body: z.string().min(1) }),
+    z.object({ type: z.literal('steps'), items: z.array(item).min(2).max(4) }),
+    z.object({ type: z.literal('timeline'), stages: z.array(item).min(2).max(4) }),
+    z.object({
+      type: z.literal('stats'),
+      items: z.array(z.object({ value: z.string().min(1), label: z.string().min(1), muted: z.boolean().optional() })).min(2).max(4),
+    }),
+    z.object({ type: z.literal('figure'), image: image(), alt: z.string().min(1), caption: z.string().min(1) }),
+    z.object({ type: z.literal('interactive'), name: z.enum(['practice-band']) }),
+  ]);
+
 const projects = defineCollection({
   loader: glob({ pattern: '*/index.md', base: './src/content/projects' }),
-  schema: z
-    .object({
-      title: z.string().min(1),
-      kicker: z.string().optional(),
-      summary: z.string().min(1),
-      role: z.string().min(1),
-      status: z.string().min(1),
-      feature: z.boolean(),
-      figure: z.enum(['arts', 'praxis', 'homes']).optional(),
-      links: z.array(link).default([]),
-      order: z.number().int(),
-      draft: z.boolean().default(false),
-    })
-    .refine((p) => !p.feature || (p.figure && p.kicker), {
-      message: 'feature projects need both a figure and a kicker',
-    }),
+  schema: ({ image }) =>
+    z
+      .object({
+        title: z.string().min(1),
+        shortName: z.string().min(1).optional(),
+        kicker: z.string().optional(),
+        summary: z.string().min(1),
+        question: z.string().min(1).optional(),
+        role: z.string().min(1),
+        status: z.string().min(1),
+        feature: z.boolean(),
+        page: z.boolean().default(false),
+        figure: z.enum(['arts', 'praxis', 'homes', 'multiview']).optional(),
+        figureCaption: z.string().min(1).optional(),
+        authors: z.array(z.string().min(1)).optional(),
+        self: z.string().min(1).optional(),
+        minute: z.array(z.string().min(1)).optional(),
+        links: z.array(link).default([]),
+        citation: z.string().min(1).optional(),
+        blocks: z.array(blocks(image)).default([]),
+        order: z.number().int(),
+        draft: z.boolean().default(false),
+      })
+      .refine((p) => !p.feature || (p.figure && p.kicker), {
+        message: 'feature projects need both a figure and a kicker',
+      })
+      .refine((p) => !p.page || (p.figure && p.figureCaption && p.kicker && p.question && p.shortName), {
+        message: 'page projects need figure, figureCaption, kicker, question and shortName',
+      })
+      .refine((p) => !p.page || (p.authors && p.self && p.authors.includes(p.self)), {
+        message: 'page projects need authors that include `self`',
+      })
+      .refine((p) => !p.page || p.minute?.length === 3, {
+        message: 'page projects need a one-minute summary (`minute`) of exactly 3 items',
+      })
+      .refine(
+        (p) => {
+          const headings = p.blocks.flatMap((b) => (b.type === 'text' ? [b.heading.trim().toLowerCase()] : []));
+          return new Set(headings).size === headings.length;
+        },
+        { message: 'text blocks must have unique headings' },
+      ),
 });
 
 const news = defineCollection({

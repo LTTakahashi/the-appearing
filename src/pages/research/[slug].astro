@@ -1,0 +1,82 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectHeader from '../../components/project/ProjectHeader.astro';
+import OnThisPage from '../../components/project/OnThisPage.astro';
+import MinuteBox from '../../components/project/MinuteBox.astro';
+import Blocks from '../../components/project/Blocks.astro';
+import PaperAndCode from '../../components/project/PaperAndCode.astro';
+import NextProject from '../../components/project/NextProject.astro';
+import { figures } from '../../components/figures';
+import { pageProjects, nextProject } from '../../lib/content';
+import { headingId } from '../../lib/markdown';
+import { site } from '../../data/site';
+
+export async function getStaticPaths() {
+  const list = await pageProjects();
+  return list.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const slug = entry.id;
+const p = entry.data;
+const next = await nextProject(slug);
+const Figure = p.figure ? (figures[p.figure] as any) : null;
+const hasPaper = Boolean(p.citation) || p.links.length > 0;
+const toc = [
+  { label: 'In one minute', id: 'in-one-minute' },
+  ...p.blocks.flatMap((b) => (b.type === 'text' ? [{ label: b.heading, id: headingId(b.heading) }] : [])),
+  ...(hasPaper ? [{ label: 'Paper and code', id: 'paper-and-code' }] : []),
+];
+---
+<BaseLayout title={`${p.title} · ${site.name}`} description={p.question} path={`/research/${slug}/`}>
+  <article class="wrap project">
+    <ProjectHeader project={p} />
+
+    {Figure && (
+      <figure class="project-hero">
+        <div class="panel"><Figure /></div>
+        <figcaption class="meta">Fig. 1 · {p.figureCaption}</figcaption>
+      </figure>
+    )}
+
+    <div class="project-body">
+      <aside class="rail"><OnThisPage items={toc} /></aside>
+      <div class="project-main">
+        <MinuteBox items={p.minute ?? []} />
+        <Blocks blocks={p.blocks} />
+        {hasPaper && <PaperAndCode citation={p.citation} links={p.links} />}
+      </div>
+    </div>
+
+    <NextProject slug={next.id} title={next.data.title} />
+  </article>
+</BaseLayout>
+
+<style>
+  .project { padding-top: 40px; }
+  .project-hero { margin: 44px 0 0; }
+  .panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 16 / 7;
+    overflow: hidden;
+    background: var(--paper-2);
+  }
+  .panel :global(svg) { width: auto; height: 100%; max-width: 100%; }
+  /* The figure's grain covers only its 4:3 drawing; in this wide panel that reads
+     as a lighter box, so the hero shows the drawing without it. */
+  .panel :global(svg > rect[filter]) { display: none; }
+  figcaption { margin-top: 10px; max-width: 90ch; }
+  .project-body {
+    display: grid;
+    grid-template-columns: 200px minmax(0, 700px);
+    gap: 32px 80px;
+    align-items: start;
+    margin-top: 64px;
+  }
+  @media (max-width: 899px) {
+    .project-body { grid-template-columns: minmax(0, 1fr); margin-top: 40px; }
+    .rail { display: none; }
+  }
+</style>
