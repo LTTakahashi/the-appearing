@@ -1,17 +1,17 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import ProjectRow from '../components/ProjectRow.astro';
 import NewsList from '../components/NewsList.astro';
 import PublicationList from '../components/PublicationList.astro';
+import { published } from '../lib/content';
 
-const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+const projects = (await published('projects')).sort((a, b) => a.data.order - b.data.order);
 const featured = projects.filter((p) => p.data.feature);
 const rows = projects.filter((p) => !p.data.feature);
-const news = await getCollection('news');
-const publications = await getCollection('publications');
+const news = await published('news');
+const publications = await published('publications');
 ---
 <BaseLayout>
   <Hero />

@@ -1,7 +1,7 @@
 const { test, before, after } = require('node:test');
 const assert = require('node:assert/strict');
 const path = require('node:path');
-const { ROOT, startServer, launch, openPage, readYaml } = require('./helpers.cjs');
+const { ROOT, startServer, launch, openPage, readEntries } = require('./helpers.cjs');
 
 let srv;
 let browser;
@@ -21,7 +21,7 @@ test('formatMonth and renderInline', async () => {
 });
 
 test('all news render, newest first, formatted', async () => {
-  const y = readYaml('src/data/news.yaml');
+  const y = readEntries('src/content/news');
   const { page, context } = await openPage(browser, srv.url + '/');
   const dates = await page.$$eval('.news time', (ts) => ts.map((t) => t.textContent.trim()));
   assert.equal(dates.length, y.length);
@@ -43,7 +43,7 @@ test('news inline markdown becomes links and emphasis', async () => {
 });
 
 test('all selected publications render in order', async () => {
-  const y = readYaml('src/data/publications.yaml').filter((p) => p.selected);
+  const y = readEntries('src/content/publications').filter((p) => p.selected);
   const { page, context } = await openPage(browser, srv.url + '/');
   const titles = await page.$$eval('#publications .pubs h3', (hs) => hs.map((h) => h.textContent.trim()));
   assert.equal(titles.length, y.length);

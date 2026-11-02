@@ -18,35 +18,36 @@ npm run dev      # http://localhost:4321
 
 ## Edit content
 
-All homepage content lives in `src/data/`. Components hold no copy of their own.
+All content lives in `src/content/`, one file per entry. Components hold no copy of their own. The visual editor at `/admin` edits these same files (see "Visual editor" below); you can also edit them directly.
 
 | What | File |
 |---|---|
-| Name, bio, hero text, contact links, navigation, "Updated" date | `src/data/site.ts` |
-| Research cards and rows | `src/data/projects.yaml` |
-| News | `src/data/news.yaml` |
-| Publications | `src/data/publications.yaml` |
+| Hero label, research line, bio, photo caption, contact links, "Updated" date | `src/content/site/profile.yaml` |
+| Research cards and rows | `src/content/projects/<slug>/index.md` (one folder per project) |
+| News | `src/content/news/<YYYY-MM>-<slug>.md` |
+| Publications | `src/content/publications/<slug>.md` |
+| Navigation | `src/data/site.ts` |
 | CV | replace `public/Takahashi_CV.pdf` (keep the file name) |
 | Portrait | replace `src/assets/portrait.jpg` (4:5, at least 760 px wide) |
 
-**Add a news item.** Add an entry to the top of `src/data/news.yaml` with a unique `id`, a `date` in `YYYY-MM` form, and `text`. The text may use `*emphasis*` and `[links](https://…)`.
+**Add a news item.** Create a file such as `src/content/news/2026-12-jins-accepted.md`. The file name is its id. Give it a `date` in `YYYY-MM` form and `text`, which may use `*emphasis*` and `[links](https://…)`.
 
-```yaml
-- id: 2026-12-jins-accepted
-  date: "2026-12"
-  text: Our *JINS* paper on smartwatch verbal-recall scoring was accepted.
+```markdown
+---
+date: "2026-12"
+text: Our *JINS* paper on smartwatch verbal-recall scoring was accepted.
+---
 ```
 
-**Add a publication.** Copy an entry in `src/data/publications.yaml` and give it a unique `id` and the next `order`. `self` must match one of the `authors` exactly; that name is shown in bold.
+**Add a publication.** Copy a file in `src/content/publications/` under a new name and give it the next `order`. `self` must match one of the `authors` exactly; that name is shown in bold.
 
-**Every YAML entry needs a unique `id`.** If you copy an entry, change its `id`.
+**Drafts.** Add `draft: true` to keep any project, news item or publication off the site. If the GitHub repository is public, drafts are still readable there.
 
 **Show Gallery or Writing in the navigation.** Once those pages exist, set `enabled: true` on their items in `src/data/site.ts`.
 
-The build (including Cloudflare's) fails with a message naming the file and entry if any of these is true:
+The build (including Cloudflare's) fails with a message naming the file if any of these is true:
 
-- the YAML is invalid (for example, an unquoted `: ` inside a sentence; wrap such text in quotes);
-- an entry has no `id`, or two entries share one;
+- the frontmatter or YAML is invalid (for example, an unquoted `: ` inside a sentence; wrap such text in quotes);
 - a required field is missing;
 - a date is malformed;
 - a link isn't `https://`, `/…` or `mailto:`.

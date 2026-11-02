@@ -1,6 +1,6 @@
 const { test, before, after } = require('node:test');
 const assert = require('node:assert/strict');
-const { startServer, launch, openPage, readYaml } = require('./helpers.cjs');
+const { startServer, launch, openPage, readEntries } = require('./helpers.cjs');
 
 let srv;
 let browser;
@@ -11,7 +11,7 @@ const cardLinks = (page, i) => page.$$eval('#research article.project-card', (ca
   [...cards[idx].querySelectorAll('a')].map((a) => [a.textContent.replace('↗', '').trim(), a.getAttribute('href')]), i);
 
 test('every YAML project renders (no silent drops)', async () => {
-  const y = readYaml('src/data/projects.yaml');
+  const y = readEntries('src/content/projects', { nested: true });
   assert.equal(y.length, 6);
   const { page, context } = await openPage(browser, srv.url + '/');
   assert.equal(await page.$$eval('#research article.project-card', (e) => e.length), y.filter((p) => p.feature).length);

@@ -2,8 +2,10 @@
 import { Picture } from 'astro:assets';
 import portrait from '../assets/portrait.jpg';
 import { site } from '../data/site';
+import { getProfile, heroLinks } from '../lib/content';
 
-const { hero } = site;
+const hero = await getProfile();
+const links = heroLinks(hero);
 ---
 <section class="wrap hero" aria-labelledby="hero-name">
   <div class="text">
@@ -14,7 +16,7 @@ const { hero } = site;
       {hero.bio.map((p) => <p>{p}</p>)}
     </div>
     <ul class="hero-links hero-enter" style="--i: 4">
-      {hero.links.map((l) => (
+      {links.map((l) => (
         <li><a href={l.href} rel={l.href.startsWith('https://') ? 'noopener' : undefined}>{l.label}</a></li>
       ))}
     </ul>

@@ -1,18 +1,21 @@
 ---
 import { site } from '../data/site';
+import { getProfile } from '../lib/content';
+
+const profile = await getProfile();
 ---
 <footer class="site-footer">
   <div class="wrap inner">
     <span class="name serif">{site.name}</span>
     <ul class="links">
-      <li><a href={`mailto:${site.email}`}>Email</a></li>
-      <li><a href={site.github} rel="noopener">GitHub</a></li>
-      <li><a href={site.orcid} rel="noopener">ORCID</a></li>
-      <li><a href={site.cvPath}>CV</a></li>
+      <li><a href={`mailto:${profile.email}`}>Email</a></li>
+      <li><a href={profile.github} rel="noopener">GitHub</a></li>
+      <li><a href={profile.orcid} rel="noopener">ORCID</a></li>
+      <li><a href={profile.cvPath}>CV</a></li>
     </ul>
     <p class="meta notes">
       <span>Also published as {site.altName}.</span>
-      <span>Updated {site.updated}</span>
+      <span>Updated {profile.updated}</span>
     </p>
   </div>
 </footer>
