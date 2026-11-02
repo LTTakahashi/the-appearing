@@ -136,7 +136,8 @@ function assertRequired(name: keyof typeof REQUIRED_FIELDS, shape: Record<string
   }
 }
 assertRequired('profile', profileFields.shape);
-assertRequired('projects', projectFields(() => z.any()).shape);
+// Only the shape's keys matter here, so a placeholder stands in for Astro's image().
+assertRequired('projects', projectFields((() => z.any()) as unknown as ImageFunction).shape);
 assertRequired('news', newsFields.shape);
 assertRequired('publications', publicationFields.shape);
 
