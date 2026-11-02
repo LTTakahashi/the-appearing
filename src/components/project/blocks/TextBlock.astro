@@ -1,0 +1,30 @@
+---
+import { headingId, renderBlockMarkdown } from '../../../lib/markdown';
+
+interface Props {
+  heading: string;
+  body: string;
+}
+
+const { heading, body } = Astro.props;
+const id = headingId(heading);
+---
+<section class="block-text" id={id} aria-labelledby={`${id}-title`}>
+  <h2 id={`${id}-title`} class="serif">{heading}</h2>
+  <div class="prose" set:html={renderBlockMarkdown(body)} />
+</section>
+
+<style>
+  .block-text { scroll-margin-top: 24px; }
+  h2 {
+    margin-bottom: 16px;
+    font-size: 32px;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+  .prose { font-size: 17px; line-height: 1.7; color: var(--ink-2); }
+  .prose :global(p + p) { margin-top: 16px; }
+  .prose :global(h3) { margin: 24px 0 8px; font-size: 20px; color: var(--ink); }
+  .prose :global(ul), .prose :global(ol) { margin: 12px 0; padding-left: 22px; }
+  .prose :global(em) { font-style: italic; }
+</style>

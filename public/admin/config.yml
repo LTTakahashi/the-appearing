@@ -1,0 +1,220 @@
+# Sveltia CMS (https://sveltiacms.app) — the visual editor at /admin.
+# It edits the same files as src/content/; every save is a commit on `main`,
+# and Cloudflare rebuilds the site. Field rules mirror src/content.config.ts;
+# tests/admin.test.cjs keeps the two in step.
+
+backend:
+  name: github
+  repo: LTTakahashi/the-appearing
+  branch: main
+  auth_methods: [token]
+
+media_folder: src/assets/uploads
+public_folder: /src/assets/uploads
+slugify_filename: true
+
+output:
+  # Leave unset optional fields out of the file instead of writing '' or [].
+  omit_empty_optional_fields: true
+
+media_libraries:
+  default:
+    config:
+      # Uploads become WebP (≤ 2400 px wide), which also drops GPS and other metadata.
+      transformations:
+        raster_image: { format: webp, quality: 85, width: 2400 }
+
+collections:
+  - name: profile
+    label: Profile
+    icon: person
+    files:
+      - name: profile
+        label: Homepage hero and contact
+        file: src/content/site/profile.yaml
+        fields:
+          - { name: label, label: Label above your name, widget: string, required: true }
+          - { name: researchLine, label: Research line (italic), widget: text, required: true }
+          - name: bio
+            label: Bio (exactly two paragraphs)
+            widget: list
+            field: { name: paragraph, label: Paragraph, widget: text }
+            min: 2
+            max: 2
+            required: true
+          - name: caption
+            label: 'Photo caption (left, right)'
+            widget: list
+            field: { name: part, label: Part, widget: string }
+            min: 2
+            max: 2
+            required: true
+          - { name: email, label: Email, widget: string, required: true }
+          - { name: github, label: GitHub URL, widget: string, required: true, pattern: ['^https://', 'Must start with https://'] }
+          - { name: orcid, label: ORCID URL, widget: string, required: true, pattern: ['^https://', 'Must start with https://'] }
+          - { name: cvPath, label: CV file path, widget: string, required: true, default: /Takahashi_CV.pdf }
+          - { name: updated, label: '"Updated" date shown in the footer', widget: string, required: true }
+
+  - name: projects
+    label: Research projects
+    label_singular: Project
+    icon: science
+    folder: src/content/projects
+    path: '{{slug}}/index'
+    extension: md
+    format: frontmatter
+    create: true
+    identifier_field: title
+    summary: '{{order}} · {{title}}'
+    sortable_fields: [order, title]
+    media_folder: ''
+    public_folder: ''
+    fields:
+      - { name: title, label: Title, widget: string, required: true }
+      - { name: order, label: Order on the homepage, widget: number, value_type: int, required: true }
+      - { name: feature, label: Show as a card with an illustration (off = compact row), widget: boolean, default: false, required: true }
+      - { name: page, label: Has its own page, widget: boolean, default: false, required: false }
+      - { name: draft, label: Draft (hidden from the site), widget: boolean, default: false, required: false }
+      - { name: shortName, label: Short name (breadcrumb; needed for pages), widget: string, required: false }
+      - { name: kicker, label: Topic label (needed for cards and pages), widget: string, required: false }
+      - { name: figure, label: Illustration (needed for cards and pages), widget: select, options: [arts, praxis, homes, multiview], required: false }
+      - { name: figureCaption, label: Illustration caption on the page (needed for pages), widget: text, required: false }
+      - { name: summary, label: Summary (card or row text), widget: text, required: true }
+      - { name: question, label: Question line under the page title (needed for pages), widget: text, required: false }
+      - { name: role, label: Your role, widget: string, required: true }
+      - { name: status, label: Status, widget: string, required: true }
+      - name: authors
+        label: Authors (needed for pages; must include your name as written below)
+        widget: list
+        field: { name: author, label: Author, widget: string }
+        required: false
+      - { name: self, label: Your name as written in the author list, widget: string, required: false }
+      - name: minute
+        label: '"In one minute" (needed for pages: exactly 3 items; **bold** allowed)'
+        widget: list
+        field: { name: item, label: Item, widget: text }
+        min: 0
+        max: 3
+        required: false
+      - name: links
+        label: Links
+        widget: list
+        required: false
+        fields:
+          - { name: label, label: Label, widget: string, required: true }
+          - { name: href, label: URL, widget: string, required: true, pattern: ['^(https://|/|mailto:)', 'Use https://, /path or mailto:'] }
+      - { name: citation, label: 'Citation (**bold**, *italic* allowed)', widget: text, required: false }
+      - name: blocks
+        label: Page sections
+        label_singular: Section
+        widget: list
+        required: false
+        types:
+          - name: text
+            label: Text
+            widget: object
+            fields:
+              - { name: heading, label: Heading (also listed in "On this page"), widget: string, required: true }
+              - { name: body, label: Text, widget: markdown, required: true, buttons: [bold, italic, link, bulleted-list, numbered-list], editor_components: [] }
+          - name: steps
+            label: Steps (2–4 boxes with arrows)
+            widget: object
+            fields:
+              - name: items
+                label: Steps
+                widget: list
+                min: 2
+                max: 4
+                fields:
+                  - { name: label, label: Label, widget: string, required: true }
+                  - { name: text, label: Text, widget: string, required: true }
+                  - { name: emphasis, label: Highlight, widget: boolean, default: false, required: false }
+          - name: timeline
+            label: Timeline (2–4 stages)
+            widget: object
+            fields:
+              - name: stages
+                label: Stages
+                widget: list
+                min: 2
+                max: 4
+                fields:
+                  - { name: label, label: Label, widget: string, required: true }
+                  - { name: text, label: Text, widget: string, required: true }
+                  - { name: emphasis, label: Highlight, widget: boolean, default: false, required: false }
+          - name: stats
+            label: Number tiles (2–4)
+            widget: object
+            fields:
+              - name: items
+                label: Tiles
+                widget: list
+                min: 2
+                max: 4
+                fields:
+                  - { name: value, label: Number, widget: string, required: true }
+                  - { name: label, label: What it means, widget: string, required: true }
+                  - { name: muted, label: Muted (reference value), widget: boolean, default: false, required: false }
+          - name: figure
+            label: Figure (image)
+            widget: object
+            fields:
+              - { name: image, label: Image, widget: image, required: true }
+              - { name: alt, label: Alt text (what the image shows), widget: string, required: true }
+              - { name: caption, label: Caption, widget: text, required: true }
+          - name: interactive
+            label: Interactive figure
+            widget: object
+            fields:
+              - { name: name, label: Figure, widget: select, options: [practice-band], required: true }
+
+  - name: news
+    label: News
+    label_singular: News item
+    icon: newspaper
+    folder: src/content/news
+    extension: md
+    format: frontmatter
+    create: true
+    slug: '{{year}}-{{month}}-{{slug}}'
+    identifier_field: text
+    summary: '{{date}} · {{text}}'
+    sortable_fields: [date]
+    fields:
+      - { name: date, label: Month (YYYY-MM), widget: string, required: true, pattern: ['^\d{4}-(0[1-9]|1[0-2])$', 'Use YYYY-MM, e.g. 2026-12'] }
+      - { name: text, label: 'Text (*italic* and [links](https://…) allowed)', widget: text, required: true }
+      - { name: draft, label: Draft (hidden from the site), widget: boolean, default: false, required: false }
+
+  - name: publications
+    label: Publications
+    label_singular: Publication
+    icon: menu_book
+    folder: src/content/publications
+    extension: md
+    format: frontmatter
+    create: true
+    identifier_field: title
+    summary: '{{order}} · {{title}}'
+    sortable_fields: [order, title]
+    fields:
+      - { name: title, label: Title, widget: string, required: true }
+      - { name: order, label: Order, widget: number, value_type: int, required: true }
+      - { name: selected, label: Show on the homepage, widget: boolean, default: true, required: true }
+      - { name: type, label: Type, widget: select, options: [journal, abstract, software], required: true }
+      - { name: status, label: 'Status (e.g. Under review, Poster)', widget: string, required: false }
+      - name: authors
+        label: Authors (papers and abstracts)
+        widget: list
+        field: { name: author, label: Author, widget: string }
+        required: false
+      - { name: self, label: Your name as written in the author list, widget: string, required: true }
+      - { name: venue, label: Venue, widget: string, required: true }
+      - { name: year, label: Year, widget: number, value_type: int, required: true }
+      - name: links
+        label: Links
+        widget: list
+        required: false
+        fields:
+          - { name: label, label: Label, widget: string, required: true }
+          - { name: href, label: URL, widget: string, required: true, pattern: ['^(https://|/|mailto:)', 'Use https://, /path or mailto:'] }
+      - { name: draft, label: Draft (hidden from the site), widget: boolean, default: false, required: false }

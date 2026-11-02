@@ -14,6 +14,7 @@ import SkipLink from '../components/SkipLink.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { site } from '../data/site';
+import { getProfile } from '../lib/content';
 
 interface Props {
   title?: string;
@@ -22,7 +23,8 @@ interface Props {
   noindex?: boolean;
 }
 
-const { title = site.name, description = site.description, path = '/', noindex = false } = Astro.props;
+const profile = await getProfile();
+const { title = site.name, description = profile.researchLine, path = '/', noindex = false } = Astro.props;
 const canonical = new URL(path, site.url).href;
 const ogImage = new URL('/og.png', site.url).href;
 const personLd = {
@@ -31,9 +33,9 @@ const personLd = {
   name: site.name,
   alternateName: site.legalName,
   url: new URL('/', site.url).href,
-  email: `mailto:${site.email}`,
+  email: `mailto:${profile.email}`,
   affiliation: { '@type': 'CollegeOrUniversity', name: site.affiliation },
-  sameAs: [site.orcid, site.github],
+  sameAs: [profile.orcid, profile.github],
 };
 ---
 <!doctype html>
@@ -78,7 +80,7 @@ const personLd = {
 
     <link rel="preload" href={newsreaderWoff2} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={interWoff2} as="font" type="font/woff2" crossorigin />
-    <script type="application/ld+json" set:html={JSON.stringify(personLd)} />
+    <script type="application/ld+json" set:html={JSON.stringify(personLd).replace(/</g, '\\u003c')} />
   </head>
   <body>
     <SkipLink />

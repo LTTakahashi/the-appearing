@@ -22,7 +22,7 @@ test('CV PDF is the Nov 2026 CV', () => {
 
 test('redirects cover old URLs', () => {
   const r = fs.readFileSync(path.join(DIST, '_redirects'), 'utf8');
-  for (const from of ['/index.html', '/research/*', '/papers/*', '/assets/figures/*', '/Takahashi_Research_Statement.pdf']) {
+  for (const from of ['/index.html', '/research/nullstate.html', '/research/multiview.html', '/research/behavior.html', '/research/program.html', '/papers/*', '/assets/figures/*', '/Takahashi_Research_Statement.pdf']) {
     const escaped = from.replace(/[.*]/g, '\\$&');
     assert.match(r, new RegExp(`^${escaped}\\s+/\\s+301$`, 'm'), `missing redirect for ${from}`);
   }

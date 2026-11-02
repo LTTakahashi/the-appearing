@@ -1,0 +1,35 @@
+---
+import type { LinkItem } from '../../data/site';
+import { renderInline } from '../../lib/format';
+import LinkChips from '../LinkChips.astro';
+
+interface Props {
+  citation?: string;
+  links: LinkItem[];
+}
+
+const { citation, links } = Astro.props;
+---
+<section id="paper-and-code" class="paper" aria-labelledby="paper-and-code-title">
+  <h2 id="paper-and-code-title" class="serif">Paper and code</h2>
+  {citation && <p class="citation" set:html={renderInline(citation)} />}
+  <LinkChips links={links} variant="chip" />
+</section>
+
+<style>
+  .paper {
+    position: relative;
+    margin-top: 56px;
+    padding-top: 28px;
+    border-top: 1px solid var(--rule-strong);
+    scroll-margin-top: 24px;
+  }
+  h2 { margin-bottom: 14px; font-size: 26px; }
+  .citation {
+    margin-bottom: 16px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ink-2);
+  }
+  .citation :global(strong) { color: var(--ink); font-weight: 600; }
+</style>

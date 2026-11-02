@@ -1,0 +1,57 @@
+---
+interface Props {
+  items: { label: string; text: string; emphasis?: boolean }[];
+}
+
+const { items } = Astro.props;
+---
+<ol class="block-steps">
+  {items.map((s) => (
+    <li class:list={{ 'is-emphasis': s.emphasis }}>
+      <p class="step-label">{s.label}</p>
+      <p class="step-text">{s.text}</p>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .block-steps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 28px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  li {
+    position: relative;
+    flex: 1 1 170px;
+    min-width: 0;
+    padding: 14px 16px;
+    border: 1px solid var(--rule-strong);
+    background: var(--paper);
+  }
+  li:not(:last-child)::after {
+    content: '→' / '';
+    position: absolute;
+    right: -21px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--font-mono);
+    color: var(--muted);
+  }
+  li.is-emphasis { border-color: var(--accent); }
+  .step-label {
+    margin-bottom: 6px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .is-emphasis .step-label { color: var(--accent); }
+  .step-text { font-size: 14.5px; line-height: 1.45; }
+  @media (max-width: 599px) {
+    li:not(:last-child)::after { content: none; }
+  }
+</style>

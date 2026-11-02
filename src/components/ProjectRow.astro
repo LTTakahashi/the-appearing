@@ -1,17 +1,22 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import LinkChips from './LinkChips.astro';
+import { vtName } from '../lib/vt';
 
 type ProjectData = CollectionEntry<'projects'>['data'];
 
 interface Props {
   project: ProjectData;
+  slug?: string;
+  hasPage?: boolean;
 }
 
-const { project } = Astro.props;
+const { project, slug, hasPage = false } = Astro.props;
+const href = hasPage && slug ? `/research/${slug}/` : null;
+const titleStyle = href && slug ? `view-transition-name: ${vtName('title', slug)}` : undefined;
 ---
 <div class="project-row">
-  <h3 class="serif">{project.title}</h3>
+  <h3 class="serif" style={titleStyle}>{href ? <a href={href}>{project.title}</a> : project.title}</h3>
   <p class="summary">{project.summary}</p>
   <div class="side">
     <p class="meta">{project.role} · {project.status}</p>

@@ -1,0 +1,32 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import TextBlock from './blocks/TextBlock.astro';
+import StepsBlock from './blocks/StepsBlock.astro';
+import TimelineBlock from './blocks/TimelineBlock.astro';
+import StatsBlock from './blocks/StatsBlock.astro';
+import FigureBlock from './blocks/FigureBlock.astro';
+import InteractiveBlock from './blocks/InteractiveBlock.astro';
+
+type Block = CollectionEntry<'projects'>['data']['blocks'][number];
+
+interface Props {
+  blocks: Block[];
+}
+
+const { blocks } = Astro.props;
+---
+<div class="blocks">
+  {blocks.map((b) => {
+    if (b.type === 'text') return <TextBlock heading={b.heading} body={b.body} />;
+    if (b.type === 'steps') return <StepsBlock items={b.items} />;
+    if (b.type === 'timeline') return <TimelineBlock stages={b.stages} />;
+    if (b.type === 'stats') return <StatsBlock items={b.items} />;
+    if (b.type === 'figure') return <FigureBlock image={b.image} alt={b.alt} caption={b.caption} />;
+    if (b.type === 'interactive') return <InteractiveBlock name={b.name} />;
+    return null;
+  })}
+</div>
+
+<style>
+  .blocks { display: flex; flex-direction: column; gap: 56px; margin-top: 56px; }
+</style>

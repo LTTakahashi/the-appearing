@@ -90,4 +90,34 @@ function readYaml(relPath) {
   return parse(fs.readFileSync(path.join(ROOT, relPath), 'utf8'));
 }
 
-module.exports = { ROOT, DIST, startServer, launch, openPage, readYaml };
+// Visible homepage text, whitespace-collapsed, for the phase-1 characterization fixture.
+async function homeSnapshot(page) {
+  return page.evaluate(() => {
+    const t = (el) => (el ? el.textContent.replace(/\s+/g, ' ').trim() : null);
+    const all = (sel) => [...document.querySelectorAll(sel)].map(t);
+    return {
+      hero: t(document.querySelector('.hero')),
+      cards: all('#research article.project-card'),
+      rows: all('#research .project-row'),
+      news: all('.news > li'),
+      pubs: all('.pubs > li'),
+      footer: t(document.querySelector('footer')),
+    };
+  });
+}
+
+// Frontmatter of every published (non-draft) entry in a content folder.
+// `nested: true` reads <dir>/<slug>/index.md, otherwise <dir>/*.md.
+function readEntries(relDir, { nested = false } = {}) {
+  const { parse } = require('yaml');
+  const dir = path.join(ROOT, relDir);
+  const files = nested
+    ? fs.readdirSync(dir).map((d) => path.join(dir, d, 'index.md')).filter((f) => fs.existsSync(f))
+    : fs.readdirSync(dir).filter((f) => f.endsWith('.md')).map((f) => path.join(dir, f));
+  return files
+    .map((f) => ({ id: nested ? path.basename(path.dirname(f)) : path.basename(f, '.md'),
+      ...parse(fs.readFileSync(f, 'utf8').split(/^---$/m)[1]) }))
+    .filter((e) => e.draft !== true);
+}
+
+module.exports = { ROOT, DIST, startServer, launch, openPage, readYaml, readEntries, homeSnapshot };

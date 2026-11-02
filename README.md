@@ -18,40 +18,75 @@ npm run dev      # http://localhost:4321
 
 ## Edit content
 
-All homepage content lives in `src/data/`. Components hold no copy of their own.
+All content lives in `src/content/`, one file per entry. Components hold no copy of their own. The visual editor at `/admin` edits these same files (see "Visual editor" below); you can also edit them directly.
 
 | What | File |
 |---|---|
-| Name, bio, hero text, contact links, navigation, "Updated" date | `src/data/site.ts` |
-| Research cards and rows | `src/data/projects.yaml` |
-| News | `src/data/news.yaml` |
-| Publications | `src/data/publications.yaml` |
+| Hero label, research line, bio, photo caption, contact links, "Updated" date | `src/content/site/profile.yaml` |
+| Research cards and rows | `src/content/projects/<slug>/index.md` (one folder per project) |
+| News | `src/content/news/<YYYY-MM>-<slug>.md` |
+| Publications | `src/content/publications/<slug>.md` |
+| Navigation | `src/data/site.ts` |
 | CV | replace `public/Takahashi_CV.pdf` (keep the file name) |
 | Portrait | replace `src/assets/portrait.jpg` (4:5, at least 760 px wide) |
 
-**Add a news item.** Add an entry to the top of `src/data/news.yaml` with a unique `id`, a `date` in `YYYY-MM` form, and `text`. The text may use `*emphasis*` and `[links](https://…)`.
+**Add a news item.** Create a file such as `src/content/news/2026-12-jins-accepted.md`. The file name is its id. Give it a `date` in `YYYY-MM` form and `text`, which may use `*emphasis*` and `[links](https://…)`.
 
-```yaml
-- id: 2026-12-jins-accepted
-  date: "2026-12"
-  text: Our *JINS* paper on smartwatch verbal-recall scoring was accepted.
+```markdown
+---
+date: "2026-12"
+text: Our *JINS* paper on smartwatch verbal-recall scoring was accepted.
+---
 ```
 
-**Add a publication.** Copy an entry in `src/data/publications.yaml` and give it a unique `id` and the next `order`. `self` must match one of the `authors` exactly; that name is shown in bold.
+**Add a publication.** Copy a file in `src/content/publications/` under a new name and give it the next `order`. `self` must match one of the `authors` exactly; that name is shown in bold.
 
-**Every YAML entry needs a unique `id`.** If you copy an entry, change its `id`.
+**Drafts.** Add `draft: true` to keep any project, news item or publication off the site. If the GitHub repository is public, drafts are still readable there.
 
 **Show Gallery or Writing in the navigation.** Once those pages exist, set `enabled: true` on their items in `src/data/site.ts`.
 
-The build (including Cloudflare's) fails with a message naming the file and entry if any of these is true:
+The build (including Cloudflare's) fails with a message naming the file if any of these is true:
 
-- the YAML is invalid (for example, an unquoted `: ` inside a sentence; wrap such text in quotes);
-- an entry has no `id`, or two entries share one;
+- the frontmatter or YAML is invalid (for example, an unquoted `: ` inside a sentence; wrap such text in quotes);
 - a required field is missing;
 - a date is malformed;
 - a link isn't `https://`, `/…` or `mailto:`.
 
 Nothing is ever silently dropped.
+
+## Visual editor
+
+The editor at **luiztakahashi.com/admin** edits the files in `src/content/` from any browser, including your phone. Every save is a commit on `main`, and Cloudflare publishes it a minute or two later.
+
+**Sign in once per browser:**
+
+1. On GitHub, open Settings → Developer settings → Personal access tokens → **Fine-grained tokens** → Generate new token.
+2. Under Repository access, choose **Only select repositories** and pick `LTTakahashi/the-appearing`.
+3. Under Permissions → Repository permissions, set **Contents** to **Read and write**. Leave everything else at No access.
+4. Pick an expiry (for example 90 days), create the token and copy it.
+5. Open `/admin`, choose **Sign in with token**, and paste it. The token stays in that browser only. Never put it in the repository.
+
+**What each section edits:**
+
+| Editor section | Files |
+|---|---|
+| Profile | `src/content/site/profile.yaml` (hero, bio, contact links, "Updated" date) |
+| Research projects | `src/content/projects/<slug>/index.md` and images in the same folder |
+| News | `src/content/news/*.md` |
+| Publications | `src/content/publications/*.md` |
+
+**Project pages.** A project with "Has its own page" switched on also needs:
+
+- a short name;
+- a topic label;
+- an illustration and its caption;
+- a question line;
+- authors that include your name;
+- exactly three "In one minute" items.
+
+If any of these is missing, the build stops and Cloudflare keeps the previous version online. A page marked as a draft can be saved half-finished; these checks start when the draft switch is turned off. Page sections can be text, steps, a timeline, number tiles, an image, or an interactive figure. The "On this page" list is built from the text sections' headings, so each heading must be different (not just in capitals or punctuation) and can't be "In one minute" or "Paper and code". Images go in an image section, with alt text and a caption, not inside a text section.
+
+**Photos.** Images uploaded in the editor are converted to WebP, which removes GPS location. The build also refuses any image that still carries location data, or whose metadata it can't read.
 
 ## Check before publishing
 
