@@ -1,9 +1,11 @@
 {
   "name": "the-appearing",
   "compatibility_date": "2025-12-18",
+  // `npx wrangler deploy` runs the Astro build first, then uploads dist/.
+  "build": { "command": "npm run build" },
   "assets": {
-    // Serve ONLY the built site. Keeps private files in the repo root
-    // (application plan, full proposal, source docs) out of the public deploy.
-    "directory": "./site"
+    // Serve ONLY the built site. Nothing outside dist/ is ever published.
+    "directory": "./dist",
+    "not_found_handling": "404-page"
   }
 }
