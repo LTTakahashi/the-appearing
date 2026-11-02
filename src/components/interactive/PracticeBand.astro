@@ -42,7 +42,7 @@ const id = 'pb-day';
           data-day={p.day} cx={p.cx} cy={p.cy} r={p.day === DEFAULT_DAY ? 7 : 4.5}></circle>
       ))}
       {g.points.map((p) => (
-        <circle class="pb-point" data-day={p.day} cx={p.cx} cy={p.cy} r="16" role="button" tabindex="-1" aria-label={`Select day ${p.day}`}></circle>
+        <circle class="pb-point" data-day={p.day} cx={p.cx} cy={p.cy} r="16" aria-hidden="true"></circle>
       ))}
     </svg>
   </div>

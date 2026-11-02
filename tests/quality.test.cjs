@@ -23,33 +23,49 @@ async function runAxe(page) {
   return page.evaluate(() => window.axe.run(document, { runOnly: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'] }));
 }
 
-for (const width of [1440, 390]) {
-  for (const colorScheme of ['light', 'dark']) {
-    test(`axe: no serious or critical violations @${width} ${colorScheme}`, async () => {
-      const { page, context } = await openPage(browser, srv.url + '/', { width, colorScheme });
-      await settle(page);
-      const { violations } = await runAxe(page);
-      const bad = violations
-        .filter((v) => ['serious', 'critical'].includes(v.impact))
-        .map((v) => `${v.id}: ${v.nodes.slice(0, 3).map((n) => n.target.join(' ')).join(' | ')}`);
-      assert.deepEqual(bad, []);
-      await context.close();
-    });
+const PAGES = ['/', '/research/arts/', '/research/smart-homes/', '/research/practice-as-signal/', '/research/multi-view/'];
 
-    test(`no horizontal overflow and no console errors @${width} ${colorScheme}`, async () => {
-      const { page, context, errors } = await openPage(browser, srv.url + '/', { width, colorScheme });
-      await settle(page);
-      const { sw, iw } = await page.evaluate(() => ({ sw: document.documentElement.scrollWidth, iw: window.innerWidth }));
-      assert.ok(sw <= iw, `scrollWidth ${sw} > innerWidth ${iw}`);
-      assert.deepEqual(errors, []);
-      await context.close();
-    });
+for (const pagePath of PAGES) {
+  for (const width of [1440, 390]) {
+    for (const colorScheme of ['light', 'dark']) {
+      test(`${pagePath} @${width} ${colorScheme}: axe clean, no overflow, no console errors`, async () => {
+        const { page, context, errors } = await openPage(browser, srv.url + pagePath, { width, colorScheme });
+        await settle(page);
+        const { sw, iw } = await page.evaluate(() => ({ sw: document.documentElement.scrollWidth, iw: window.innerWidth }));
+        assert.ok(sw <= iw, `scrollWidth ${sw} > innerWidth ${iw}`);
+        const { violations } = await runAxe(page);
+        const bad = violations
+          .filter((v) => ['serious', 'critical'].includes(v.impact))
+          .map((v) => `${v.id}: ${v.nodes.slice(0, 3).map((n) => n.target.join(' ')).join(' | ')}`);
+        assert.deepEqual(bad, []);
+        assert.deepEqual(errors, []);
+        await context.close();
+      });
+    }
   }
 }
 
 test('no horizontal overflow at 320px', async () => {
-  const { page, context } = await openPage(browser, srv.url + '/', { width: 320, height: 700 });
+  for (const pagePath of PAGES) {
+    const { page, context } = await openPage(browser, srv.url + pagePath, { width: 320, height: 700 });
+    await settle(page);
+    const { sw, iw } = await page.evaluate(() => ({ sw: document.documentElement.scrollWidth, iw: window.innerWidth }));
+    assert.ok(sw <= iw, `${pagePath}: scrollWidth ${sw} > innerWidth ${iw}`);
+    await context.close();
+  }
+});
+
+test('long unbroken strings wrap on project pages at 320px', async () => {
+  const { page, context } = await openPage(browser, srv.url + '/research/arts/', { width: 320, height: 700 });
   await settle(page);
+  await page.evaluate(() => {
+    const long = 'https://doi.org/10.1017/S1355617726101234_supplementary_materials_and_code_archive_v2_final';
+    for (const sel of ['.project-header h1', '.project-question', '.block-text .prose p', '.stat-label', '.step-text', '.stage-text', '.citation']) {
+      const el = document.querySelector(sel);
+      if (!el) throw new Error(`missing ${sel}`);
+      el.append(` ${long}`);
+    }
+  });
   const { sw, iw } = await page.evaluate(() => ({ sw: document.documentElement.scrollWidth, iw: window.innerWidth }));
   assert.ok(sw <= iw, `scrollWidth ${sw} > innerWidth ${iw}`);
   await context.close();
@@ -73,7 +89,7 @@ test('long unbroken strings in content wrap instead of scrolling sideways at 320
 });
 
 test('every internal link and asset resolves', async () => {
-  for (const pagePath of ['/', '/404']) {
+  for (const pagePath of [...PAGES, '/404']) {
     const { page, context } = await openPage(browser, srv.url + pagePath);
     const refs = await page.evaluate(() => {
       const out = new Set();
@@ -102,11 +118,11 @@ test('every internal link and asset resolves', async () => {
 
 test('screenshots for review', async () => {
   fs.mkdirSync(SHOTS, { recursive: true });
-  for (const width of [1440, 390]) {
+  for (const [pagePath, name] of [['/', 'home'], ['/research/arts/', 'arts'], ['/research/practice-as-signal/', 'practice']]) for (const width of [1440, 390]) {
     for (const colorScheme of ['light', 'dark']) {
-      const { page, context } = await openPage(browser, srv.url + '/', { width, colorScheme, reducedMotion: 'reduce' });
+      const { page, context } = await openPage(browser, srv.url + pagePath, { width, colorScheme, reducedMotion: 'reduce' });
       await page.evaluate(() => document.fonts.ready);
-      const file = path.join(SHOTS, `home-${width}-${colorScheme}.png`);
+      const file = path.join(SHOTS, `${name}-${width}-${colorScheme}.png`);
       await page.screenshot({ path: file, fullPage: true });
       assert.ok(fs.statSync(file).size > 10_000);
       await context.close();
