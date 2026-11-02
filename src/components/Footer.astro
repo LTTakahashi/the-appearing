@@ -1,0 +1,53 @@
+---
+import { site } from '../data/site';
+---
+<footer class="site-footer">
+  <div class="wrap inner">
+    <span class="name serif">{site.name}</span>
+    <ul class="links">
+      <li><a href={`mailto:${site.email}`}>Email</a></li>
+      <li><a href={site.github} rel="noopener">GitHub</a></li>
+      <li><a href={site.orcid} rel="noopener">ORCID</a></li>
+      <li><a href={site.cvPath}>CV</a></li>
+    </ul>
+    <p class="meta notes">
+      <span>Also published as {site.altName}.</span>
+      <span>Updated {site.updated}</span>
+    </p>
+  </div>
+</footer>
+
+<style>
+  .site-footer { margin-top: 24px; }
+  .inner {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px 40px;
+    padding-top: 36px;
+    padding-bottom: 56px;
+  }
+  .inner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: var(--gutter);
+    right: var(--gutter);
+    border-top: 1px solid var(--rule-strong);
+  }
+  .name { font-size: 20px; font-weight: 600; }
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 24px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+  }
+  .links a { display: inline-flex; align-items: center; min-height: 44px; }
+  .notes { display: flex; flex-wrap: wrap; gap: 4px 24px; }
+</style>

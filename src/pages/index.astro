@@ -1,6 +1,9 @@
 ---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../data/site';
 ---
-<html lang="en">
-  <head><meta charset="utf-8" /><title>Luiz Takahashi</title></head>
-  <body><h1>Luiz Takahashi</h1></body>
-</html>
+<BaseLayout>
+  <section class="wrap">
+    <h1 class="serif">{site.name}</h1>
+  </section>
+</BaseLayout>
