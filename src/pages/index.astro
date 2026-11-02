@@ -1,9 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { site } from '../data/site';
+import Hero from '../components/Hero.astro';
 ---
 <BaseLayout>
-  <section class="wrap">
-    <h1 class="serif">{site.name}</h1>
-  </section>
+  <Hero />
 </BaseLayout>
