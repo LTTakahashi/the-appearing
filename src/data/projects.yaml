@@ -1,0 +1,80 @@
+# Research projects shown on the homepage. Copy is fixed by the design spec §7.3.
+# feature: true  → a card with an illustration (needs `figure` and `kicker`)
+# feature: false → a compact row
+# Every entry needs a unique `id`, or Astro silently skips it.
+
+- id: arts
+  order: 1
+  feature: true
+  figure: arts
+  kicker: Speech · Wearables
+  title: Scoring spoken word recall on a smartwatch
+  summary: >-
+    Older adults said the words they remembered into an Apple Watch, unsupervised, in daily life.
+    ARTS scores the recall from Whisper’s word probabilities, not only its top guess, and matched
+    two human scorers on held-out participants (ICC .97).
+  role: First author
+  status: Submitted to JINS · Open source
+  links:
+    - { label: Code, href: "https://github.com/WSU-CASAS/ARTS" }
+
+- id: praxis
+  order: 2
+  feature: true
+  figure: praxis
+  kicker: Repeated testing · Hierarchical models
+  title: Practice as signal
+  summary: >-
+    A test repeated on a watch is also a learning task. Praxis gives each prompt a calibrated
+    expected-score band. On people left out of the fit its 95% bands held 93–97% coverage, while
+    a fixed day-one range fell to 43%.
+  role: Lead
+  status: Manuscript in preparation
+
+- id: homes
+  order: 3
+  feature: true
+  figure: homes
+  kicker: Ambient sensing · State-space models
+  title: Room-aware tracking in smart homes
+  summary: >-
+    A Kalman filter adapted to event-driven home sensors cut localization error by 18% with
+    uncertainty that stayed calibrated (92% consistency vs. 65%). In 35 older adults’ homes, more
+    varied days went with better working memory.
+  role: First author
+  status: ISG 2026 poster
+  links:
+    - { label: DOI, href: "https://doi.org/10.4017/gt.2026.25.2.1421.3" }
+
+- id: adherence
+  order: 4
+  feature: false
+  title: Medication adherence from in-home sensors
+  summary: >-
+    A classifier for motion sensors on pill bottles and organizers matched clinician records
+    about 93% of the time across 25 older adults’ homes.
+  role: Second author
+  status: ISG 2026
+  links:
+    - { label: DOI, href: "https://doi.org/10.4017/gt.2026.25.2.1527.3" }
+
+- id: multiview
+  order: 5
+  feature: false
+  title: Multi-view interaction detection
+  summary: >-
+    With Junhao Wen (Columbia): proofs and analysis code for detecting interactions between
+    biomarker views. In multi-cohort proteomics, an apparent cross-organ interaction vanished
+    under cohort adjustment, as the theory predicted.
+  role: First author
+  status: In preparation
+
+- id: sql
+  order: 6
+  feature: false
+  title: SQL Component Match
+  summary: >-
+    An AST-based metric that judges whether generated SQL means the same as the reference: 95%
+    semantic accuracy vs. 70% for the Spider metric. C4AI, University of São Paulo.
+  role: Technical report
+  status: "2025"

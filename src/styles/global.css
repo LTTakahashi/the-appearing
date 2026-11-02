@@ -44,7 +44,31 @@ a:hover { text-decoration-color: var(--accent); }
   padding-inline: var(--gutter);
 }
 
-.section { border-top: 1px solid var(--rule-strong); }
+/* Section rule spans the content column (between gutters), like the header rule. */
+.section { position: relative; }
+.section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: var(--gutter);
+  right: var(--gutter);
+  border-top: 1px solid var(--rule-strong);
+}
+
+.section-title {
+  font-family: var(--font-serif);
+  font-size: 40px;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+}
+
+/* Two-ink figure classes (spec §6.5): ink, accent, paper as fill (i/a/p)
+   or stroke (is/as). SVG presentation attributes cannot read CSS variables. */
+.fig .i { fill: var(--ink); }
+.fig .is { stroke: var(--ink); }
+.fig .a { fill: var(--accent); }
+.fig .as { stroke: var(--accent); }
+.fig .p { fill: var(--paper); }
 
 .serif { font-family: var(--font-serif); }
 

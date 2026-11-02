@@ -1,0 +1,52 @@
+---
+import type { LinkItem } from '../data/site';
+
+interface Props {
+  links: LinkItem[];
+  variant?: 'inline' | 'chip';
+}
+
+const { links, variant = 'inline' } = Astro.props;
+---
+{links.length > 0 && (
+  <ul class:list={['link-list', variant]}>
+    {links.map((l) => {
+      const external = l.href.startsWith('https://');
+      return (
+        <li>
+          <a href={l.href} rel={external ? 'noopener' : undefined}>
+            {l.label}{external && <span class="arrow" aria-hidden="true">↗</span>}
+          </a>
+        </li>
+      );
+    })}
+  </ul>
+)}
+
+<style>
+  .link-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+  }
+  a { display: inline-flex; align-items: center; gap: 4px; }
+  .arrow { text-decoration: none; display: inline-block; }
+
+  .chip { gap: 8px; }
+  .chip a {
+    padding: 3px 9px;
+    border: 1px solid var(--rule-strong);
+    text-decoration: none;
+    transition: border-color 200ms ease, color 200ms ease;
+  }
+  .chip a:hover { border-color: var(--accent); color: var(--accent); }
+
+  @media (pointer: coarse) {
+    .link-list a { min-height: 44px; }
+  }
+</style>

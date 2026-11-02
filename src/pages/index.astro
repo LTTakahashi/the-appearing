@@ -1,7 +1,38 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import ProjectRow from '../components/ProjectRow.astro';
+
+const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+const featured = projects.filter((p) => p.data.feature);
+const rows = projects.filter((p) => !p.data.feature);
 ---
 <BaseLayout>
   <Hero />
+
+  <section id="research" class="wrap section research" aria-labelledby="research-title">
+    <h2 id="research-title" class="section-title">Research</h2>
+    <div class="cards">
+      {featured.map((p) => <ProjectCard project={p.data} />)}
+    </div>
+    <div class="rows">
+      {rows.map((p) => <ProjectRow project={p.data} />)}
+    </div>
+  </section>
 </BaseLayout>
+
+<style>
+  .research { padding-top: 56px; padding-bottom: 80px; scroll-margin-top: 16px; }
+  .section-title { margin-bottom: 36px; }
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px 32px;
+  }
+  .rows {
+    margin-top: 56px;
+    border-top: 1px solid var(--rule);
+  }
+</style>

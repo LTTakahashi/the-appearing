@@ -1,0 +1,24 @@
+---
+import Grain from './Grain.astro';
+---
+<svg class="fig" viewBox="0 0 400 300" role="img" aria-label="Illustration: daily scores rise with practice inside a calibrated band; a flat day-one range falls behind; one score drops below the band.">
+  <Grain id="grain-praxis" />
+  <line class="is" x1="40" y1="250" x2="370" y2="250" stroke-width="1.5"></line>
+  <line class="is" x1="40" y1="40" x2="40" y2="250" stroke-width="1.5"></line>
+  <rect class="i" x="40" y="172" width="330" height="48" opacity="0.07"></rect>
+  <line class="is" x1="40" y1="196" x2="370" y2="196" stroke-width="1.2" stroke-dasharray="4 4" opacity="0.55"></line>
+  <path class="a" d="M50,186 C110,128 170,90 240,78 S330,68 360,66 L360,110 C330,112 300,116 240,122 C170,134 110,172 50,234 Z" opacity="0.18"></path>
+  <path class="as" d="M50,210 C110,150 170,112 240,100 S330,90 360,88" fill="none" stroke-width="2.6"></path>
+  <g class="i">
+    <circle cx="60" cy="212" r="3.8"></circle><circle cx="82" cy="176" r="3.8"></circle>
+    <circle cx="104" cy="174" r="3.8"></circle><circle cx="126" cy="146" r="3.8"></circle>
+    <circle cx="148" cy="141" r="3.8"></circle><circle cx="170" cy="122" r="3.8"></circle>
+    <circle cx="192" cy="124" r="3.8"></circle><circle cx="214" cy="106" r="3.8"></circle>
+    <circle cx="236" cy="109" r="3.8"></circle><circle cx="258" cy="96" r="3.8"></circle>
+    <circle cx="302" cy="90" r="3.8"></circle><circle cx="324" cy="96" r="3.8"></circle>
+    <circle cx="346" cy="86" r="3.8"></circle>
+  </g>
+  <circle class="a" cx="280" cy="152" r="5"></circle>
+  <circle class="as" cx="280" cy="152" r="11" fill="none" stroke-width="1.5"></circle>
+  <rect width="400" height="300" filter="url(#grain-praxis)"></rect>
+</svg>
