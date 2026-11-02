@@ -54,6 +54,40 @@ The build (including Cloudflare's) fails with a message naming the file if any o
 
 Nothing is ever silently dropped.
 
+## Visual editor
+
+The editor at **luiztakahashi.com/admin** edits the files in `src/content/` from any browser, including your phone. Every save is a commit on `main`, and Cloudflare publishes it a minute or two later.
+
+**Sign in once per browser:**
+
+1. On GitHub, open Settings → Developer settings → Personal access tokens → **Fine-grained tokens** → Generate new token.
+2. Under Repository access, choose **Only select repositories** and pick `LTTakahashi/the-appearing`.
+3. Under Permissions → Repository permissions, set **Contents** to **Read and write**. Leave everything else at No access.
+4. Pick an expiry (for example 90 days), create the token and copy it.
+5. Open `/admin`, choose **Sign in with token**, and paste it. The token stays in that browser only. Never put it in the repository.
+
+**What each section edits:**
+
+| Editor section | Files |
+|---|---|
+| Profile | `src/content/site/profile.yaml` (hero, bio, contact links, "Updated" date) |
+| Research projects | `src/content/projects/<slug>/index.md` and images in the same folder |
+| News | `src/content/news/*.md` |
+| Publications | `src/content/publications/*.md` |
+
+**Project pages.** A project with "Has its own page" switched on also needs:
+
+- a short name;
+- a topic label;
+- an illustration and its caption;
+- a question line;
+- authors that include your name;
+- exactly three "In one minute" items.
+
+If any of these is missing, the build stops and Cloudflare keeps the previous version online. Page sections can be text, steps, a timeline, number tiles, an image, or an interactive figure. The "On this page" list is built from the text sections' headings.
+
+**Photos.** Images uploaded in the editor are converted to WebP, which removes GPS location. The build also refuses any image that still carries location data.
+
 ## Check before publishing
 
 ```bash

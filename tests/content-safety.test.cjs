@@ -104,3 +104,12 @@ test('a figure block whose image file is missing fails the build', () => {
   assert.notEqual(r.status, 0, `build should fail:\n${r.out.slice(-600)}`);
   assert.match(r.out, /missing\.webp/);
 });
+
+test('the editor\'s required-field list cannot drift from the schemas', () => {
+  const r = buildCopy((dir) => {
+    const f = path.join(dir, 'src/lib/required-fields.ts');
+    fs.writeFileSync(f, fs.readFileSync(f, 'utf8').replace("news: ['date', 'text'],", "news: ['date'],"));
+  });
+  assert.notEqual(r.status, 0, `build should fail:\n${r.out.slice(-600)}`);
+  assert.match(r.out, /required-fields\.ts: news lists \[date\] but the schema requires \[date,text\]/);
+});
