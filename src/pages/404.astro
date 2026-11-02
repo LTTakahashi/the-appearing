@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { site } from '../data/site';
 ---
-<BaseLayout title={`Page not found · ${site.name}`} path="/404">
+<BaseLayout title={`Page not found · ${site.name}`} path="/404" noindex>
   <section class="wrap notfound">
     <p class="kicker">404</p>
     <h1 class="serif">Page not found</h1>

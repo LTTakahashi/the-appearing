@@ -99,6 +99,15 @@ a:hover { text-decoration-color: var(--accent); }
 }
 
 /* ---------- motion ---------- */
+/* .reveal is only ever added by src/scripts/reveal.ts (JS on, motion allowed). */
+.reveal {
+  transition: opacity 400ms ease, transform 400ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.js .reveal:not(.is-visible) {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
 @media (prefers-reduced-motion: no-preference) {
   @view-transition { navigation: auto; }
 }
