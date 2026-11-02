@@ -35,6 +35,13 @@ test('wrangler serves dist with build step and 404 page', () => {
   assert.match(cfg, /"command":\s*"npm run build"/);
 });
 
+test('browser tests run on a fresh machine: playwright is a project dependency', () => {
+  const pkg = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8'));
+  assert.ok(pkg.devDependencies && pkg.devDependencies.playwright, 'playwright missing from devDependencies');
+  const resolved = require.resolve('playwright', { paths: [ROOT] });
+  assert.ok(resolved.startsWith(path.join(ROOT, 'node_modules')), `playwright resolved outside the project: ${resolved}`);
+});
+
 test('unknown path returns 404 status', async () => {
   const srv = await startServer();
   try {

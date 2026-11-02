@@ -61,11 +61,7 @@ npm run verify
 
 This runs `astro check`, a production build, the browser tests in `tests/`, and a Cloudflare dry run (`wrangler deploy --dry-run`). The browser tests check layout, theme, accessibility (axe), links and phone widths.
 
-The browser tests use Playwright through `require('playwright')`. On a fresh machine, install it once:
-
-```bash
-npm i -g playwright
-```
+The browser tests use Playwright, which `npm install` adds as a dev dependency. On a fresh machine, download its browser once:
 
 ```bash
 npx playwright install chromium
