@@ -90,4 +90,20 @@ function readYaml(relPath) {
   return parse(fs.readFileSync(path.join(ROOT, relPath), 'utf8'));
 }
 
-module.exports = { ROOT, DIST, startServer, launch, openPage, readYaml };
+// Visible homepage text, whitespace-collapsed, for the phase-1 characterization fixture.
+async function homeSnapshot(page) {
+  return page.evaluate(() => {
+    const t = (el) => (el ? el.textContent.replace(/\s+/g, ' ').trim() : null);
+    const all = (sel) => [...document.querySelectorAll(sel)].map(t);
+    return {
+      hero: t(document.querySelector('.hero')),
+      cards: all('#research article.project-card'),
+      rows: all('#research .project-row'),
+      news: all('.news > li'),
+      pubs: all('.pubs > li'),
+      footer: t(document.querySelector('footer')),
+    };
+  });
+}
+
+module.exports = { ROOT, DIST, startServer, launch, openPage, readYaml, homeSnapshot };

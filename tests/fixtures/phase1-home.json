@@ -1,0 +1,27 @@
+{
+  "hero": "PhD applicant · Fall 2027Luiz TakahashiI measure cognition and behavior in daily life, and ask when a recorded change is real rather than practice, context or noise.I’m a computer science undergraduate at Washington State University (B.S. expected May 2027), working in the Neuropsychology and Aging Lab with Maureen Schmitter-Edgecombe and the CASAS Smart Home Lab with Diane J. Cook on NIH/NIA-funded studies of older adults. I work with smartwatch speech, repeated cognitive tests and in-home sensors, using uncertainty-aware machine learning, hierarchical models and calibrated prediction intervals, always tested on people held out of development.I also work with Junhao Wen at Columbia on detecting interactions between biomarker views. Before that, I built an evaluation metric for text-to-SQL with Fabio Cozman at the University of São Paulo’s Center for Artificial Intelligence (C4AI).CV (PDF)l.takahashidosreis@wsu.eduGitHubORCIDB.S. Computer Science, WSU ’27Pullman, WA",
+  "cards": [
+    "Speech · WearablesScoring spoken word recall on a smartwatchOlder adults said the words they remembered into an Apple Watch, unsupervised, in daily life. ARTS scores the recall from Whisper’s word probabilities, not only its top guess, and matched two human scorers on held-out participants (ICC .97).First author · Submitted to JINS · Open sourceCode↗",
+    "Repeated testing · Hierarchical modelsPractice as signalA test repeated on a watch is also a learning task. Praxis gives each prompt a calibrated expected-score band. On people left out of the fit its 95% bands held 93–97% coverage, while a fixed day-one range fell to 43%.Lead · Manuscript in preparation",
+    "Ambient sensing · State-space modelsRoom-aware tracking in smart homesA Kalman filter adapted to event-driven home sensors cut localization error by 18% with uncertainty that stayed calibrated (92% consistency vs. 65%). In 35 older adults’ homes, more varied days went with better working memory.First author · ISG 2026 posterDOI↗"
+  ],
+  "rows": [
+    "Medication adherence from in-home sensorsA classifier for motion sensors on pill bottles and organizers matched clinician records about 93% of the time across 25 older adults’ homes.Second author · ISG 2026DOI↗",
+    "Multi-view interaction detectionWith Junhao Wen (Columbia): proofs and analysis code for detecting interactions between biomarker views. In multi-cohort proteomics, an apparent cross-organ interaction vanished under cohort adjustment, as the theory predicted.First author · In preparation",
+    "SQL Component MatchAn AST-based metric that judges whether generated SQL means the same as the reference: 95% semantic accuracy vs. 70% for the Spider metric. C4AI, University of São Paulo.Technical report · 2025"
+  ],
+  "news": [
+    "Sep 2026Submitted our paper on automated scoring of smartwatch verbal recall to JINS, and released ARTS as open source.",
+    "Aug 2026Started as an Undergraduate Research Peer Mentor at WSU’s Office of Undergraduate Research.",
+    "Mar 2026Poster on room-aware behavioral profiling at ISG 2026, Vancouver.",
+    "Aug 2025Joined the Neuropsychology and Aging Lab and the CASAS Smart Home Lab at WSU.",
+    "May 2025Research assistant at the Center for Artificial Intelligence (C4AI), University of São Paulo."
+  ],
+  "pubs": [
+    "Journal · Under reviewAutomated scoring of verbal recall in smartwatch-based ecological momentary assessment: development and independent validationL. Takahashi, A. Adam, H. McDougle, M. Jaworski III, B. Minor, M. Calamia, D. J. Cook, M. Schmitter-EdgecombeJournal of the International Neuropsychological Society, submitted 2026Code↗",
+    "Conference abstract · PosterRoom-aware behavioral profiling for cognitive health monitoring in smart homesL. Takahashi, D. J. Cook, M. Schmitter-EdgecombeGerontechnology 25(Suppl.), 2026 · ISG 2026, VancouverDOI↗",
+    "Conference abstractRemote technological assessment of medication adherence in older adultsR. Jenkins, L. Takahashi Dos Reis, D. J. Cook, M. Schmitter-EdgecombeGerontechnology 25(Suppl.), 2026 · ISG 2026, VancouverDOI↗",
+    "SoftwareARTS: scoring pipeline for spoken word-list recall on smartwatchesgithub.com/WSU-CASAS/ARTS, 2026Code↗"
+  ],
+  "footer": "Luiz TakahashiEmailGitHubORCIDCVAlso published as L. Takahashi Dos Reis.Updated November 2026"
+}
