@@ -1,0 +1,46 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { formatMonth, renderInline } from '../lib/format';
+
+type NewsEntry = CollectionEntry<'news'>;
+
+interface Props {
+  items: NewsEntry[];
+}
+
+const items = [...Astro.props.items].sort((a, b) => b.data.date.localeCompare(a.data.date));
+---
+<ol class="news">
+  {items.map((n) => (
+    <li>
+      <time class="meta" datetime={n.data.date}>{formatMonth(n.data.date)}</time>
+      <span class="text" set:html={renderInline(n.data.text)} />
+    </li>
+  ))}
+</ol>
+
+<style>
+  .news {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--rule);
+  }
+  li {
+    display: flex;
+    gap: 20px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  time {
+    flex: 0 0 72px;
+    padding-top: 3px;
+    font-size: 12.5px;
+  }
+  .text {
+    min-width: 0;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--ink-2);
+  }
+</style>

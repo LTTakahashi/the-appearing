@@ -1,0 +1,52 @@
+# Publications. Copy and author lists are verbatim from the CV (design spec §7.5).
+# `self` is the name to bold; it must appear in `authors` (software entries list none).
+# Every entry needs a unique `id`.
+
+- id: jins-2026
+  order: 1
+  selected: true
+  type: journal
+  status: Under review
+  title: "Automated scoring of verbal recall in smartwatch-based ecological momentary assessment: development and independent validation"
+  authors: [L. Takahashi, A. Adam, H. McDougle, M. Jaworski III, B. Minor, M. Calamia, D. J. Cook, M. Schmitter-Edgecombe]
+  self: L. Takahashi
+  venue: Journal of the International Neuropsychological Society, submitted 2026
+  year: 2026
+  links:
+    - { label: Code, href: "https://github.com/WSU-CASAS/ARTS" }
+
+- id: isg-2026-room-aware
+  order: 2
+  selected: true
+  type: abstract
+  status: Poster
+  title: Room-aware behavioral profiling for cognitive health monitoring in smart homes
+  authors: [L. Takahashi, D. J. Cook, M. Schmitter-Edgecombe]
+  self: L. Takahashi
+  venue: Gerontechnology 25(Suppl.), 2026 · ISG 2026, Vancouver
+  year: 2026
+  links:
+    - { label: DOI, href: "https://doi.org/10.4017/gt.2026.25.2.1421.3" }
+
+- id: isg-2026-adherence
+  order: 3
+  selected: true
+  type: abstract
+  title: Remote technological assessment of medication adherence in older adults
+  authors: [R. Jenkins, L. Takahashi Dos Reis, D. J. Cook, M. Schmitter-Edgecombe]
+  self: L. Takahashi Dos Reis
+  venue: Gerontechnology 25(Suppl.), 2026 · ISG 2026, Vancouver
+  year: 2026
+  links:
+    - { label: DOI, href: "https://doi.org/10.4017/gt.2026.25.2.1527.3" }
+
+- id: arts-software
+  order: 4
+  selected: true
+  type: software
+  title: "ARTS: scoring pipeline for spoken word-list recall on smartwatches"
+  self: L. Takahashi
+  venue: github.com/WSU-CASAS/ARTS, 2026
+  year: 2026
+  links:
+    - { label: Code, href: "https://github.com/WSU-CASAS/ARTS" }

@@ -1,0 +1,22 @@
+# News items, newest first on the page (sorted by `date`). Copy: design spec §7.4.
+# `text` allows *emphasis* and [links](https://…). Every entry needs a unique `id`.
+
+- id: 2026-09-jins
+  date: "2026-09"
+  text: Submitted our paper on automated scoring of smartwatch verbal recall to *JINS*, and released [ARTS](https://github.com/WSU-CASAS/ARTS) as open source.
+
+- id: 2026-08-peer-mentor
+  date: "2026-08"
+  text: Started as an Undergraduate Research Peer Mentor at WSU’s Office of Undergraduate Research.
+
+- id: 2026-03-isg
+  date: "2026-03"
+  text: Poster on room-aware behavioral profiling at ISG 2026, Vancouver.
+
+- id: 2025-08-labs
+  date: "2025-08"
+  text: Joined the Neuropsychology and Aging Lab and the CASAS Smart Home Lab at WSU.
+
+- id: 2025-05-c4ai
+  date: "2025-05"
+  text: Research assistant at the Center for Artificial Intelligence (C4AI), University of São Paulo.

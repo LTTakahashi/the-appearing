@@ -26,4 +26,32 @@ const projects = defineCollection({
     }),
 });
 
-export const collections = { projects };
+const news = defineCollection({
+  loader: file('src/data/news.yaml'),
+  schema: z.object({
+    date: z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/, 'date must be YYYY-MM'),
+    text: z.string().min(1),
+  }),
+});
+
+const publications = defineCollection({
+  loader: file('src/data/publications.yaml'),
+  schema: z
+    .object({
+      type: z.enum(['journal', 'abstract', 'software']),
+      status: z.string().optional(),
+      title: z.string().min(1),
+      authors: z.array(z.string().min(1)).default([]),
+      self: z.string().min(1),
+      venue: z.string().min(1),
+      year: z.number().int(),
+      links: z.array(link).default([]),
+      selected: z.boolean(),
+      order: z.number().int(),
+    })
+    .refine((p) => p.type === 'software' || p.authors.includes(p.self), {
+      message: '`self` must appear in `authors` (papers and abstracts need an author list)',
+    }),
+});
+
+export const collections = { projects, news, publications };
