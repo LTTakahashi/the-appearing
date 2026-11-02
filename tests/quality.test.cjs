@@ -55,6 +55,23 @@ test('no horizontal overflow at 320px', async () => {
   await context.close();
 });
 
+test('long unbroken strings in content wrap instead of scrolling sideways at 320px', async () => {
+  const { page, context } = await openPage(browser, srv.url + '/', { width: 320, height: 700 });
+  await settle(page);
+  await page.evaluate(() => {
+    // No hyphens or spaces: a pasted URL or identifier gives the browser no break opportunity.
+    const long = 'https://doi.org/10.1017/S1355617726101234_supplementary_materials_and_code_archive_v2_final';
+    for (const sel of ['.news li .text', '.project-card .summary', '.project-row .summary', '.project-row h3', '.pubs .venue', '.pubs h3', '.pubs .authors']) {
+      const el = document.querySelector(sel);
+      if (!el) throw new Error(`missing ${sel}`);
+      el.append(` ${long}`);
+    }
+  });
+  const { sw, iw } = await page.evaluate(() => ({ sw: document.documentElement.scrollWidth, iw: window.innerWidth }));
+  assert.ok(sw <= iw, `scrollWidth ${sw} > innerWidth ${iw}`);
+  await context.close();
+});
+
 test('every internal link and asset resolves', async () => {
   for (const pagePath of ['/', '/404']) {
     const { page, context } = await openPage(browser, srv.url + pagePath);
