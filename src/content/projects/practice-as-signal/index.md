@@ -29,6 +29,11 @@ blocks:
     heading: How it was tested
     body: |-
       Leave-one-person-out tests in two WSU studies: 180 adults 50 and older over two weeks, and 39 adults in up to five week-long bursts over about 16 months.
+  - type: stats
+    items:
+      - { value: 93–97%, label: Praxis 95% band coverage }
+      - { value: 42.7%, label: fixed day-one range coverage (from 93.9%) }
+      - { value: "+4.28", label: predicted first-to-last-burst rise (observed +4.55) }
   - type: text
     heading: Status
     body: |-

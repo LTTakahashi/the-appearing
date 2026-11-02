@@ -1,0 +1,52 @@
+---
+interface Props {
+  stages: { label: string; text: string; emphasis?: boolean }[];
+}
+
+const { stages } = Astro.props;
+---
+<ol class="block-timeline">
+  {stages.map((s) => (
+    <li class:list={{ 'is-emphasis': s.emphasis }}>
+      <p class="stage-label">{s.label}</p>
+      <p class="stage-text">{s.text}</p>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .block-timeline {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--rule-strong);
+    border-bottom: 1px solid var(--rule-strong);
+  }
+  li { flex: 1 1 200px; padding: 16px 18px 18px; }
+  li:first-child { padding-left: 0; }
+  li:last-child { padding-right: 0; }
+  li.is-emphasis {
+    flex: 0 1 160px;
+    padding-left: 18px;
+    padding-right: 18px;
+    background: var(--accent);
+    color: var(--paper);
+  }
+  .stage-label {
+    margin-bottom: 6px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .is-emphasis .stage-label { color: var(--paper); }
+  .stage-text { font-size: 15px; line-height: 1.5; }
+  .is-emphasis .stage-text { font-weight: 600; }
+  @media (max-width: 599px) {
+    li, li:first-child, li:last-child { flex-basis: 100%; padding: 14px 0; }
+    li.is-emphasis { flex-basis: 100%; padding: 14px 16px; }
+  }
+</style>

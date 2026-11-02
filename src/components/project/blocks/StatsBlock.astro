@@ -1,0 +1,42 @@
+---
+interface Props {
+  items: { value: string; label: string; muted?: boolean }[];
+}
+
+const { items } = Astro.props;
+---
+<ul class="block-stats">
+  {items.map((s) => (
+    <li class:list={{ 'is-muted': s.muted }}>
+      <p class="stat-value serif">{s.value}</p>
+      <p class="stat-label">{s.label}</p>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .block-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr));
+    gap: 1px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+  }
+  li { padding: 18px 18px 20px; background: var(--paper); min-width: 0; }
+  .stat-value {
+    font-size: 44px;
+    line-height: 1;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .is-muted .stat-value { color: var(--ink-2); }
+  .stat-label {
+    margin-top: 10px;
+    font-size: 13.5px;
+    line-height: 1.4;
+    color: var(--ink-2);
+  }
+</style>

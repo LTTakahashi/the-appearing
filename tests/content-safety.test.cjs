@@ -94,3 +94,13 @@ test('a draft page project gets no route and is skipped by next-project links', 
   assert.match(r.practice, /class="next-project"[^>]*href="\/research\/multi-view\/"|href="\/research\/multi-view\/"[^>]*class="next-project"/);
   assert.doesNotMatch(r.home, /Room-aware tracking in smart homes/);
 });
+
+test('a figure block whose image file is missing fails the build', () => {
+  const r = buildCopy((dir) => {
+    const f = projectFile(dir, 'arts');
+    fs.writeFileSync(f, fs.readFileSync(f, 'utf8').replace('blocks:\n',
+      'blocks:\n  - type: figure\n    image: ./missing.webp\n    alt: A missing figure\n    caption: This image does not exist\n'));
+  });
+  assert.notEqual(r.status, 0, `build should fail:\n${r.out.slice(-600)}`);
+  assert.match(r.out, /missing\.webp/);
+});

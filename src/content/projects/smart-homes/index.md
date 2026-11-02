@@ -31,10 +31,21 @@ blocks:
     heading: The approach
     body: |-
       I adapted a Kalman filter to event-driven sensor updates, with a room-aware mechanism, so it reports both an estimated position and its uncertainty. LASSO then ranked behavioral features for separating healthy from impaired residents.
+  - type: timeline
+    stages:
+      - { label: Source data, text: "WSU Functional Assessment Study, 41 participants" }
+      - { label: Simulated residents, text: "30 healthy and 30 impaired, generated from that data", emphasis: true }
+      - { label: Real homes, text: "35 older adults, 2M+ sensor events" }
   - type: text
     heading: Results
     body: |-
       Against baseline models on the synthetic benchmarks, the filter was more accurate and better calibrated. LASSO-ranked behavioral features separated healthy from impaired simulated residents. In real homes, the variety of a person’s days tracked working memory.
+  - type: stats
+    items:
+      - { value: 18%, label: lower localization error than baselines }
+      - { value: 92%, label: statistically consistent uncertainty (65% for baselines) }
+      - { value: ".78", label: "AUC, healthy vs. impaired residents" }
+      - { value: "−.43", label: "r, 1-back accuracy vs. day-to-day similarity" }
   - type: text
     heading: Limits
     body: |-
