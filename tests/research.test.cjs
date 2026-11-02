@@ -7,8 +7,9 @@ let browser;
 before(async () => { srv = await startServer(); browser = await launch(); });
 after(async () => { await browser.close(); await srv.close(); });
 
+// A card's own links (Code, DOI), excluding the title link that makes the whole card clickable.
 const cardLinks = (page, i) => page.$$eval('#research article.project-card', (cards, idx) =>
-  [...cards[idx].querySelectorAll('a')].map((a) => [a.textContent.replace('↗', '').trim(), a.getAttribute('href')]), i);
+  [...cards[idx].querySelectorAll('a:not(.card-link)')].map((a) => [a.textContent.replace('↗', '').trim(), a.getAttribute('href')]), i);
 
 test('every YAML project renders (no silent drops)', async () => {
   const y = readEntries('src/content/projects', { nested: true });
@@ -27,9 +28,11 @@ test('cards in spec order with figures', async () => {
   await context.close();
 });
 
-test('cards are not whole-card links; real links only', async () => {
+test('cards are never nested in links and keep their real links', async () => {
+  // Phase 1 kept cards unlinked until project pages existed; phase 2a links each card via its
+  // title (see transitions.test.cjs). Cards must still not be wrapped in an <a>.
   const { page, context } = await openPage(browser, srv.url + '/');
-  assert.equal(await page.$$eval('#research article.project-card', (as) => as.filter((a) => a.closest('a')).length), 0);
+  assert.equal(await page.$$eval('#research article.project-card', (as) => as.filter((a) => a.parentElement.closest('a')).length), 0);
   assert.deepEqual(await cardLinks(page, 0), [['Code', 'https://github.com/WSU-CASAS/ARTS']]);
   assert.deepEqual(await cardLinks(page, 1), []);
   assert.deepEqual(await cardLinks(page, 2), [['DOI', 'https://doi.org/10.4017/gt.2026.25.2.1421.3']]);
