@@ -39,11 +39,19 @@ All homepage content lives in `src/data/`. Components hold no copy of their own.
 
 **Add a publication.** Copy an entry in `src/data/publications.yaml` and give it a unique `id` and the next `order`. `self` must match one of the `authors` exactly; that name is shown in bold.
 
-**Every YAML entry needs a unique `id`.** Astro silently skips entries without one. The tests catch that by checking that every entry appears on the page.
+**Every YAML entry needs a unique `id`.** If you copy an entry, change its `id`.
 
 **Show Gallery or Writing in the navigation.** Once those pages exist, set `enabled: true` on their items in `src/data/site.ts`.
 
-The build fails with a clear message if an entry is missing a required field, has a malformed date, or uses a link that isn't `https://`, `/…` or `mailto:`.
+The build (including Cloudflare's) fails with a message naming the file and entry if any of these is true:
+
+- the YAML is invalid (for example, an unquoted `: ` inside a sentence; wrap such text in quotes);
+- an entry has no `id`, or two entries share one;
+- a required field is missing;
+- a date is malformed;
+- a link isn't `https://`, `/…` or `mailto:`.
+
+Nothing is ever silently dropped.
 
 ## Check before publishing
 

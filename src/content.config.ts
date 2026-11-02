@@ -1,6 +1,6 @@
 import { defineCollection } from 'astro:content';
-import { file } from 'astro/loaders';
 import { z } from 'astro/zod';
+import { yamlList } from './lib/yaml-list-loader';
 
 const link = z.object({
   label: z.string().min(1),
@@ -8,7 +8,7 @@ const link = z.object({
 });
 
 const projects = defineCollection({
-  loader: file('src/data/projects.yaml'),
+  loader: yamlList('src/data/projects.yaml'),
   schema: z
     .object({
       title: z.string().min(1),
@@ -27,7 +27,7 @@ const projects = defineCollection({
 });
 
 const news = defineCollection({
-  loader: file('src/data/news.yaml'),
+  loader: yamlList('src/data/news.yaml'),
   schema: z.object({
     date: z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/, 'date must be YYYY-MM'),
     text: z.string().min(1),
@@ -35,7 +35,7 @@ const news = defineCollection({
 });
 
 const publications = defineCollection({
-  loader: file('src/data/publications.yaml'),
+  loader: yamlList('src/data/publications.yaml'),
   schema: z
     .object({
       type: z.enum(['journal', 'abstract', 'software']),
