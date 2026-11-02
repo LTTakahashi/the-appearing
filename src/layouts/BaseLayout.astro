@@ -80,7 +80,7 @@ const personLd = {
 
     <link rel="preload" href={newsreaderWoff2} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={interWoff2} as="font" type="font/woff2" crossorigin />
-    <script type="application/ld+json" set:html={JSON.stringify(personLd)} />
+    <script type="application/ld+json" set:html={JSON.stringify(personLd).replace(/</g, '\\u003c')} />
   </head>
   <body>
     <SkipLink />

@@ -113,3 +113,80 @@ test('the editor\'s required-field list cannot drift from the schemas', () => {
   assert.notEqual(r.status, 0, `build should fail:\n${r.out.slice(-600)}`);
   assert.match(r.out, /required-fields\.ts: news lists \[date\] but the schema requires \[date,text\]/);
 });
+
+// --- Phase-2a review fixes -------------------------------------------------
+
+test('a project saved by the editor with empty optional fields still builds', () => {
+  const r = buildCopy((dir) => {
+    // What Sveltia writes for a row project: every optional field present but empty.
+    fs.writeFileSync(projectFile(dir, 'medication-adherence'), `---
+title: Medication adherence from in-home sensors
+order: 4
+feature: false
+page: false
+draft: false
+shortName: ''
+kicker: ''
+figure: ''
+figureCaption: ''
+summary: A classifier for motion sensors on pill bottles and organizers matched clinician records about 93% of the time across 25 older adults’ homes.
+question: ''
+role: Second author
+status: ISG 2026
+authors: []
+self: ''
+minute: []
+links:
+  - label: DOI
+    href: https://doi.org/10.4017/gt.2026.25.2.1527.3
+citation: ''
+blocks: []
+---
+`);
+    const pub = path.join(dir, 'src/content/publications/isg-2026-adherence.md');
+    fs.writeFileSync(pub, fs.readFileSync(pub, 'utf8').replace(/^---\n/, "---\nstatus: ''\n"));
+  }, (dist) => ({ home: fs.readFileSync(path.join(dist, 'index.html'), 'utf8') }));
+  assert.equal(r.status, 0, r.out.slice(-1200));
+  assert.match(r.home, /Medication adherence from in-home sensors/);
+});
+
+test('text-section headings that collide as section ids fail the build', () => {
+  const r = buildCopy((dir) => {
+    const f = projectFile(dir, 'arts');
+    fs.writeFileSync(f, fs.readFileSync(f, 'utf8').replace('heading: Limits', 'heading: Results.'));
+  });
+  assert.notEqual(r.status, 0, `build should fail:\n${r.out.slice(-600)}`);
+  assert.match(r.out, /same section id/);
+});
+
+test('an image inside a text section fails the build', () => {
+  const r = buildCopy((dir) => {
+    const f = projectFile(dir, 'arts');
+    fs.writeFileSync(f, fs.readFileSync(f, 'utf8').replace('This is *candidate rescue*.', 'This is *candidate rescue*. ![A plot](plot.webp)'));
+  });
+  assert.notEqual(r.status, 0, `build should fail:\n${r.out.slice(-600)}`);
+  assert.match(r.out, /Figure section/);
+});
+
+test('an unfinished draft page project does not block the build', () => {
+  const r = buildCopy((dir) => {
+    fs.mkdirSync(path.join(dir, 'src/content/projects/new-idea'));
+    fs.writeFileSync(projectFile(dir, 'new-idea'),
+      '---\ntitle: A new idea\norder: 7\nfeature: false\npage: true\ndraft: true\nsummary: Work in progress.\nrole: Lead\nstatus: Draft\n---\n');
+  }, (dist) => ({ hasPage: fs.existsSync(path.join(dist, 'research/new-idea/index.html')) }));
+  assert.equal(r.status, 0, r.out.slice(-1200));
+  assert.equal(r.hasPage, false);
+});
+
+test('profile URLs cannot break out of the JSON-LD script', () => {
+  const r = buildCopy((dir) => {
+    const f = path.join(dir, 'src/content/site/profile.yaml');
+    fs.writeFileSync(f, fs.readFileSync(f, 'utf8').replace(/^github: .*$/m,
+      "github: 'https://github.com/x</script><script>alert(1)</script>'"));
+  }, (dist) => ({ home: fs.readFileSync(path.join(dist, 'index.html'), 'utf8') }));
+  assert.equal(r.status, 0, r.out.slice(-1200));
+  // The JSON-LD block must run to its own end and round-trip the value. (In the
+  // hero link the same text sits inside a quoted href, where `<` is inert.)
+  const ld = r.home.match(/<script type="application\/ld\+json">(.*?)<\/script>/s)[1];
+  assert.ok(JSON.parse(ld).sameAs.includes('https://github.com/x</script><script>alert(1)</script>'), ld);
+});

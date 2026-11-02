@@ -13,6 +13,10 @@ media_folder: src/assets/uploads
 public_folder: /src/assets/uploads
 slugify_filename: true
 
+output:
+  # Leave unset optional fields out of the file instead of writing '' or [].
+  omit_empty_optional_fields: true
+
 media_libraries:
   default:
     config:
@@ -111,7 +115,7 @@ collections:
             widget: object
             fields:
               - { name: heading, label: Heading (also listed in "On this page"), widget: string, required: true }
-              - { name: body, label: Text, widget: markdown, required: true, buttons: [bold, italic, link, bulleted-list, numbered-list] }
+              - { name: body, label: Text, widget: markdown, required: true, buttons: [bold, italic, link, bulleted-list, numbered-list], editor_components: [] }
           - name: steps
             label: Steps (2–4 boxes with arrows)
             widget: object

@@ -53,3 +53,42 @@ test('the build script runs the check first', () => {
   const pkg = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8'));
   assert.equal(pkg.scripts.build, 'node scripts/check-images.mjs && astro build');
 });
+
+test('a WebP with GPS location fails and is named', () => {
+  const dir = tempSite({ 'public/photos/trip.webp': path.join(ROOT, 'tests/fixtures/gps.webp') });
+  try {
+    const r = run(dir);
+    assert.equal(r.status, 1, r.stdout);
+    assert.match(r.stdout, /GPS location found: public\/photos\/trip\.webp/);
+  } finally { fs.rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('an image whose metadata cannot be read fails closed', () => {
+  const dir = tempSite({ 'src/a/broken.jpg': Buffer.from('this is not a jpeg') });
+  try {
+    const r = run(dir);
+    assert.equal(r.status, 1, r.stdout);
+    assert.match(r.stdout, /Could not read metadata: src\/a\/broken\.jpg/);
+  } finally { fs.rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('a WebP without metadata (what the editor uploads) passes', () => {
+  // The GPS fixture with its EXIF chunk dropped and the RIFF size fixed up.
+  const src = fs.readFileSync(path.join(ROOT, 'tests/fixtures/gps.webp'));
+  const chunks = [];
+  for (let at = 12; at + 8 <= src.length; ) {
+    const size = src.readUInt32LE(at + 4);
+    const end = at + 8 + size + (size & 1);
+    if (src.toString('latin1', at, at + 4) !== 'EXIF') chunks.push(src.subarray(at, end));
+    at = end;
+  }
+  const body = Buffer.concat([Buffer.from('WEBP'), ...chunks]);
+  const head = Buffer.alloc(8);
+  head.write('RIFF');
+  head.writeUInt32LE(body.length, 4);
+  const dir = tempSite({ 'public/photos/clean.webp': Buffer.concat([head, body]) });
+  try {
+    const r = run(dir);
+    assert.equal(r.status, 0, r.stdout);
+  } finally { fs.rmSync(dir, { recursive: true, force: true }); }
+});

@@ -2,9 +2,15 @@ import { defineCollection, type ImageFunction } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 import { REQUIRED_FIELDS } from './lib/required-fields';
+import { headingProblem, markdownImages } from './lib/markdown';
 
 // One file per entry: the file or folder name is the id, so ids can't be missing
 // or duplicated, and a malformed file fails the build naming that file.
+
+// The editor can save an untouched optional field as '' (older files, or a field
+// cleared by hand); treat that as "not set" instead of failing the build.
+const unsetIfEmpty = (v: unknown) => (v === '' ? undefined : v);
+const optionalText = () => z.preprocess(unsetIfEmpty, z.string().min(1).optional());
 
 const link = z.object({
   label: z.string().min(1),
@@ -34,7 +40,13 @@ const item = z.object({ label: z.string().min(1), text: z.string().min(1), empha
 // matching the editor's list-widget type key.
 const blocks = (image: ImageFunction) =>
   z.discriminatedUnion('type', [
-    z.object({ type: z.literal('text'), heading: z.string().min(1), body: z.string().min(1) }),
+    z.object({
+      type: z.literal('text'),
+      heading: z.string().min(1),
+      body: z.string().min(1).refine((md) => markdownImages(md).length === 0, {
+        message: 'images go in a Figure section (with alt text and a caption), not inside a text section',
+      }),
+    }),
     z.object({ type: z.literal('steps'), items: z.array(item).min(2).max(4) }),
     z.object({ type: z.literal('timeline'), stages: z.array(item).min(2).max(4) }),
     z.object({
@@ -48,49 +60,49 @@ const blocks = (image: ImageFunction) =>
 const projectFields = (image: ImageFunction) =>
   z.object({
         title: z.string().min(1),
-        shortName: z.string().min(1).optional(),
-        kicker: z.string().optional(),
+        shortName: optionalText(),
+        kicker: optionalText(),
         summary: z.string().min(1),
-        question: z.string().min(1).optional(),
+        question: optionalText(),
         role: z.string().min(1),
         status: z.string().min(1),
         feature: z.boolean(),
         page: z.boolean().default(false),
-        figure: z.enum(['arts', 'praxis', 'homes', 'multiview']).optional(),
-        figureCaption: z.string().min(1).optional(),
+        figure: z.preprocess(unsetIfEmpty, z.enum(['arts', 'praxis', 'homes', 'multiview']).optional()),
+        figureCaption: optionalText(),
         authors: z.array(z.string().min(1)).optional(),
-        self: z.string().min(1).optional(),
+        self: optionalText(),
         minute: z.array(z.string().min(1)).optional(),
         links: z.array(link).default([]),
-        citation: z.string().min(1).optional(),
+        citation: optionalText(),
         blocks: z.array(blocks(image)).default([]),
         order: z.number().int(),
         draft: z.boolean().default(false),
       });
 
+const live = (p: { page: boolean; draft: boolean }) => p.page && !p.draft;
+
 const projects = defineCollection({
   loader: glob({ pattern: '*/index.md', base: './src/content/projects' }),
   schema: ({ image }) =>
     projectFields(image)
-      .refine((p) => !p.feature || (p.figure && p.kicker), {
+      .refine((p) => !p.feature || p.draft || (p.figure && p.kicker), {
         message: 'feature projects need both a figure and a kicker',
       })
-      .refine((p) => !p.page || (p.figure && p.figureCaption && p.kicker && p.question && p.shortName), {
+      // Page rules apply once a page is published, so a draft can be saved half-written.
+      .refine((p) => !live(p) || (p.figure && p.figureCaption && p.kicker && p.question && p.shortName), {
         message: 'page projects need figure, figureCaption, kicker, question and shortName',
       })
-      .refine((p) => !p.page || (p.authors && p.self && p.authors.includes(p.self)), {
+      .refine((p) => !live(p) || (p.authors && p.self && p.authors.includes(p.self)), {
         message: 'page projects need authors that include `self`',
       })
-      .refine((p) => !p.page || p.minute?.length === 3, {
+      .refine((p) => !live(p) || p.minute?.length === 3, {
         message: 'page projects need a one-minute summary (`minute`) of exactly 3 items',
       })
-      .refine(
-        (p) => {
-          const headings = p.blocks.flatMap((b) => (b.type === 'text' ? [b.heading.trim().toLowerCase()] : []));
-          return new Set(headings).size === headings.length;
-        },
-        { message: 'text blocks must have unique headings' },
-      ),
+      .superRefine((p, ctx) => {
+        const problem = headingProblem(p.blocks.flatMap((b) => (b.type === 'text' ? [b.heading] : [])));
+        if (problem) ctx.addIssue({ code: 'custom', message: problem });
+      }),
 });
 
 const newsFields = z.object({
@@ -106,7 +118,7 @@ const news = defineCollection({
 
 const publicationFields = z.object({
       type: z.enum(['journal', 'abstract', 'software']),
-      status: z.string().optional(),
+      status: optionalText(),
       title: z.string().min(1),
       authors: z.array(z.string().min(1)).default([]),
       self: z.string().min(1),

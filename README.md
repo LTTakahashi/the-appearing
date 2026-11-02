@@ -84,9 +84,9 @@ The editor at **luiztakahashi.com/admin** edits the files in `src/content/` from
 - authors that include your name;
 - exactly three "In one minute" items.
 
-If any of these is missing, the build stops and Cloudflare keeps the previous version online. Page sections can be text, steps, a timeline, number tiles, an image, or an interactive figure. The "On this page" list is built from the text sections' headings.
+If any of these is missing, the build stops and Cloudflare keeps the previous version online. A page marked as a draft can be saved half-finished; these checks start when the draft switch is turned off. Page sections can be text, steps, a timeline, number tiles, an image, or an interactive figure. The "On this page" list is built from the text sections' headings, so each heading must be different (not just in capitals or punctuation) and can't be "In one minute" or "Paper and code". Images go in an image section, with alt text and a caption, not inside a text section.
 
-**Photos.** Images uploaded in the editor are converted to WebP, which removes GPS location. The build also refuses any image that still carries location data.
+**Photos.** Images uploaded in the editor are converted to WebP, which removes GPS location. The build also refuses any image that still carries location data, or whose metadata it can't read.
 
 ## Check before publishing
 

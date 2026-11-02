@@ -81,3 +81,19 @@ test('README explains token sign-in', () => {
   assert.match(readme, /fine-grained/i);
   assert.match(readme, /\/admin/);
 });
+
+test('the editor omits empty optional fields when saving', () => {
+  assert.equal(config().output?.omit_empty_optional_fields, true);
+});
+
+test('text sections cannot embed images in the editor', () => {
+  const blocks = collection('projects').fields.find((f) => f.name === 'blocks');
+  const body = blocks.types.find((t) => t.name === 'text').fields.find((f) => f.name === 'body');
+  assert.deepEqual(body.editor_components, []);
+});
+
+test('the editor script is integrity-pinned', () => {
+  const html = fs.readFileSync(path.join(ROOT, 'public/admin/index.html'), 'utf8');
+  assert.match(html, /integrity="sha384-LPT86oZkLhmoF84O1jKZBSaFJOVvKv8sjXDKap1SOaSwzbC8F6HH7rTJWekmAzG9"/);
+  assert.match(html, /crossorigin="anonymous"/);
+});
